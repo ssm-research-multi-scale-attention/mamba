@@ -1,5 +1,6 @@
 import os
 import torch
+torch.set_float32_matmul_precision('high')
 from torch.optim import Adam
 from transformers import MambaForCausalLM, AutoTokenizer
 
@@ -30,6 +31,7 @@ def main():
     # Tokenizing inputs
     tokenizer = AutoTokenizer.from_pretrained("state-spaces/mamba-130m-hf")
     inputs = tokenizer(texts, padding=True, return_tensors="pt")
+    inputs = {k: v.to(device) for k, v in inputs.items()}
     
     # Training
     if not os.path.isdir(model_path):

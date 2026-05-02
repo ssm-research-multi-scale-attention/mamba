@@ -93,15 +93,24 @@ def main():
             print(f"Loss at step {step+1}/{training_steps}: {loss.item():.2f}")
 
             # Saving the fine-tuned model
-            model.save_pretrained(model_path)
+            model._orig_mod.save_pretrained(model_path)
 
-    # Evaluation (TODO)
+    # Evaluation
     model = MambaForCausalLM.from_pretrained(model_path).to(device)
-    model = torch.compile(model.eval())
+    model.eval()
+
     sequence = "<Query> <2> </Query> <Seq> <A> <B> <C> </Seq> <Ans>"
     ids = torch.tensor([tokenize(sequence)], device=device)
+    attention_mask = torch.ones_like(ids)
+
     with torch.no_grad():
-        out = model.generate(input_ids=ids, do_sample=False, max_new_tokens=2)
+        out = model.generate(
+            input_ids=ids,
+            attention_mask=attention_mask,
+            do_sample=False,
+            max_new_tokens=2,
+        )
+
     decoded = detokenize(out[0].tolist())
     print("Original sequence:\n\t", sequence)
     print("Generated sequence:\n\t", decoded)

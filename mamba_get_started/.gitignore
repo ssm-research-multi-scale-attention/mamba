@@ -1,5 +1,6 @@
 # Custom files and folders
 finetuned*
+mamba-130m-hf-virtual-retrieval/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
