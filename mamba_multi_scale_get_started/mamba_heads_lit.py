@@ -9,7 +9,12 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from omegaconf import DictConfig, OmegaConf
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+)
 
 from mamba_heads_models import MambaHeadsClassifier
 
@@ -41,6 +46,26 @@ class MambaHeadsLitModule(pl.LightningModule):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.backbone(x)
 
+    def _tb_experiment(self):
+        logger = self.logger
+        if logger is None:
+            return None
+        return getattr(logger, "experiment", None)
+
+    def on_fit_start(self) -> None:
+        exp = self._tb_experiment()
+        if exp is None:
+            return
+        step = int(self.trainer.global_step) if self.trainer is not None else 0
+        total = sum(p.numel() for p in self.parameters())
+        trainable = sum(p.numel() for p in self.parameters() if p.requires_grad)
+        try:
+            exp.add_scalar("model/total_params", float(total), step)
+            exp.add_scalar("model/trainable_params", float(trainable), step)
+            exp.add_text("config/resolved_yaml", OmegaConf.to_yaml(self.cfg), step)
+        except Exception:
+            pass
+
     def training_step(self, batch: tuple[torch.Tensor, torch.Tensor], batch_idx: int) -> torch.Tensor:
         x, y = batch
         logits = self(x)
@@ -53,6 +78,16 @@ class MambaHeadsLitModule(pl.LightningModule):
             on_epoch=True,
             batch_size=x.size(0),
         )
+        preds = logits.detach().argmax(dim=-1)
+        acc = (preds == y).float().mean()
+        self.log(
+            "train/acc_batch",
+            acc,
+            prog_bar=False,
+            on_step=True,
+            on_epoch=False,
+            batch_size=x.size(0),
+        )
         return loss
 
     def on_test_start(self) -> None:
@@ -62,6 +97,8 @@ class MambaHeadsLitModule(pl.LightningModule):
     def test_step(self, batch: tuple[torch.Tensor, torch.Tensor], batch_idx: int) -> None:
         x, y = batch
         logits = self(x)
+        loss = self.loss_fn(logits, y)
+        self.log("test/loss", loss, on_step=False, on_epoch=True, batch_size=x.size(0))
         preds = logits.argmax(dim=-1)
         self._test_preds.append(preds.detach().cpu())
         self._test_targets.append(y.detach().cpu())
@@ -74,6 +111,23 @@ class MambaHeadsLitModule(pl.LightningModule):
         print(f"Test Accuracy: {acc:.4f}")
         print("Classification Report:\n", report)
         self._last_cm = confusion_matrix(targets, preds)
+
+        self.log("test/accuracy", float(acc))
+        try:
+            f1w = float(f1_score(targets, preds, average="weighted", zero_division=0))
+            f1m = float(f1_score(targets, preds, average="macro", zero_division=0))
+            self.log("test/f1_weighted", f1w)
+            self.log("test/f1_macro", f1m)
+        except Exception:
+            pass
+
+        exp = self._tb_experiment()
+        if exp is not None and self.trainer is not None:
+            step = int(self.trainer.global_step)
+            try:
+                exp.add_text("test/classification_report", report, step)
+            except Exception:
+                pass
 
     def configure_optimizers(self):
         cfg = self.cfg

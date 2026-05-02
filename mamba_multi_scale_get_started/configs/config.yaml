@@ -21,7 +21,7 @@ data:
   eval_subset: null
 
 loader:
-  batch_size: 128
+  batch_size: 256
   num_workers: 64
   pin_memory: true
 
@@ -45,9 +45,20 @@ train:
   weight_decay: 0.01
   devices: 1
   precision: 32
+  # torch.set_float32_matmul_precision: highest | high | medium. null/false to skip.
+  float32_matmul_precision: high
 
 logging:
   output_dir: outputs/${experiment.name}
+  # At run start, experiment_runner writes resolved_config.yaml here (fully merged & resolved).
+  # Plotly HTML (train_loss.html, confusion_matrix.html, interactive_report.html)
   save_plots: true
+  # plotly write_html: cdn (default, smaller) | inline (self-contained, better offline)
+  plotly_include_js: cdn
   # If true, require lit._last_cm after test when save_plots is on
   require_confusion_matrix: false
+  # TensorBoard: events under output_dir / tensorboard_subdir / version_*
+  tensorboard: true
+  tensorboard_subdir: tensorboard
+  # Step interval for train/acc_batch etc.; epoch metrics unaffected
+  tensorboard_log_every_n_steps: 50

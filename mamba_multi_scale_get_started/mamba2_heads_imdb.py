@@ -24,7 +24,7 @@ from experiment_runner import run_experiment
     "--config",
     "config_path",
     type=click.Path(exists=True, dir_okay=False, path_type=str),
-    default=lambda: os.path.join(package_directory(), "config.yaml"),
+    default=lambda: os.path.join(package_directory(), "configs", "config.yaml"),
     show_default="config.yaml next to script",
     help="Path to YAML config.",
 )

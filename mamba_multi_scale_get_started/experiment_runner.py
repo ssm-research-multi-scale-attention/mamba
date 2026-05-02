@@ -2,10 +2,14 @@
 from __future__ import annotations
 
 import inspect
+import os
 from typing import Any
 
 import pytorch_lightning as pl
+import torch
 from omegaconf import DictConfig, OmegaConf
+from pytorch_lightning.callbacks import Callback, LearningRateMonitor
+from pytorch_lightning.loggers import TensorBoardLogger
 from transformers import AutoTokenizer
 
 from exp_config import (
@@ -18,6 +22,49 @@ from exp_config import (
 from hf_text_dataloaders import build_text_classification_dataloaders
 from lightning_callbacks import TrainLossEpochCallback
 from plotting import save_training_artifacts
+
+RESOLVED_CONFIG_FILENAME = "resolved_config.yaml"
+
+
+def _plotly_include_js(cfg: DictConfig) -> str | bool:
+    """``cdn`` (smaller HTML) or ``inline`` / true (embedded JS, better offline in browser)."""
+    raw = str(OmegaConf.select(cfg, "logging.plotly_include_js", default="cdn")).strip().lower()
+    if raw in ("inline", "embed", "true", "1", "yes", "on"):
+        return True
+    return "cdn"
+
+
+def _apply_torch_train_env(cfg: DictConfig) -> None:
+    """Global torch training knobs (see ``train.float32_matmul_precision`` in config)."""
+    raw = OmegaConf.select(cfg, "train.float32_matmul_precision", default="high")
+    if raw is None or str(raw).strip().lower() in ("none", "null", "false", ""):
+        return
+    torch.set_float32_matmul_precision(str(raw))
+
+
+def dump_resolved_config(cfg: DictConfig, output_dir: str, filename: str = RESOLVED_CONFIG_FILENAME) -> str:
+    """Write fully resolved OmegaConf to YAML under ``output_dir``; return path written."""
+    os.makedirs(output_dir, exist_ok=True)
+    path = os.path.join(output_dir, filename)
+    OmegaConf.save(cfg, path)
+    return path
+
+
+def _tensorboard_enabled(cfg: DictConfig) -> bool:
+    raw = OmegaConf.select(cfg, "logging.tensorboard", default=True)
+    if raw is None or str(raw).strip().lower() in ("false", "0", "no", "off"):
+        return False
+    return bool(raw)
+
+
+def _build_tensorboard_logger(cfg: DictConfig, output_dir: str) -> TensorBoardLogger:
+    """Events live under ``output_dir / tensorboard_subdir / version_*``."""
+    sub = str(OmegaConf.select(cfg, "logging.tensorboard_subdir", default="tensorboard"))
+    return TensorBoardLogger(
+        save_dir=output_dir,
+        name=sub,
+        default_hp_metric=False,
+    )
 
 
 def _tokenizer_from_cfg(cfg: DictConfig):
@@ -52,6 +99,7 @@ def build_lightning_module(cfg: DictConfig, tokenizer: Any | None):
 
 
 def run_experiment(cfg: DictConfig) -> None:
+    _apply_torch_train_env(cfg)
     seed = int(cfg.experiment.seed)
     pl.seed_everything(seed, workers=True)
     set_seed(seed)
@@ -59,6 +107,10 @@ def run_experiment(cfg: DictConfig) -> None:
     device_hint = resolve_device(str(cfg.device))
     print("Resolved config:\n", OmegaConf.to_yaml(cfg))
     print(f"Device hint (data loaders): {device_hint}")
+
+    out_dir = str(cfg.logging.output_dir)
+    snap_path = dump_resolved_config(cfg, out_dir)
+    print(f"Saved resolved config snapshot: {snap_path}")
 
     print("Loading tokenizer and HF dataset loaders...")
     tokenizer = _tokenizer_from_cfg(cfg)
@@ -80,14 +132,28 @@ def run_experiment(cfg: DictConfig) -> None:
     else:
         precision = str(pr)
 
-    loss_tracker = TrainLossEpochCallback()
+    use_tb = _tensorboard_enabled(cfg)
+    callbacks: list[Callback] = [TrainLossEpochCallback()]
+    logger: bool | TensorBoardLogger = False
+    if use_tb:
+        tb = _build_tensorboard_logger(cfg, out_dir)
+        logger = tb
+        callbacks.append(LearningRateMonitor(logging_interval="epoch"))
+        print(f"TensorBoard: logdir={tb.log_dir}")
+
+    log_every = int(OmegaConf.select(cfg, "logging.tensorboard_log_every_n_steps", default=50))
+    if log_every < 1:
+        log_every = 50
+
+    loss_tracker = callbacks[0]
     trainer = pl.Trainer(
         max_epochs=int(cfg.train.epochs),
         accelerator=accel,
         devices=devices_arg,
         precision=precision,  # type: ignore[arg-type]
-        callbacks=[loss_tracker],
-        logger=False,
+        callbacks=callbacks,
+        logger=logger,
+        log_every_n_steps=log_every if use_tb else 50,
         enable_checkpointing=False,
     )
 
@@ -100,5 +166,9 @@ def run_experiment(cfg: DictConfig) -> None:
         raise RuntimeError("logging.require_confusion_matrix=true but module set no _last_cm after test.")
 
     if cfg.logging.save_plots:
-        out_dir = str(cfg.logging.output_dir)
-        save_training_artifacts(out_dir, loss_tracker.epoch_train_losses, cm)
+        save_training_artifacts(
+            out_dir,
+            loss_tracker.epoch_train_losses,
+            cm,
+            include_plotlyjs=_plotly_include_js(cfg),
+        )
