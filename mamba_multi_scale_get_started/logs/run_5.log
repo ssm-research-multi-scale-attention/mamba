@@ -1,0 +1,22 @@
+Loading tokenizer and dataset...
+Building model...
+Parameters: total=11,151,746 trainable=11,151,746
+Epoch 1/5 - train_loss: 0.6933
+Epoch 2/5 - train_loss: 0.3898
+Epoch 3/5 - train_loss: 0.1297
+Epoch 4/5 - train_loss: 0.0113
+Epoch 5/5 - train_loss: 0.0023
+Evaluating on test set...
+Test Accuracy: 0.8623
+Classification Report:
+               precision    recall  f1-score   support
+
+           0     0.8556    0.8718    0.8636     12500
+           1     0.8693    0.8529    0.8610     12500
+
+    accuracy                         0.8623     25000
+   macro avg     0.8624    0.8623    0.8623     25000
+weighted avg     0.8624    0.8623    0.8623     25000
+
+Saved: outputs/5/train_loss.png
+Saved: outputs/5/confusion_matrix.png

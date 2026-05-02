@@ -1,0 +1,53 @@
+# Text classification experiments (OmegaConf + Lightning).
+#
+# Swap dataset / Lightning module via data.* and model.lit_class.
+
+experiment:
+  name: imdb_mamba2_baseline
+  seed: 42
+
+device: auto
+
+data:
+  # HuggingFace dataset id passed to datasets.load_dataset
+  dataset: imdb
+  train_split: train
+  eval_split: test
+  text_key: text
+  label_key: label
+  tokenizer: bert-base-uncased
+  max_length: 512
+  train_subset: null
+  eval_subset: null
+
+loader:
+  batch_size: 128
+  num_workers: 64
+  pin_memory: true
+
+model:
+  # Dotted path to LightningModule.__init__(self, cfg, **kwargs). Optional kwargs:
+  lit_class: mamba_heads_lit.MambaHeadsLitModule
+  lit_init: {}
+  d_model: 256
+  num_classes: 2
+  layer_headdims: [32, 32, 32, 32, 32, 32, 32, 32]
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+
+train:
+  epochs: 3
+  optimizer: adamw
+  lr: 2.0e-4
+  weight_decay: 0.01
+  devices: 1
+  precision: 32
+
+logging:
+  output_dir: outputs/${experiment.name}
+  save_plots: true
+  # If true, require lit._last_cm after test when save_plots is on
+  require_confusion_matrix: false
