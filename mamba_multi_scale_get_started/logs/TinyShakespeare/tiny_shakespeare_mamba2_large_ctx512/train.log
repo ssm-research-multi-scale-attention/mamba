@@ -4,3 +4,6 @@ epoch 1/20 train_loss=1.6430 val_loss=1.5312 val_ppl=4.62 val_bpc=2.2090
   saved best.pt (val_loss=1.531154)
 epoch 2/20 train_loss=1.1100 val_loss=1.6142 val_ppl=5.02 val_bpc=2.3288
 epoch 3/20 train_loss=0.7615 val_loss=1.9853 val_ppl=7.28 val_bpc=2.8642
+epoch 4/20 train_loss=0.4195 val_loss=2.4804 val_ppl=11.95 val_bpc=3.5784
+early stopping at epoch 4: val_loss did not improve by min_delta=0.0001 for 3 epochs (best val_loss=1.531154)
+meta_metrics: train=117.19s eval=185.82s loop=303.54s setup=0.77s → meta_metrics.csv
