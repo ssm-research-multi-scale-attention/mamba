@@ -1,0 +1,6 @@
+experiment=tiny_shakespeare_mamba2_lr3e4 device=cuda:1 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_mamba2_lr3e4
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/10 train_loss=0.4376 val_loss=6.8024 val_ppl=900.02 val_bpc=9.8138
+  saved best.pt (val_loss=6.802413)
+epoch 2/10 train_loss=0.1276 val_loss=8.0318 val_ppl=3077.16 val_bpc=11.5874
+epoch 3/10 train_loss=0.1092 val_loss=8.5219 val_ppl=5023.77 val_bpc=12.2946

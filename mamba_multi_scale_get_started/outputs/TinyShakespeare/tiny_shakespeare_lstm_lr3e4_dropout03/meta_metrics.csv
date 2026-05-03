@@ -1,0 +1,2 @@
+experiment_name,seed,device,cuda_device_name,epochs_planned,epochs_completed,early_stopped,best_val_loss,num_parameters_trainable,wall_setup_sec,wall_train_phases_sec,wall_eval_phases_sec,wall_training_loop_sec,wall_overhead_sec,finished_at_utc
+tiny_shakespeare_lstm_lr3e4_dropout03,42,cuda:1,NVIDIA H100 80GB HBM3,10,4,True,1.49261709,1086017,0.804326,397.999595,21.142059,419.75711,0.615455,2026-05-03T22:07:48.625950+00:00

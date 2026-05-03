@@ -1,0 +1,26 @@
+experiment=tiny_shakespeare_lstm device=cuda out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_lstm
+epoch 1/10 train_loss=1.0801 val_loss=2.1158 val_ppl=8.30 val_bpc=3.0525
+  saved best.pt (val_loss=2.1158)
+epoch 2/10 train_loss=0.5972 val_loss=3.0347 val_ppl=20.79 val_bpc=4.3781
+epoch 3/10 train_loss=0.4537 val_loss=3.5066 val_ppl=33.34 val_bpc=5.0590
+epoch 4/10 train_loss=0.3970 val_loss=3.8144 val_ppl=45.35 val_bpc=5.5030
+epoch 5/10 train_loss=0.3656 val_loss=3.9892 val_ppl=54.01 val_bpc=5.7551
+experiment=tiny_shakespeare_lstm device=cuda out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_lstm
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/10 train_loss=1.0801 val_loss=2.1158 val_ppl=8.30 val_bpc=3.0525
+  saved best.pt (val_loss=2.115834)
+epoch 2/10 train_loss=0.5972 val_loss=3.0347 val_ppl=20.79 val_bpc=4.3781
+epoch 3/10 train_loss=0.4537 val_loss=3.5066 val_ppl=33.34 val_bpc=5.0590
+epoch 4/10 train_loss=0.3970 val_loss=3.8144 val_ppl=45.35 val_bpc=5.5030
+early stopping at epoch 4: val_loss did not improve by min_delta=0.0001 for 3 epochs (best val_loss=2.115834)
+experiment=tiny_shakespeare_lstm device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_lstm
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+[debug] vocab_size=65 expected_random_CE=4.174387 (=ln(vocab))
+[debug] sample x[:80] decode: 'First Citizen:\nBefore we proceed any further, hear me speak.\n\nAll:\nSpeak, speak.'
+[debug] sample y[:80] decode: 'irst Citizen:\nBefore we proceed any further, hear me speak.\n\nAll:\nSpeak, speak.\n'
+[debug] shift check OK: y[:-1] == x[1:]
+[debug] initial train CE=4.187111 (random weights)
+[debug] initial val CE=4.186750 (random weights)
+epoch 1/1 train_loss=1.0721 val_loss=2.1129 val_ppl=8.27 val_bpc=3.0483
+  saved best.pt (val_loss=2.112914)
+meta_metrics: train=97.60s eval=4.88s loop=102.59s setup=0.77s → meta_metrics.csv

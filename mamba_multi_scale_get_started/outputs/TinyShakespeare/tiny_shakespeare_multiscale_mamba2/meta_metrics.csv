@@ -1,0 +1,2 @@
+experiment_name,seed,device,cuda_device_name,epochs_planned,epochs_completed,early_stopped,best_val_loss,num_parameters_trainable,wall_setup_sec,wall_train_phases_sec,wall_eval_phases_sec,wall_training_loop_sec,wall_overhead_sec,finished_at_utc
+tiny_shakespeare_multiscale_mamba2,42,cuda:0,NVIDIA H100 80GB HBM3,10,4,True,6.15136120,2536673,0.793467,718.278708,26.76116,745.766073,0.726205,2026-05-03T22:16:09.778707+00:00

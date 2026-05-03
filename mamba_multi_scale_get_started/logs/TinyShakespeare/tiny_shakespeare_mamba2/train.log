@@ -1,0 +1,42 @@
+experiment=tiny_shakespeare_mamba2 device=cuda out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_mamba2
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/10 train_loss=0.2130 val_loss=5.4698 val_ppl=237.41 val_bpc=7.8912
+  saved best.pt (val_loss=5.469784)
+epoch 2/10 train_loss=0.0898 val_loss=6.2320 val_ppl=508.77 val_bpc=8.9909
+epoch 3/10 train_loss=0.0780 val_loss=6.5723 val_ppl=715.00 val_bpc=9.4818
+epoch 4/10 train_loss=0.0720 val_loss=6.9370 val_ppl=1029.67 val_bpc=10.0080
+early stopping at epoch 4: val_loss did not improve by min_delta=0.0001 for 3 epochs (best val_loss=5.469784)
+experiment=tiny_shakespeare_mamba2 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_mamba2
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+[debug] vocab_size=65 expected_random_CE=4.174387 (=ln(vocab))
+[debug] sample x[:80] decode: 'First Citizen:\nBefore we proceed any further, hear me speak.\n\nAll:\nSpeak, speak.'
+[debug] sample y[:80] decode: 'irst Citizen:\nBefore we proceed any further, hear me speak.\n\nAll:\nSpeak, speak.\n'
+[debug] shift check OK: y[:-1] == x[1:]
+[debug] initial train CE=4.323074 (random weights)
+[debug] initial val CE=4.329412 (random weights)
+epoch 1/1 train_loss=0.2133 val_loss=5.5093 val_ppl=246.98 val_bpc=7.9482
+  saved best.pt (val_loss=5.509296)
+meta_metrics: train=268.92s eval=9.58s loop=278.64s setup=0.78s → meta_metrics.csv
+experiment=tiny_shakespeare_mamba2 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_mamba2
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/10 train_loss=2.9064 val_loss=2.3346 val_ppl=10.33 val_bpc=3.3681
+  saved best.pt (val_loss=2.334571)
+epoch 2/10 train_loss=2.0943 val_loss=2.0328 val_ppl=7.64 val_bpc=2.9328
+  saved best.pt (val_loss=2.032837)
+epoch 3/10 train_loss=1.8350 val_loss=1.8767 val_ppl=6.53 val_bpc=2.7074
+  saved best.pt (val_loss=1.876654)
+epoch 4/10 train_loss=1.6833 val_loss=1.7837 val_ppl=5.95 val_bpc=2.5733
+  saved best.pt (val_loss=1.783687)
+epoch 5/10 train_loss=1.5814 val_loss=1.7112 val_ppl=5.54 val_bpc=2.4687
+  saved best.pt (val_loss=1.711197)
+epoch 6/10 train_loss=1.5061 val_loss=1.6621 val_ppl=5.27 val_bpc=2.3980
+  saved best.pt (val_loss=1.662146)
+epoch 7/10 train_loss=1.4514 val_loss=1.6205 val_ppl=5.06 val_bpc=2.3379
+  saved best.pt (val_loss=1.620506)
+epoch 8/10 train_loss=1.4087 val_loss=1.5968 val_ppl=4.94 val_bpc=2.3037
+  saved best.pt (val_loss=1.596810)
+epoch 9/10 train_loss=1.3729 val_loss=1.5776 val_ppl=4.84 val_bpc=2.2759
+  saved best.pt (val_loss=1.577568)
+epoch 10/10 train_loss=1.3503 val_loss=1.5634 val_ppl=4.78 val_bpc=2.2555
+  saved best.pt (val_loss=1.563421)
+meta_metrics: train=27.11s eval=95.56s loop=124.07s setup=0.79s → meta_metrics.csv

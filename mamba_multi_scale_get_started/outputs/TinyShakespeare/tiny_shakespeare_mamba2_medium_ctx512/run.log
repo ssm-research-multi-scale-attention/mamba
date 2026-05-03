@@ -1,0 +1,11 @@
+experiment=tiny_shakespeare_mamba2_medium_ctx512 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_mamba2_medium_ctx512
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/20 train_loss=1.9755 val_loss=1.6756 val_ppl=5.34 val_bpc=2.4173
+  saved best.pt (val_loss=1.675574)
+epoch 2/20 train_loss=1.3602 val_loss=1.5427 val_ppl=4.68 val_bpc=2.2256
+  saved best.pt (val_loss=1.542684)
+epoch 3/20 train_loss=1.2026 val_loss=1.5536 val_ppl=4.73 val_bpc=2.2413
+epoch 4/20 train_loss=1.0811 val_loss=1.6221 val_ppl=5.06 val_bpc=2.3402
+epoch 5/20 train_loss=0.9524 val_loss=1.7480 val_ppl=5.74 val_bpc=2.5218
+early stopping at epoch 5: val_loss did not improve by min_delta=0.0001 for 3 epochs (best val_loss=1.542684)
+meta_metrics: train=43.49s eval=90.53s loop=134.50s setup=0.71s → meta_metrics.csv

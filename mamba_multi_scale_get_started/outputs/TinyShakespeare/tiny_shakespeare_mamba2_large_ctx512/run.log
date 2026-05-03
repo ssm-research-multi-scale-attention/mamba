@@ -1,0 +1,2 @@
+experiment=tiny_shakespeare_mamba2_large_ctx512 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_mamba2_large_ctx512
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)

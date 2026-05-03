@@ -1,0 +1,9 @@
+experiment=tiny_shakespeare_lstm_lr3e4_dropout03 device=cuda:1 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_lstm_lr3e4_dropout03
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/10 train_loss=1.4159 val_loss=1.4926 val_ppl=4.45 val_bpc=2.1534
+  saved best.pt (val_loss=1.492617)
+epoch 2/10 train_loss=1.1217 val_loss=1.6171 val_ppl=5.04 val_bpc=2.3330
+epoch 3/10 train_loss=1.0265 val_loss=1.7158 val_ppl=5.56 val_bpc=2.4754
+epoch 4/10 train_loss=0.9762 val_loss=1.7777 val_ppl=5.92 val_bpc=2.5647
+early stopping at epoch 4: val_loss did not improve by min_delta=0.0001 for 3 epochs (best val_loss=1.492617)
+meta_metrics: train=398.00s eval=21.14s loop=419.76s setup=0.80s → meta_metrics.csv

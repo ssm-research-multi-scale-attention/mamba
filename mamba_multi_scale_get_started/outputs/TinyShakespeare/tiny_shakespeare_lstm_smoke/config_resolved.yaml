@@ -1,0 +1,25 @@
+experiment:
+  name: tiny_shakespeare_lstm_smoke
+  seed: 42
+data:
+  dataset: tiny_shakespeare
+  data_dir: data/tiny_shakespeare
+  block_size: 128
+  train_ratio: 0.9
+loader:
+  batch_size: 32
+  num_workers: 0
+model:
+  backbone: lstm_lm
+  d_model: 256
+  hidden_size: 256
+  num_layers: 2
+  dropout: 0.0
+  vocab_size: 65
+train:
+  epochs: 1
+  lr: 0.001
+  weight_decay: 0.01
+  grad_clip: 1.0
+logging:
+  output_dir: outputs/TinyShakespeare/tiny_shakespeare_lstm_smoke
