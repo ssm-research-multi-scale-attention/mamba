@@ -1,0 +1,61 @@
+experiment:
+  name: imdb_multiscale_mamba2_attention__seed_42__fusion_concat
+  seed: 42
+device: auto
+data:
+  dataset: imdb
+  train_split: train
+  eval_split: test
+  text_key: text
+  label_key: label
+  tokenizer: bert-base-uncased
+  max_length: 512
+  train_subset: null
+  eval_subset: null
+loader:
+  batch_size: 256
+  num_workers: 64
+  pin_memory: true
+model:
+  lit_class: classifier_lit.SequenceClassifierLitModule
+  backbone: multiscale_mamba_attention
+  d_model: 256
+  num_classes: 2
+  multiscale:
+    slow_stride: 4
+    fusion: concat
+    attention_heads: 4
+    dropout: 0.1
+    fast_layer_headdims:
+    - 32
+    - 32
+    - 32
+    - 32
+    - 32
+    - 32
+    - 32
+    - 32
+    slow_layer_headdims:
+    - 32
+    - 32
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+train:
+  epochs: 3
+  optimizer: adamw
+  lr: 0.0002
+  weight_decay: 0.01
+  devices: 1
+  precision: 32
+  float32_matmul_precision: high
+logging:
+  output_dir: outputs/imdb_multiscale_mamba2_attention__seed_42__fusion_concat
+  save_plots: true
+  plotly_include_js: cdn
+  require_confusion_matrix: false
+  tensorboard: true
+  tensorboard_subdir: tensorboard
+  tensorboard_log_every_n_steps: 50

@@ -1,0 +1,3 @@
+# python mamba2_heads_imdb.py --config configs/multiscale_mamba2_attention.yaml model.multiscale.slow_stride=2 experiment.name=imdb_multiscale_mamba2_attention__seed_42__slow_stride_2 >logs/run_multiscale_mamba2_attention_slow_stride_2.log
+# python mamba2_heads_imdb.py --config configs/multiscale_mamba2_attention.yaml model.multiscale.fusion=concat experiment.name=imdb_multiscale_mamba2_attention__seed_42__fusion_concat >logs/run_multiscale_mamba2_attention_fusion_concat.log
+python mamba2_heads_imdb.py --config configs/multiscale_mamba2_attention.yaml model.multiscale.slow_stride=2 model.multiscale.fusion=concat experiment.name=imdb_multiscale_mamba2_attention__seed_42__slow_stride_2__fusion_concat >logs/run_multiscale_mamba2_attention_slow_stride_2__fusion_concat.log

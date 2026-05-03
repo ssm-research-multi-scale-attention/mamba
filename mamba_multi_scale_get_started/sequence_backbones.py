@@ -108,7 +108,7 @@ class RnnClassifier(nn.Module):
 class MultiScaleMambaClassifier(nn.Module):
     """
     Shared embedding → fast Mamba over full length → slow Mamba over stridden length
-    → masked mean pool per branch → concat or sum → LayerNorm + linear.
+    → masked mean pool per branch → concat, sum, or gated fusion → LayerNorm + linear.
     """
 
     def __init__(
@@ -124,8 +124,8 @@ class MultiScaleMambaClassifier(nn.Module):
     ):
         super().__init__()
         fusion_l = str(fusion).strip().lower()
-        if fusion_l not in ("concat", "sum"):
-            raise ValueError(f"fusion must be 'concat' or 'sum', got {fusion!r}")
+        if fusion_l not in ("concat", "sum", "gated"):
+            raise ValueError(f"fusion must be 'concat', 'sum', or 'gated', got {fusion!r}")
         self.slow_stride = int(slow_stride)
         self.fusion = fusion_l
         fusion_dim = 2 * d_model if fusion_l == "concat" else d_model
@@ -136,6 +136,11 @@ class MultiScaleMambaClassifier(nn.Module):
         )
         self.slow_seq = nn.Sequential(
             *[MambaLayer(d_model=d_model, headdim=h, **mamba_kwargs) for h in slow_layer_headdims]
+        )
+        self.gate = (
+            nn.Sequential(nn.LayerNorm(2 * d_model), nn.Linear(2 * d_model, d_model))
+            if fusion_l == "gated"
+            else None
         )
         self.classifier = nn.Sequential(
             nn.LayerNorm(fusion_dim),
@@ -154,8 +159,14 @@ class MultiScaleMambaClassifier(nn.Module):
 
         if self.fusion == "concat":
             fused = torch.cat([fast_pooled, slow_pooled], dim=-1)
-        else:
+        elif self.fusion == "sum":
             fused = fast_pooled + slow_pooled
+        else:
+            gmod = self.gate
+            if gmod is None:
+                raise RuntimeError("gated fusion requires gate module")
+            gate = torch.sigmoid(gmod(torch.cat([fast_pooled, slow_pooled], dim=-1)))
+            fused = fast_pooled + gate * slow_pooled
         return self.classifier(fused)
 
 
@@ -184,8 +195,8 @@ class MultiScaleMambaAttentionClassifier(nn.Module):
             raise ValueError(f"slow_stride must be >= 1, got {slow_stride!r}")
         self.slow_stride = ss
         fusion_l = str(fusion).strip().lower()
-        if fusion_l not in ("residual", "concat"):
-            raise ValueError(f"fusion must be 'residual' or 'concat', got {fusion!r}")
+        if fusion_l not in ("residual", "concat", "gated"):
+            raise ValueError(f"fusion must be 'residual', 'concat', or 'gated', got {fusion!r}")
         self.fusion = fusion_l
         ah = int(attention_heads)
         if d_model % ah != 0:
@@ -205,6 +216,11 @@ class MultiScaleMambaAttentionClassifier(nn.Module):
         )
         self.dropout = nn.Dropout(float(dropout))
         self.fusion_proj = nn.Linear(2 * d_model, d_model) if fusion_l == "concat" else None
+        self.gate = (
+            nn.Sequential(nn.LayerNorm(2 * d_model), nn.Linear(2 * d_model, d_model))
+            if fusion_l == "gated"
+            else None
+        )
         self.classifier = nn.Sequential(nn.LayerNorm(d_model), nn.Linear(d_model, num_classes))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -229,11 +245,17 @@ class MultiScaleMambaAttentionClassifier(nn.Module):
 
         if self.fusion == "residual":
             fused_seq = fast_out + self.dropout(attn_out)
-        else:
+        elif self.fusion == "concat":
             proj = self.fusion_proj
             if proj is None:
                 raise RuntimeError("concat fusion requires fusion_proj")
             fused_seq = proj(torch.cat([fast_out, self.dropout(attn_out)], dim=-1))
+        else:
+            gmod = self.gate
+            if gmod is None:
+                raise RuntimeError("gated fusion requires gate module")
+            gate = torch.sigmoid(gmod(torch.cat([fast_out, attn_out], dim=-1)))
+            fused_seq = fast_out + gate * self.dropout(attn_out)
 
         pooled = masked_token_mean_pool(fused_seq, x, self.embed.padding_idx)
         return self.classifier(pooled)
@@ -245,10 +267,10 @@ def build_sequence_backbone(cfg: DictConfig, vocab_size: int) -> nn.Module:
     ``multiscale_mamba_attention`` | ``lstm`` | ``gru``.
 
     - **mamba**: ``model.d_model``, ``model.layer_headdims``, ``model.mamba`` kwargs.
-    - **multiscale_mamba**: ``model.multiscale`` (``slow_stride``, ``fusion``, ``fast_layer_headdims``,
-      ``slow_layer_headdims``); headdim lists default to ``model.layer_headdims`` when omitted.
+    - **multiscale_mamba**: ``model.multiscale`` (``slow_stride``, ``fusion``: concat|sum|gated,
+      ``fast_layer_headdims``, ``slow_layer_headdims``); headdim lists default to ``model.layer_headdims`` when omitted.
     - **multiscale_mamba_attention**: same ``multiscale`` keys plus ``attention_heads``, ``dropout``;
-      fast headdims default to ``model.layer_headdims``; slow defaults to ``[32, 32]``;
+      ``fusion``: residual|concat|gated; fast headdims default to ``model.layer_headdims``; slow defaults to ``[32, 32]``;
       ``attention_heads`` default 4; ``fusion`` default ``residual``; ``dropout`` default ``0.0``.
     - **lstm** / **gru**: ``model.embed_dim`` (else ``model.d_model``), ``model.rnn`` (hidden_size, num_layers, …).
     """

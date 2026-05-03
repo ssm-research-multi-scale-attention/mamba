@@ -1,0 +1,107 @@
+Resolved config:
+ experiment:
+  name: imdb_multiscale_mamba2_attention__seed_42__slow_stride_2__fusion_concat
+  seed: 42
+device: auto
+data:
+  dataset: imdb
+  train_split: train
+  eval_split: test
+  text_key: text
+  label_key: label
+  tokenizer: bert-base-uncased
+  max_length: 512
+  train_subset: null
+  eval_subset: null
+loader:
+  batch_size: 256
+  num_workers: 64
+  pin_memory: true
+model:
+  lit_class: classifier_lit.SequenceClassifierLitModule
+  backbone: multiscale_mamba_attention
+  d_model: 256
+  num_classes: 2
+  multiscale:
+    slow_stride: 2
+    fusion: concat
+    attention_heads: 4
+    dropout: 0.1
+    fast_layer_headdims:
+    - 32
+    - 32
+    - 32
+    - 32
+    - 32
+    - 32
+    - 32
+    - 32
+    slow_layer_headdims:
+    - 32
+    - 32
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+train:
+  epochs: 3
+  optimizer: adamw
+  lr: 0.0002
+  weight_decay: 0.01
+  devices: 1
+  precision: 32
+  float32_matmul_precision: high
+logging:
+  output_dir: outputs/imdb_multiscale_mamba2_attention__seed_42__slow_stride_2__fusion_concat
+  save_plots: true
+  plotly_include_js: cdn
+  require_confusion_matrix: false
+  tensorboard: true
+  tensorboard_subdir: tensorboard
+  tensorboard_log_every_n_steps: 50
+
+Device hint (data loaders): cuda
+Saved resolved config snapshot: outputs/imdb_multiscale_mamba2_attention__seed_42__slow_stride_2__fusion_concat/resolved_config.yaml
+Loading tokenizer and HF dataset loaders...
+Building Lightning module: classifier_lit.SequenceClassifierLitModule ...
+Parameters: total=12,381,538 trainable=12,381,538
+TensorBoard: logdir=outputs/imdb_multiscale_mamba2_attention__seed_42__slow_stride_2__fusion_concat/tensorboard/version_0
+┏━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name     ┃ Type                               ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ backbone │ MultiScaleMambaAttentionClassifier │ 12.4 M │ train │     0 │
+│ 1 │ loss_fn  │ CrossEntropyLoss                   │      0 │ train │     0 │
+└───┴──────────┴────────────────────────────────────┴────────┴───────┴───────┘
+Trainable params: 12.4 M                                                                                                                                
+Non-trainable params: 0                                                                                                                                 
+Total params: 12.4 M                                                                                                                                    
+Total estimated model params size (MB): 49                                                                                                              
+Modules in train mode: 84                                                                                                                               
+Modules in eval mode: 0                                                                                                                                 
+Total FLOPs: 0                                                                                                                                          
+Epoch 2/2  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98/98 0:00:11 • 0:00:00 9.84it/s v_num: 0.000 train_loss: 0.190
+Test Accuracy: 0.8604
+Classification Report:
+               precision    recall  f1-score   support
+
+           0     0.8584    0.8631    0.8607     12500
+           1     0.8624    0.8576    0.8600     12500
+
+    accuracy                         0.8604     25000
+   macro avg     0.8604    0.8604    0.8604     25000
+weighted avg     0.8604    0.8604    0.8604     25000
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│       test/accuracy       │    0.8603600263595581     │
+│       test/f1_macro       │    0.8603589534759521     │
+│     test/f1_weighted      │    0.8603589534759521     │
+│         test/loss         │    0.35875722765922546    │
+└───────────────────────────┴───────────────────────────┘
+Testing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98/98 0:00:02 • 0:00:00 38.23it/s  
+Saved: outputs/imdb_multiscale_mamba2_attention__seed_42__slow_stride_2__fusion_concat/metrics.csv
+Saved: outputs/imdb_multiscale_mamba2_attention__seed_42__slow_stride_2__fusion_concat/train_loss.html
+Saved: outputs/imdb_multiscale_mamba2_attention__seed_42__slow_stride_2__fusion_concat/confusion_matrix.html
+Saved: outputs/imdb_multiscale_mamba2_attention__seed_42__slow_stride_2__fusion_concat/interactive_report.html
