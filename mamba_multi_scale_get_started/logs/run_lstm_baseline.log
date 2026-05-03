@@ -1,0 +1,91 @@
+Resolved config:
+ experiment:
+  name: imdb_lstm_baseline__seed_42
+  seed: 42
+device: auto
+data:
+  dataset: imdb
+  train_split: train
+  eval_split: test
+  text_key: text
+  label_key: label
+  tokenizer: bert-base-uncased
+  max_length: 512
+  train_subset: null
+  eval_subset: null
+loader:
+  batch_size: 256
+  num_workers: 64
+  pin_memory: true
+model:
+  lit_class: lstm_baseline_lit.LstmBaselineLitModule
+  lit_init: {}
+  embed_dim: 256
+  num_classes: 2
+  lstm:
+    hidden_size: 256
+    num_layers: 2
+    dropout: 0.1
+    bidirectional: false
+train:
+  epochs: 3
+  optimizer: adamw
+  lr: 0.0002
+  weight_decay: 0.01
+  devices: 1
+  precision: 32
+  float32_matmul_precision: high
+logging:
+  output_dir: outputs/imdb_lstm_baseline__seed_42
+  save_metrics: true
+  save_plots: true
+  plotly_include_js: cdn
+  require_confusion_matrix: false
+  tensorboard: true
+  tensorboard_subdir: tensorboard
+  tensorboard_log_every_n_steps: 50
+
+Device hint (data loaders): cuda
+Saved resolved config snapshot: outputs/imdb_lstm_baseline__seed_42/resolved_config.yaml
+Loading tokenizer and HF dataset loaders...
+Building Lightning module: lstm_baseline_lit.LstmBaselineLitModule ...
+Parameters: total=8,867,330 trainable=8,867,330
+TensorBoard: logdir=outputs/imdb_lstm_baseline__seed_42/tensorboard/version_0
+┏━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name     ┃ Type             ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ backbone │ LstmClassifier   │  8.9 M │ train │     0 │
+│ 1 │ loss_fn  │ CrossEntropyLoss │      0 │ train │     0 │
+└───┴──────────┴──────────────────┴────────┴───────┴───────┘
+Trainable params: 8.9 M                                                                                                                                 
+Non-trainable params: 0                                                                                                                                 
+Total params: 8.9 M                                                                                                                                     
+Total estimated model params size (MB): 35                                                                                                              
+Modules in train mode: 7                                                                                                                                
+Modules in eval mode: 0                                                                                                                                 
+Total FLOPs: 0                                                                                                                                          
+Epoch 2/2  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98/98 0:00:04 • 0:00:00 35.88it/s v_num: 0.000 train_loss: 0.342
+Test Accuracy: 0.8397
+Classification Report:
+               precision    recall  f1-score   support
+
+           0     0.8725    0.7957    0.8323     12500
+           1     0.8122    0.8838    0.8465     12500
+
+    accuracy                         0.8397     25000
+   macro avg     0.8424    0.8397    0.8394     25000
+weighted avg     0.8424    0.8397    0.8394     25000
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│       test/accuracy       │    0.8397200107574463     │
+│       test/f1_macro       │    0.8394085168838501     │
+│     test/f1_weighted      │    0.8394085168838501     │
+│         test/loss         │    0.36501994729042053    │
+└───────────────────────────┴───────────────────────────┘
+Testing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98/98 0:00:00 • 0:00:00 104.66it/s  
+Saved: outputs/imdb_lstm_baseline__seed_42/metrics.csv
+Saved: outputs/imdb_lstm_baseline__seed_42/train_loss.html
+Saved: outputs/imdb_lstm_baseline__seed_42/confusion_matrix.html
+Saved: outputs/imdb_lstm_baseline__seed_42/interactive_report.html

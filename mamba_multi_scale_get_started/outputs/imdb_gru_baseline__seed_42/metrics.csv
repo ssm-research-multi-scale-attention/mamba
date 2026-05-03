@@ -1,0 +1,26 @@
+metric,value
+experiment_name,imdb_gru_baseline__seed_42
+seed,42
+model_lit_class,classifier_lit.SequenceClassifierLitModule
+model_backbone,gru
+train_epochs,3
+cuda_device_index,0
+cuda_device_name,NVIDIA H100 80GB HBM3
+seconds_test,2.4872080078125
+seconds_train,14.121544921875
+seconds_train_plus_test,16.608752929687498
+test_timing_method,cuda_event
+train_timing_method,cuda_event
+model_total_params,8604162
+model_trainable_params,8604162
+train_loss_epoch_1,0.5873677134513855
+train_loss_epoch_2,0.4364011287689209
+train_loss_epoch_3,0.36353230476379395
+test/accuracy,0.8227999806404114
+test/f1_macro,0.821978747844696
+test/f1_weighted,0.821978747844696
+test/loss,0.3875729441642761
+confusion_matrix_0_0,11134
+confusion_matrix_0_1,1366
+confusion_matrix_1_0,3064
+confusion_matrix_1_1,9436

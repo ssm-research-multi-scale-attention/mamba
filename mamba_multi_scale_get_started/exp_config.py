@@ -25,7 +25,7 @@ def load_config(config_path: str, cli_overrides: List[str]) -> DictConfig:
 
 def import_class(path: str) -> Any:
     """
-    Resolve a dotted class path such as ``mamba_heads_lit.MambaHeadsLitModule``.
+    Resolve a dotted class path such as ``classifier_lit.SequenceClassifierLitModule``.
 
     Leading/trailing whitespace is stripped.
     """

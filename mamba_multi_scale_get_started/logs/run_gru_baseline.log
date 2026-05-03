@@ -1,0 +1,94 @@
+Resolved config:
+ experiment:
+  name: imdb_gru_baseline__seed_42
+  seed: 42
+device: auto
+data:
+  dataset: imdb
+  train_split: train
+  eval_split: test
+  text_key: text
+  label_key: label
+  tokenizer: bert-base-uncased
+  max_length: 512
+  train_subset: null
+  eval_subset: null
+loader:
+  batch_size: 256
+  num_workers: 64
+  pin_memory: true
+model:
+  lit_class: classifier_lit.SequenceClassifierLitModule
+  backbone: gru
+  d_model: 256
+  embed_dim: 256
+  num_classes: 2
+  layer_headdims: []
+  mamba: {}
+  rnn:
+    hidden_size: 256
+    num_layers: 2
+    dropout: 0.1
+    bidirectional: false
+train:
+  epochs: 3
+  optimizer: adamw
+  lr: 0.0002
+  weight_decay: 0.01
+  devices: 1
+  precision: 32
+  float32_matmul_precision: high
+logging:
+  output_dir: outputs/imdb_gru_baseline__seed_42
+  save_metrics: true
+  save_plots: true
+  plotly_include_js: cdn
+  require_confusion_matrix: false
+  tensorboard: true
+  tensorboard_subdir: tensorboard
+  tensorboard_log_every_n_steps: 50
+
+Device hint (data loaders): cuda
+Saved resolved config snapshot: outputs/imdb_gru_baseline__seed_42/resolved_config.yaml
+Loading tokenizer and HF dataset loaders...
+Building Lightning module: classifier_lit.SequenceClassifierLitModule ...
+Parameters: total=8,604,162 trainable=8,604,162
+TensorBoard: logdir=outputs/imdb_gru_baseline__seed_42/tensorboard/version_0
+┏━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name     ┃ Type             ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ backbone │ RnnClassifier    │  8.6 M │ train │     0 │
+│ 1 │ loss_fn  │ CrossEntropyLoss │      0 │ train │     0 │
+└───┴──────────┴──────────────────┴────────┴───────┴───────┘
+Trainable params: 8.6 M                                                                                                                                 
+Non-trainable params: 0                                                                                                                                 
+Total params: 8.6 M                                                                                                                                     
+Total estimated model params size (MB): 34                                                                                                              
+Modules in train mode: 7                                                                                                                                
+Modules in eval mode: 0                                                                                                                                 
+Total FLOPs: 0                                                                                                                                          
+Epoch 2/2  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98/98 0:00:04 • 0:00:00 32.97it/s v_num: 0.000 train_loss: 0.364
+Test Accuracy: 0.8228
+Classification Report:
+               precision    recall  f1-score   support
+
+           0     0.7842    0.8907    0.8341     12500
+           1     0.8735    0.7549    0.8099     12500
+
+    accuracy                         0.8228     25000
+   macro avg     0.8289    0.8228    0.8220     25000
+weighted avg     0.8289    0.8228    0.8220     25000
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│       test/accuracy       │    0.8227999806404114     │
+│       test/f1_macro       │     0.821978747844696     │
+│     test/f1_weighted      │     0.821978747844696     │
+│         test/loss         │    0.3875729441642761     │
+└───────────────────────────┴───────────────────────────┘
+Testing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98/98 0:00:00 • 0:00:00 112.08it/s  
+Saved: outputs/imdb_gru_baseline__seed_42/metrics.csv
+Saved: outputs/imdb_gru_baseline__seed_42/train_loss.html
+Saved: outputs/imdb_gru_baseline__seed_42/confusion_matrix.html
+Saved: outputs/imdb_gru_baseline__seed_42/interactive_report.html

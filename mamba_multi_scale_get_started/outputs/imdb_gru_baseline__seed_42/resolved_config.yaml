@@ -1,6 +1,6 @@
 experiment:
-  name: imdb_mamba2_baseline__seed_44
-  seed: 44
+  name: imdb_gru_baseline__seed_42
+  seed: 42
 device: auto
 data:
   dataset: imdb
@@ -17,24 +17,18 @@ loader:
   num_workers: 64
   pin_memory: true
 model:
-  lit_class: mamba_heads_lit.MambaHeadsLitModule
-  lit_init: {}
+  lit_class: classifier_lit.SequenceClassifierLitModule
+  backbone: gru
   d_model: 256
+  embed_dim: 256
   num_classes: 2
-  layer_headdims:
-  - 32
-  - 32
-  - 32
-  - 32
-  - 32
-  - 32
-  - 32
-  - 32
-  mamba:
-    d_state: 32
-    d_conv: 4
-    expand: 2
-    ngroups: 1
+  layer_headdims: []
+  mamba: {}
+  rnn:
+    hidden_size: 256
+    num_layers: 2
+    dropout: 0.1
+    bidirectional: false
 train:
   epochs: 3
   optimizer: adamw
@@ -44,7 +38,7 @@ train:
   precision: 32
   float32_matmul_precision: high
 logging:
-  output_dir: outputs/imdb_mamba2_baseline__seed_44
+  output_dir: outputs/imdb_gru_baseline__seed_42
   save_metrics: true
   save_plots: true
   plotly_include_js: cdn

@@ -45,6 +45,7 @@ train:
   float32_matmul_precision: high
 logging:
   output_dir: outputs/imdb_mamba2_baseline__seed_43
+  save_metrics: true
   save_plots: true
   plotly_include_js: cdn
   require_confusion_matrix: false

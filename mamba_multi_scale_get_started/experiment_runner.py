@@ -21,6 +21,8 @@ from exp_config import (
 )
 from hf_text_dataloaders import build_text_classification_dataloaders
 from lightning_callbacks import TrainLossEpochCallback
+from metrics_export import save_metrics_csv
+from run_timing import collect_run_timing_metadata, timed_phase
 from plotting import save_training_artifacts
 
 RESOLVED_CONFIG_FILENAME = "resolved_config.yaml"
@@ -157,13 +159,37 @@ def run_experiment(cfg: DictConfig) -> None:
         enable_checkpointing=False,
     )
 
-    trainer.fit(lit, train_dataloaders=train_loader)
-    trainer.test(lit, dataloaders=eval_loader)
+    _, train_sec, train_time_meth = timed_phase(
+        lambda: trainer.fit(lit, train_dataloaders=train_loader),
+    )
+    _, test_sec, test_time_meth = timed_phase(
+        lambda: trainer.test(lit, dataloaders=eval_loader),
+    )
 
     cm = getattr(lit, "_last_cm", None)
     strict_cm = getattr(cfg.logging, "require_confusion_matrix", False)
     if strict_cm and cm is None:
         raise RuntimeError("logging.require_confusion_matrix=true but module set no _last_cm after test.")
+
+    if OmegaConf.select(cfg, "logging.save_metrics", default=True):
+        run_timings: dict[str, Any] = {
+            "seconds_train": train_sec,
+            "seconds_test": test_sec,
+            "seconds_train_plus_test": train_sec + test_sec,
+            "train_timing_method": train_time_meth,
+            "test_timing_method": test_time_meth,
+        }
+        run_timings.update(collect_run_timing_metadata())
+        save_metrics_csv(
+            out_dir,
+            cfg=cfg,
+            train_losses=loss_tracker.epoch_train_losses,
+            callback_metrics=dict(trainer.callback_metrics),
+            total_params=total_params,
+            trainable_params=trainable_params,
+            confusion_matrix=cm,
+            run_timings=run_timings,
+        )
 
     if cfg.logging.save_plots:
         save_training_artifacts(
