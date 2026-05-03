@@ -1,0 +1,103 @@
+Resolved config:
+ experiment:
+  name: imdb_multiscale_mamba2__seed_42
+  seed: 42
+device: auto
+data:
+  dataset: imdb
+  train_split: train
+  eval_split: test
+  text_key: text
+  label_key: label
+  tokenizer: bert-base-uncased
+  max_length: 512
+  train_subset: null
+  eval_subset: null
+loader:
+  batch_size: 256
+  num_workers: 64
+  pin_memory: true
+model:
+  lit_class: classifier_lit.SequenceClassifierLitModule
+  backbone: multiscale_mamba
+  d_model: 256
+  num_classes: 2
+  multiscale:
+    slow_stride: 4
+    fusion: concat
+    fast_layer_headdims:
+    - 32
+    - 32
+    - 32
+    - 32
+    slow_layer_headdims:
+    - 32
+    - 32
+    - 32
+    - 32
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+train:
+  epochs: 3
+  optimizer: adamw
+  lr: 0.0002
+  weight_decay: 0.01
+  devices: 1
+  precision: 32
+  float32_matmul_precision: high
+logging:
+  output_dir: outputs/imdb_multiscale_mamba2__seed_42
+  save_plots: true
+  plotly_include_js: cdn
+  require_confusion_matrix: false
+  tensorboard: true
+  tensorboard_subdir: tensorboard
+  tensorboard_log_every_n_steps: 50
+
+Device hint (data loaders): cuda
+Saved resolved config snapshot: outputs/imdb_multiscale_mamba2__seed_42/resolved_config.yaml
+Loading tokenizer and HF dataset loaders...
+Building Lightning module: classifier_lit.SequenceClassifierLitModule ...
+Parameters: total=11,152,770 trainable=11,152,770
+TensorBoard: logdir=outputs/imdb_multiscale_mamba2__seed_42/tensorboard/version_0
+┏━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name     ┃ Type                      ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ backbone │ MultiScaleMambaClassifier │ 11.2 M │ train │     0 │
+│ 1 │ loss_fn  │ CrossEntropyLoss          │      0 │ train │     0 │
+└───┴──────────┴───────────────────────────┴────────┴───────┴───────┘
+Trainable params: 11.2 M                                                                                                                                
+Non-trainable params: 0                                                                                                                                 
+Total params: 11.2 M                                                                                                                                    
+Total estimated model params size (MB): 44                                                                                                              
+Modules in train mode: 64                                                                                                                               
+Modules in eval mode: 0                                                                                                                                 
+Total FLOPs: 0                                                                                                                                          
+Epoch 2/2  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98/98 0:00:07 • 0:00:00 17.67it/s v_num: 0.000 train_loss: 0.126
+Test Accuracy: 0.8244
+Classification Report:
+               precision    recall  f1-score   support
+
+           0     0.7721    0.9204    0.8398     12500
+           1     0.9015    0.7284    0.8058     12500
+
+    accuracy                         0.8244     25000
+   macro avg     0.8368    0.8244    0.8228     25000
+weighted avg     0.8368    0.8244    0.8228     25000
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        Test metric        ┃       DataLoader 0        ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│       test/accuracy       │     0.824400007724762     │
+│       test/f1_macro       │    0.8227666020393372     │
+│     test/f1_weighted      │    0.8227666020393372     │
+│         test/loss         │    0.4443153142929077     │
+└───────────────────────────┴───────────────────────────┘
+Testing ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 98/98 0:00:01 • 0:00:00 71.88it/s  
+Saved: outputs/imdb_multiscale_mamba2__seed_42/metrics.csv
+Saved: outputs/imdb_multiscale_mamba2__seed_42/train_loss.html
+Saved: outputs/imdb_multiscale_mamba2__seed_42/confusion_matrix.html
+Saved: outputs/imdb_multiscale_mamba2__seed_42/interactive_report.html

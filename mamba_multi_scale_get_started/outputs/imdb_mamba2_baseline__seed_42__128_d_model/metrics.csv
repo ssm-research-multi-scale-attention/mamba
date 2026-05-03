@@ -1,0 +1,26 @@
+metric,value
+experiment_name,imdb_mamba2_baseline__seed_42__128_d_model
+seed,42
+model_lit_class,classifier_lit.SequenceClassifierLitModule
+model_backbone,mamba
+train_epochs,3
+cuda_device_index,0
+cuda_device_name,NVIDIA H100 80GB HBM3
+seconds_test,4.14326953125
+seconds_train,36.97079296875
+seconds_train_plus_test,41.114062499999996
+test_timing_method,cuda_event
+train_timing_method,cuda_event
+model_total_params,4782530
+model_trainable_params,4782530
+train_loss_epoch_1,0.5958788394927979
+train_loss_epoch_2,0.3577497899532318
+train_loss_epoch_3,0.22799845039844513
+test/accuracy,0.7810400128364563
+test/f1_macro,0.7746743559837341
+test/f1_weighted,0.7746743559837341
+test/loss,0.5067091584205627
+confusion_matrix_0_0,7662
+confusion_matrix_0_1,4838
+confusion_matrix_1_0,636
+confusion_matrix_1_1,11864

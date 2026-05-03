@@ -1,0 +1,2 @@
+python mamba2_heads_imdb.py --config configs/multiscale_mamba2.yaml model.multiscale.slow_stride=2 experiment.name=imdb_multiscale_mamba2__seed_42__slow_stride_2 >logs/run_multiscale_mamba2_slow_stride_2.log
+python mamba2_heads_imdb.py --config configs/multiscale_mamba2.yaml model.multiscale.slow_stride=8 experiment.name=imdb_multiscale_mamba2__seed_42__slow_stride_8 >logs/run_multiscale_mamba2_slow_stride_8.log

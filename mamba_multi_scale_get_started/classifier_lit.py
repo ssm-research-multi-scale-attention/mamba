@@ -20,7 +20,7 @@ from sequence_backbones import build_sequence_backbone
 
 
 class SequenceClassifierLitModule(pl.LightningModule):
-    """Backbone from ``cfg.model.backbone`` (mamba | lstm | gru); see ``sequence_backbones.build_sequence_backbone``."""
+    """Backbone from ``cfg.model.backbone`` (mamba | multiscale_mamba | multiscale_mamba_attention | lstm | gru); see ``sequence_backbones.build_sequence_backbone``."""
 
     def __init__(self, cfg: DictConfig, vocab_size: int):
         super().__init__()

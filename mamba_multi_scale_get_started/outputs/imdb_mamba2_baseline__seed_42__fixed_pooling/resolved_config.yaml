@@ -1,14 +1,7 @@
-# Text classification experiments (OmegaConf + Lightning).
-#
-# Unified lit: classifier_lit.SequenceClassifierLitModule + model.backbone: mamba | lstm | gru
-# RNN baselines (same task): configs/lstm_baseline.yaml, configs/gru_baseline.yaml
-
 experiment:
   name: imdb_mamba2_baseline__seed_42__fixed_pooling
   seed: 42
-
 device: auto
-
 data:
   dataset: imdb
   train_split: train
@@ -19,41 +12,44 @@ data:
   max_length: 512
   train_subset: null
   eval_subset: null
-
 loader:
   batch_size: 256
   num_workers: 64
   pin_memory: true
-
 model:
   lit_class: classifier_lit.SequenceClassifierLitModule
   backbone: mamba
   d_model: 256
   num_classes: 2
-  layer_headdims: [32, 32, 32, 32, 32, 32, 32, 32]
+  layer_headdims:
+  - 32
+  - 32
+  - 32
+  - 32
+  - 32
+  - 32
+  - 32
+  - 32
   mamba:
     d_state: 32
     d_conv: 4
     expand: 2
     ngroups: 1
-  # Used as default embed_dim for lstm/gru when model.embed_dim is unset
   rnn:
     hidden_size: 256
     num_layers: 2
     dropout: 0.1
     bidirectional: false
-
 train:
   epochs: 3
   optimizer: adamw
-  lr: 2.0e-4
+  lr: 0.0002
   weight_decay: 0.01
   devices: 1
   precision: 32
   float32_matmul_precision: high
-
 logging:
-  output_dir: outputs/${experiment.name}
+  output_dir: outputs/imdb_mamba2_baseline__seed_42__fixed_pooling
   save_metrics: true
   save_plots: true
   plotly_include_js: cdn
