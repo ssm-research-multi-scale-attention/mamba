@@ -1,3 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+
+PYTHON="${PYTHON:-python}"
+
 echo "Running Mamba2 (12 layers)..."
 OUT=outputs/TinyShakespeare/tiny_shakespeare_mamba2_12layers_random_windows
 mkdir -p "$OUT"
