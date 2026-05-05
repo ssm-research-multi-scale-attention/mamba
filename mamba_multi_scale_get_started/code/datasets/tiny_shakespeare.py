@@ -1,9 +1,10 @@
-"""Tiny Shakespeare character-level corpus: download, vocab, DataLoaders."""
+"""Character-level corpora (Tiny Shakespeare, text8): download, vocab, DataLoaders."""
 from __future__ import annotations
 
 import json
 import random
 import urllib.request
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,7 @@ from torch.utils.data import DataLoader, Dataset, get_worker_info
 TINY_SHAKESPEARE_URL = (
     "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
 )
+TEXT8_ZIP_URL = "http://mattmahoney.net/dc/text8.zip"
 
 
 class CharVocab:
@@ -111,30 +113,58 @@ def _download_if_missing(url: str, dest: Path) -> None:
         dest.write_bytes(r.read())
 
 
-def build_tiny_shakespeare(
+def _ensure_tiny_shakespeare_text(data_dir: Path) -> str:
+    txt_path = data_dir / "input.txt"
+    _download_if_missing(TINY_SHAKESPEARE_URL, txt_path)
+    return txt_path.read_text(encoding="utf-8")
+
+
+def _ensure_text8_text(data_dir: Path) -> str:
+    txt_path = data_dir / "text8"
+    if txt_path.is_file() and txt_path.stat().st_size > 0:
+        return txt_path.read_text(encoding="utf-8")
+    zip_path = data_dir / "text8.zip"
+    _download_if_missing(TEXT8_ZIP_URL, zip_path)
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        members = set(zf.namelist())
+        if "text8" not in members:
+            raise ValueError("text8.zip has no 'text8' file.")
+        zf.extract("text8", path=data_dir)
+    return txt_path.read_text(encoding="utf-8")
+
+
+def build_char_lm_dataset(
+    dataset: str,
     data_dir: str | Path,
     block_size: int,
     batch_size: int,
     train_ratio: float,
     num_workers: int,
     *,
+    vocab: CharVocab | None = None,
     sampling: str = "sequential",
     steps_per_epoch: int = 1000,
     seed: int = 0,
 ) -> tuple[DataLoader, DataLoader, CharVocab]:
-    """
-    Download ``input.txt`` if needed, contiguous train/val split, char-level DataLoaders.
-
-    ``sampling``: ``sequential`` (default) or ``random_windows`` for train only (val always sequential).
-
-    Returns ``train_loader, val_loader, vocab``.
-    """
+    """Build char LM loaders for supported corpora."""
     data_dir = Path(data_dir)
-    txt_path = data_dir / "input.txt"
-    _download_if_missing(TINY_SHAKESPEARE_URL, txt_path)
-    text = txt_path.read_text(encoding="utf-8")
-    vocab = CharVocab.from_text(text)
-    ids = torch.tensor(vocab.encode(text), dtype=torch.long)
+    ds = str(dataset).strip().lower()
+    if ds == "tiny_shakespeare":
+        text = _ensure_tiny_shakespeare_text(data_dir)
+    elif ds == "text8":
+        text = _ensure_text8_text(data_dir)
+    else:
+        raise ValueError(f"Unsupported data.dataset={dataset!r}. Use tiny_shakespeare or text8.")
+
+    if vocab is None:
+        vocab = CharVocab.from_text(text)
+    try:
+        ids = torch.tensor(vocab.encode(text), dtype=torch.long)
+    except KeyError as e:
+        ch = str(e).strip("'")
+        raise KeyError(
+            f"Dataset {dataset!r} contains character {ch!r} missing from provided vocab."
+        ) from e
 
     n = ids.numel()
     need = int(block_size) + 1
@@ -174,3 +204,28 @@ def build_tiny_shakespeare(
         drop_last=False,
     )
     return train_loader, val_loader, vocab
+
+
+def build_tiny_shakespeare(
+    data_dir: str | Path,
+    block_size: int,
+    batch_size: int,
+    train_ratio: float,
+    num_workers: int,
+    *,
+    sampling: str = "sequential",
+    steps_per_epoch: int = 1000,
+    seed: int = 0,
+) -> tuple[DataLoader, DataLoader, CharVocab]:
+    """Backward-compatible alias for Tiny Shakespeare char LM loaders."""
+    return build_char_lm_dataset(
+        dataset="tiny_shakespeare",
+        data_dir=data_dir,
+        block_size=block_size,
+        batch_size=batch_size,
+        train_ratio=train_ratio,
+        num_workers=num_workers,
+        sampling=sampling,
+        steps_per_epoch=steps_per_epoch,
+        seed=seed,
+    )

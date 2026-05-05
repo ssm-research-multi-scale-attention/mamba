@@ -1,0 +1,2 @@
+experiment_name,seed,device,cuda_device_name,epochs_planned,epochs_completed,early_stopped,best_val_loss,num_parameters_trainable,wall_setup_sec,wall_train_phases_sec,wall_eval_phases_sec,wall_training_loop_sec,wall_overhead_sec,finished_at_utc,dataset,data_sampling,debug_initial_train_ce,debug_initial_val_ce,debug_shift_ok
+tiny_shakespeare_multiscale_gated_mamba2_random_windows_block_size_256,42,cuda:0,NVIDIA H100 80GB HBM3,10,10,False,1.62257467,2669025,3.673192,30.90147,71.71036,106.959473,4.347643,2026-05-05T16:11:49.560524+00:00,tiny_shakespeare,random_windows,,,

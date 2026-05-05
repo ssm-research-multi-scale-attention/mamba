@@ -1,0 +1,2 @@
+model_name,experiment_name,config_path,backbone,fusion,stride,block_size,batch_size,batch_size_requested,batch_size_effective,vocab_size,d_model,num_parameters_trainable,device,cuda_device_name,forward_latency_ms_mean,forward_latency_ms_std,forward_latency_ms_p50,forward_latency_ms_p95,tokens_per_second,max_cuda_memory_mb,status
+benchmark_mamba2_lm,benchmark_mamba2_lm,configs/TinyShakespeare/benchmark_lm_mamba2.yaml,mamba2_lm,,,32,1,1,1,65,256,1702401,cuda:0,NVIDIA H100 80GB HBM3,3.157079,0.232861,3.157079,3.305271,10135.9509,39.5718,ok

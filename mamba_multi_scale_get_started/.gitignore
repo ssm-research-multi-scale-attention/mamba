@@ -2,3 +2,4 @@
 __pycache__/
 tensorboard/
 *.pt
+data/text8/

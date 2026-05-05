@@ -1,0 +1,5 @@
+grid:
+  configs:
+  - /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/tiny_shakespeare_multiscale_concat_mamba2.yaml
+  block_size:
+  - 1024

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Train character-level LM (Tiny Shakespeare) from YAML + CLI overrides."""
+"""Train character-level LM from YAML + CLI overrides."""
 from __future__ import annotations
 
 import csv
@@ -21,7 +21,7 @@ _CODE = Path(__file__).resolve().parent
 if str(_CODE) not in sys.path:
     sys.path.insert(0, str(_CODE))
 
-from datasets.tiny_shakespeare import build_tiny_shakespeare
+from datasets.tiny_shakespeare import build_char_lm_dataset
 from exp_config import load_config, set_seed
 from models.language_models import build_lm
 
@@ -89,7 +89,8 @@ def _resolve_out_dir(cfg: DictConfig) -> Path:
 
 def _resolve_log_dir(cfg: DictConfig) -> Path:
     name = str(cfg.experiment.name)
-    return (PROJECT_ROOT / "logs" / "TinyShakespeare" / name).resolve()
+    dataset = str(OmegaConf.select(cfg, "data.dataset", default="tiny_shakespeare"))
+    return (PROJECT_ROOT / "logs" / dataset / name).resolve()
 
 
 def _metrics_row(
@@ -137,6 +138,7 @@ def _write_meta_metrics_csv(path: Path, row: dict[str, str | int | float | bool]
         "wall_training_loop_sec",
         "wall_overhead_sec",
         "finished_at_utc",
+        "dataset",
         "data_sampling",
         "debug_initial_train_ce",
         "debug_initial_val_ce",
@@ -286,9 +288,11 @@ def main(config_path: str, debug_initial_eval: bool, overrides: tuple[str, ...])
     device = _resolve_lm_device(cfg)
 
     data_dir = PROJECT_ROOT / str(cfg.data.data_dir)
+    dataset = str(OmegaConf.select(cfg, "data.dataset", default="tiny_shakespeare")).strip().lower()
     sampling = str(OmegaConf.select(cfg, "data.sampling", default="sequential")).strip().lower()
     steps_per_epoch = int(OmegaConf.select(cfg, "data.steps_per_epoch", default=1000))
-    train_loader, val_loader, vocab = build_tiny_shakespeare(
+    train_loader, val_loader, vocab = build_char_lm_dataset(
+        dataset=dataset,
         data_dir=data_dir,
         block_size=int(cfg.data.block_size),
         batch_size=int(cfg.loader.batch_size),
@@ -432,6 +436,7 @@ def main(config_path: str, debug_initial_eval: bool, overrides: tuple[str, ...])
             "wall_training_loop_sec": round(wall_loop_sec, 6),
             "wall_overhead_sec": round(wall_overhead, 6),
             "finished_at_utc": datetime.now(timezone.utc).isoformat(),
+            "dataset": dataset,
             "data_sampling": sampling,
             "debug_initial_train_ce": dbg_train_ce,
             "debug_initial_val_ce": dbg_val_ce,

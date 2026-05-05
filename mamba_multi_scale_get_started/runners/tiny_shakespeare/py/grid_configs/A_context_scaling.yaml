@@ -1,0 +1,10 @@
+grid:
+  configs:
+  - /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/tiny_shakespeare_mamba2.yaml
+  - /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/tiny_shakespeare_multiscale_sum_mamba2.yaml
+  - /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/tiny_shakespeare_multiscale_gated_mamba2.yaml
+  - /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/tiny_shakespeare_multiscale_mamba2_attention.yaml
+  block_size:
+  - 256
+  - 512
+  - 1024

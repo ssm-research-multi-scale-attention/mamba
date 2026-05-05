@@ -1,4 +1,7 @@
-"""Time training vs evaluation phases (CUDA events when available, else wall clock)."""
+"""Time training vs evaluation phases (CUDA events when available, else wall clock).
+
+LM forward latency / throughput sweeps: see ``benchmark_timing.py``.
+"""
 from __future__ import annotations
 
 import time

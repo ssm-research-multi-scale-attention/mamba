@@ -1,0 +1,17 @@
+grid:
+  configs:
+  - /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/benchmark_lm_mamba2.yaml
+  - /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/benchmark_lm_ms_attention_stride4.yaml
+  - /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/benchmark_lm_ms_gated_stride2.yaml
+  - /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/benchmark_lm_ms_gated_stride4.yaml
+  block_size:
+  - 256
+  - 512
+  - 1024
+  batch_size:
+  - 1
+  - 8
+  - 16
+  warmup_steps: 20
+  measure_steps: 100
+  # merged_csv: outputs/timing/D_timing_merged.csv
