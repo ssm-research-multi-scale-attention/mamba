@@ -1,0 +1,18 @@
+experiment=mqar_ms_attention_stride4_len128 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/mqar_ms_attention_stride4_len128
+mqar data: fixed_examples=True random_baseline_acc≈1/vocab=0.000977 (vocab_size=1024)
+epoch 1/10 train loss=6.2566 acc=0.0036 em=0.0000 | val loss=6.3031 acc=0.0016 em=0.0000 | random≈0.0010
+  saved best.pt (val_answer_loss=6.303072)
+epoch 2/10 train loss=6.1650 acc=0.0086 em=0.0000 | val loss=6.2882 acc=0.0019 em=0.0000 | random≈0.0010
+  saved best.pt (val_answer_loss=6.288160)
+experiment=mqar_ms_attention_stride4_len128 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/mqar_ms_attention_stride4_len128
+mqar data: fixed_examples=True random_baseline_acc≈1/vocab=0.000977 (vocab_size=1024)
+epoch 1/10 train loss=6.2566 acc=0.0036 em=0.0000 | val loss=6.3031 acc=0.0016 em=0.0000 | random≈0.0010
+  saved best.pt (val_answer_loss=6.303072)
+epoch 2/10 train loss=6.1650 acc=0.0086 em=0.0000 | val loss=6.2882 acc=0.0019 em=0.0000 | random≈0.0010
+  saved best.pt (val_answer_loss=6.288160)
+epoch 3/10 train loss=5.9598 acc=0.0270 em=0.0000 | val loss=6.3446 acc=0.0022 em=0.0000 | random≈0.0010
+epoch 4/10 train loss=5.6379 acc=0.0779 em=0.0000 | val loss=6.4002 acc=0.0025 em=0.0000 | random≈0.0010
+epoch 5/10 train loss=5.2405 acc=0.1792 em=0.0000 | val loss=6.4409 acc=0.0022 em=0.0000 | random≈0.0010
+early stopping at epoch 5: val answer_loss did not improve by min_delta=0.0001 for 3 epochs
+test answer_loss=6.287826 test_acc=0.001813 test_em=0.000000 random_baseline≈0.000977
+done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/mqar_ms_attention_stride4_len128/meta_metrics.csv

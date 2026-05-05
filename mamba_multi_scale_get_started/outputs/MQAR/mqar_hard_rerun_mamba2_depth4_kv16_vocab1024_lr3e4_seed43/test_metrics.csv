@@ -1,0 +1,2 @@
+split,test_loss_ckpt_answer_loss,test_loss_ckpt_answer_ppl,test_loss_ckpt_answer_accuracy,test_loss_ckpt_exact_match,test_acc_ckpt_answer_loss,test_acc_ckpt_answer_ppl,test_acc_ckpt_answer_accuracy,test_acc_ckpt_exact_match,answer_loss,answer_ppl,answer_accuracy,exact_match
+test,6.25730882,521.81275813,0.00203125,0.00000000,6.32158195,556.45257945,0.00818750,0.00000000,6.25730882,521.81275813,0.00203125,0.00000000

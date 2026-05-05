@@ -1,0 +1,2 @@
+experiment_name,output_dir,input_seq_len,num_kv_pairs,vocab_size,seed,backbone,fusion,stride,d_model,num_parameters_trainable,epochs_planned,epochs_completed,best_val_answer_loss,best_val_answer_accuracy,test_answer_loss,test_answer_accuracy,test_exact_match,random_baseline_accuracy,wall_training_loop_sec,finished_at_utc,status
+mqar_debug_small,outputs/MQAR/mqar_debug_small,64,2,128,42,mamba2_lm,,,256,1734720,20,8,3.21872725,0.26000000,3.27326149,0.26400000,0.04700000,0.00781250,34.340957,2026-05-05T20:09:35.411504+00:00,ok

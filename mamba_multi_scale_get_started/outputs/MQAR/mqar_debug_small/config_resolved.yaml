@@ -1,0 +1,44 @@
+experiment:
+  name: mqar_debug_small
+  seed: 42
+device: auto
+cuda_device: 0
+data:
+  dataset: mqar
+  input_seq_len: 64
+  num_kv_pairs: 2
+  vocab_size: 128
+  train_examples: 5000
+  val_examples: 1000
+  test_examples: 1000
+  num_passes: 1
+  random_non_queries: true
+  power_a: 0.01
+  fixed_examples: true
+loader:
+  batch_size: 64
+  num_workers: 2
+train:
+  epochs: 20
+  lr: 0.0003
+  weight_decay: 0.01
+  grad_clip: 1.0
+  early_stopping:
+    patience: 3
+    min_delta: 0.0001
+logging:
+  output_dir: outputs/MQAR/mqar_debug_small
+model:
+  backbone: mamba2_lm
+  d_model: 256
+  layer_headdims:
+  - 32
+  - 32
+  - 32
+  - 32
+  vocab_size: 128
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1

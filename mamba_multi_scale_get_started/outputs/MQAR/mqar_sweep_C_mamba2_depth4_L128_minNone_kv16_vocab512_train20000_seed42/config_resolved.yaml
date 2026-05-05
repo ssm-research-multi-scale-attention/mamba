@@ -1,0 +1,46 @@
+experiment:
+  name: mqar_sweep_C_mamba2_depth4_L128_minNone_kv16_vocab512_train20000_seed42
+  seed: 42
+device: cuda:0
+cuda_device: 0
+data:
+  dataset: mqar
+  input_seq_len: 128
+  num_kv_pairs: 16
+  vocab_size: 512
+  train_examples: 20000
+  val_examples: 2000
+  test_examples: 2000
+  num_passes: 1
+  random_non_queries: true
+  fixed_examples: true
+  power_a: 0.01
+  min_query_pos: null
+loader:
+  batch_size: 128
+  num_workers: 0
+  pin_memory: false
+train:
+  epochs: 20
+  lr: 0.0003
+  weight_decay: 0.01
+  grad_clip: 1.0
+  early_stopping:
+    patience: 4
+    min_delta: 0.0001
+logging:
+  output_dir: outputs/MQAR/mqar_sweep_C_mamba2_depth4_L128_minNone_kv16_vocab512_train20000_seed42
+model:
+  backbone: mamba2_lm
+  d_model: 256
+  layer_headdims:
+  - 32
+  - 32
+  - 32
+  - 32
+  vocab_size: 512
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1

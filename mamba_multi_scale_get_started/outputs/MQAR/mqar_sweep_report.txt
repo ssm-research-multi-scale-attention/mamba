@@ -1,0 +1,89 @@
+MQAR difficulty sweep analysis
+  source: /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/summary_mqar_difficulty_sweep.csv
+
+1. Runs by regime:
+   too_hard: 51
+   too_easy: 44
+   interesting: 8
+
+2. Top "interesting" settings (by count of interesting models desc, then spread of primary_acc across models desc):
+   1. C/L128/minminNone/kv16/vocab704/train20000 — interesting_models=1 spread_acc=0.9770
+   2. C/L128/minminNone/kv16/vocab768/train20000 — interesting_models=1 spread_acc=0.9415
+
+3. All models per setting_key:
+   [A/L128/minminNone/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_easy primary_acc=0.99909375 primary_em=0.98650000 (mqar_sweep_A_mamba2_depth4_L128_minNone_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_easy primary_acc=0.99937500 primary_em=0.99000000 (mqar_sweep_A_ms_attention_stride4_L128_minNone_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_easy primary_acc=0.99856250 primary_em=0.97750000 (mqar_sweep_A_ms_gated_stride2_L128_minNone_kv16_vocab512_train20000_seed42)
+   [A/L160/minminNone/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_easy primary_acc=0.99887500 primary_em=0.98200000 (mqar_sweep_A_mamba2_depth4_L160_minNone_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_easy primary_acc=0.99846875 primary_em=0.97550000 (mqar_sweep_A_ms_attention_stride4_L160_minNone_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_easy primary_acc=0.99840625 primary_em=0.97500000 (mqar_sweep_A_ms_gated_stride2_L160_minNone_kv16_vocab512_train20000_seed42)
+   [A/L192/minminNone/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_easy primary_acc=0.99718750 primary_em=0.95550000 (mqar_sweep_A_mamba2_depth4_L192_minNone_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.04137500 primary_em=0.00000000 (mqar_sweep_A_ms_attention_stride4_L192_minNone_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_easy primary_acc=0.99700000 primary_em=0.95400000 (mqar_sweep_A_ms_gated_stride2_L192_minNone_kv16_vocab512_train20000_seed42)
+   [A/L224/minminNone/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_easy primary_acc=0.99653125 primary_em=0.94800000 (mqar_sweep_A_mamba2_depth4_L224_minNone_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_easy primary_acc=0.99490625 primary_em=0.92100000 (mqar_sweep_A_ms_attention_stride4_L224_minNone_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_easy primary_acc=0.99150000 primary_em=0.87400000 (mqar_sweep_A_ms_gated_stride2_L224_minNone_kv16_vocab512_train20000_seed42)
+   [A/L256/minminNone/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_easy primary_acc=0.99890625 primary_em=0.98250000 (mqar_sweep_A_mamba2_depth4_L256_minNone_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.01459375 primary_em=0.00000000 (mqar_sweep_A_ms_attention_stride4_L256_minNone_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_easy primary_acc=0.99556250 primary_em=0.93150000 (mqar_sweep_A_ms_gated_stride2_L256_minNone_kv16_vocab512_train20000_seed42)
+   [B/L256/minmin128/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_hard primary_acc=0.00400000 primary_em=0.00000000 (mqar_sweep_B_mamba2_depth4_L256_min128_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.00396875 primary_em=0.00000000 (mqar_sweep_B_ms_attention_stride4_L256_min128_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_hard primary_acc=0.00543750 primary_em=0.00000000 (mqar_sweep_B_ms_gated_stride2_L256_min128_kv16_vocab512_train20000_seed42)
+   [B/L256/minmin48/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_hard primary_acc=0.01812500 primary_em=0.00000000 (mqar_sweep_B_mamba2_depth4_L256_min48_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.00353125 primary_em=0.00000000 (mqar_sweep_B_ms_attention_stride4_L256_min48_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_hard primary_acc=0.00743750 primary_em=0.00000000 (mqar_sweep_B_ms_gated_stride2_L256_min48_kv16_vocab512_train20000_seed42)
+   [B/L256/minmin64/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_hard primary_acc=0.00378125 primary_em=0.00000000 (mqar_sweep_B_mamba2_depth4_L256_min64_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.00428125 primary_em=0.00000000 (mqar_sweep_B_ms_attention_stride4_L256_min64_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_hard primary_acc=0.00621875 primary_em=0.00000000 (mqar_sweep_B_ms_gated_stride2_L256_min64_kv16_vocab512_train20000_seed42)
+   [B/L256/minmin96/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_hard primary_acc=0.00515625 primary_em=0.00000000 (mqar_sweep_B_mamba2_depth4_L256_min96_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.00387500 primary_em=0.00000000 (mqar_sweep_B_ms_attention_stride4_L256_min96_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_hard primary_acc=0.00759375 primary_em=0.00000000 (mqar_sweep_B_ms_gated_stride2_L256_min96_kv16_vocab512_train20000_seed42)
+   [C/L128/minminNone/kv16/vocab512/train20000]
+      mamba2_depth4: regime=too_easy primary_acc=0.99896875 primary_em=0.98450000 (mqar_sweep_C_mamba2_depth4_L128_minNone_kv16_vocab512_train20000_seed42)
+      ms_attention_stride4: regime=too_easy primary_acc=0.99946875 primary_em=0.99150000 (mqar_sweep_C_ms_attention_stride4_L128_minNone_kv16_vocab512_train20000_seed42)
+      ms_gated_stride2: regime=too_easy primary_acc=0.99878125 primary_em=0.98050000 (mqar_sweep_C_ms_gated_stride2_L128_minNone_kv16_vocab512_train20000_seed42)
+   [C/L128/minminNone/kv16/vocab576/train20000]
+      mamba2_depth4: regime=too_easy primary_acc=0.99853125 primary_em=0.97650000 (mqar_sweep_C_mamba2_depth4_L128_minNone_kv16_vocab576_train20000_seed42)
+      ms_attention_stride4: regime=too_easy primary_acc=0.99712500 primary_em=0.95550000 (mqar_sweep_C_ms_attention_stride4_L128_minNone_kv16_vocab576_train20000_seed42)
+      ms_gated_stride2: regime=too_easy primary_acc=0.99665625 primary_em=0.94800000 (mqar_sweep_C_ms_gated_stride2_L128_minNone_kv16_vocab576_train20000_seed42)
+   [C/L128/minminNone/kv16/vocab640/train20000]
+      mamba2_depth4: regime=too_easy primary_acc=0.99559375 primary_em=0.93200000 (mqar_sweep_C_mamba2_depth4_L128_minNone_kv16_vocab640_train20000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.00396875 primary_em=0.00000000 (mqar_sweep_C_ms_attention_stride4_L128_minNone_kv16_vocab640_train20000_seed42)
+      ms_gated_stride2: regime=too_easy primary_acc=0.99690625 primary_em=0.95250000 (mqar_sweep_C_ms_gated_stride2_L128_minNone_kv16_vocab640_train20000_seed42)
+   [C/L128/minminNone/kv16/vocab704/train20000]
+      mamba2_depth4: regime=interesting primary_acc=0.98106250 primary_em=0.73650000 (mqar_sweep_C_mamba2_depth4_L128_minNone_kv16_vocab704_train20000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.01675000 primary_em=0.00000000 (mqar_sweep_C_ms_attention_stride4_L128_minNone_kv16_vocab704_train20000_seed42)
+      ms_gated_stride2: regime=too_easy primary_acc=0.99375000 primary_em=0.90500000 (mqar_sweep_C_ms_gated_stride2_L128_minNone_kv16_vocab704_train20000_seed42)
+   [C/L128/minminNone/kv16/vocab768/train20000]
+      mamba2_depth4: regime=too_hard primary_acc=0.03006250 primary_em=0.00000000 (mqar_sweep_C_mamba2_depth4_L128_minNone_kv16_vocab768_train20000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.01653125 primary_em=0.00000000 (mqar_sweep_C_ms_attention_stride4_L128_minNone_kv16_vocab768_train20000_seed42)
+      ms_gated_stride2: regime=interesting primary_acc=0.95803125 primary_em=0.50300000 (mqar_sweep_C_ms_gated_stride2_L128_minNone_kv16_vocab768_train20000_seed42)
+   [D/L128/minminNone/kv16/vocab512/train5000]
+      mamba2_depth4: regime=too_hard primary_acc=0.00378125 primary_em=0.00000000 (mqar_sweep_D_mamba2_depth4_L128_minNone_kv16_vocab512_train5000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.00325000 primary_em=0.00000000 (mqar_sweep_D_ms_attention_stride4_L128_minNone_kv16_vocab512_train5000_seed42)
+      ms_gated_stride2: regime=too_hard primary_acc=0.00350000 primary_em=0.00000000 (mqar_sweep_D_ms_gated_stride2_L128_minNone_kv16_vocab512_train5000_seed42)
+   [D/L160/minminNone/kv16/vocab512/train5000]
+      mamba2_depth4: regime=too_hard primary_acc=0.00475000 primary_em=0.00000000 (mqar_sweep_D_mamba2_depth4_L160_minNone_kv16_vocab512_train5000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.00356250 primary_em=0.00000000 (mqar_sweep_D_ms_attention_stride4_L160_minNone_kv16_vocab512_train5000_seed42)
+      ms_gated_stride2: regime=too_hard primary_acc=0.00418750 primary_em=0.00000000 (mqar_sweep_D_ms_gated_stride2_L160_minNone_kv16_vocab512_train5000_seed42)
+   [D/L192/minminNone/kv16/vocab512/train5000]
+      mamba2_depth4: regime=too_hard primary_acc=0.00353125 primary_em=0.00000000 (mqar_sweep_D_mamba2_depth4_L192_minNone_kv16_vocab512_train5000_seed42)
+      ms_attention_stride4: regime=too_hard primary_acc=0.00393750 primary_em=0.00000000 (mqar_sweep_D_ms_attention_stride4_L192_minNone_kv16_vocab512_train5000_seed42)
+      ms_gated_stride2: regime=too_hard primary_acc=0.00368750 primary_em=0.00000000 (mqar_sweep_D_ms_gated_stride2_L192_minNone_kv16_vocab512_train5000_seed42)
+
+4. Recommendation:
+Interesting settings exist. Rerun top settings with seeds 42/43/44, e.g.:
+
+   - C/L128/minminNone/kv16/vocab704/train20000
+     template: same overrides as sweep row for this setting_key; set experiment.seed=42/43/44 and unique experiment.name per run.
+   - C/L128/minminNone/kv16/vocab768/train20000
+     template: same overrides as sweep row for this setting_key; set experiment.seed=42/43/44 and unique experiment.name per run.

@@ -1,0 +1,16 @@
+MQAR difficulty sweep analysis
+  source: outputs/MQAR/summary_mqar_final_only.csv
+
+1. Runs by regime:
+   too_easy: 15
+   too_hard: 10
+   interesting: 2
+
+2. Top "interesting" settings (by count of interesting models desc, then spread of primary_acc across models desc):
+   (none)
+
+3. All models per setting_key:
+
+4. Recommendation:
+MQAR not useful in current setup; regimes are mostly too easy/too hard.
+   (No setting had ≥1 model in the "interesting" band per rules.)

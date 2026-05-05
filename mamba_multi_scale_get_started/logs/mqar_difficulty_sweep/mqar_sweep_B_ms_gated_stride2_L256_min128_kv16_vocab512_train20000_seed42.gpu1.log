@@ -1,0 +1,36 @@
+mqar_split_hashes: n_train=20000 uniq_train=20000 | n_val=2000 uniq_val=2000 | n_test=2000 uniq_test=2000
+mqar_answer_positions[train]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[val]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[test]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+experiment=mqar_sweep_B_ms_gated_stride2_L256_min128_kv16_vocab512_train20000_seed42 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/mqar_sweep_B_ms_gated_stride2_L256_min128_kv16_vocab512_train20000_seed42
+mqar data: fixed_examples=True random_baseline_acc≈1/vocab=0.001953 (vocab_size=512)
+--- mqar resolved config (sanity) ---
+  experiment.name: mqar_sweep_B_ms_gated_stride2_L256_min128_kv16_vocab512_train20000_seed42
+  model.backbone: multiscale_mamba2_lm
+  model.layer_headdims: [32, 32, 32, 32]
+  model.multiscale.fast_layer_headdims: [32, 32, 32, 32]
+  model.multiscale.slow_layer_headdims: [32, 32]
+  data.input_seq_len: 256
+  data.num_kv_pairs: 16
+  data.vocab_size: 512
+  data.train_examples: 20000  val_examples: 2000  test_examples: 2000
+  data.fixed_examples: True
+  data.min_query_pos: 128
+  train.lr: 0.0003
+  train.epochs: 20
+  num_parameters_trainable: 2898336
+  tags(backbone,fusion,stride): multiscale_mamba2_lm, gated, 2
+--- end resolved config ---
+epoch 1/20 train loss=5.5490 acc=0.0049 em=0.0000 | val loss=5.5631 acc=0.0037 em=0.0000 | random≈0.0020
+  saved best_loss.pt (val_answer_loss=5.563138)
+  saved best_acc.pt (val_answer_accuracy=0.003656)
+epoch 2/20 train loss=5.5200 acc=0.0084 em=0.0000 | val loss=5.5632 acc=0.0051 em=0.0000 | random≈0.0020
+  saved best_acc.pt (val_answer_accuracy=0.005094)
+epoch 3/20 train loss=5.4180 acc=0.0193 em=0.0000 | val loss=5.5793 acc=0.0052 em=0.0000 | random≈0.0020
+epoch 4/20 train loss=5.1163 acc=0.0616 em=0.0000 | val loss=5.6535 acc=0.0053 em=0.0000 | random≈0.0020
+  saved best_acc.pt (val_answer_accuracy=0.005344)
+epoch 5/20 train loss=4.6507 acc=0.1410 em=0.0000 | val loss=5.7820 acc=0.0054 em=0.0000 | random≈0.0020
+early stopping at epoch 5: val answer_loss did not improve by min_delta=0.0001 for 4 epochs
+test [best_loss_ckpt] loss=5.563234 acc=0.004250 em=0.000000
+test [best_acc_ckpt]  loss=5.655812 acc=0.005437 em=0.000000 random_baseline≈0.001953
+done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/mqar_sweep_B_ms_gated_stride2_L256_min128_kv16_vocab512_train20000_seed42/meta_metrics.csv

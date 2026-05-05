@@ -1,0 +1,33 @@
+mqar_split_hashes: n_train=20000 uniq_train=20000 | n_val=2000 uniq_val=2000 | n_test=2000 uniq_test=2000
+mqar_answer_positions[train]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[val]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[test]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+experiment=mqar_vocab640_ms_attention_stride4_dropout00_kv16_lr3e4_seed42 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/mqar_vocab640_ms_attention_stride4_dropout00_kv16_lr3e4_seed42
+mqar data: fixed_examples=True random_baseline_acc≈1/vocab=0.001563 (vocab_size=640)
+--- mqar resolved config (sanity) ---
+  experiment.name: mqar_vocab640_ms_attention_stride4_dropout00_kv16_lr3e4_seed42
+  model.backbone: multiscale_mamba2_attention_lm
+  model.layer_headdims: [32, 32, 32, 32]
+  model.multiscale.fast_layer_headdims: [32, 32, 32, 32]
+  model.multiscale.slow_layer_headdims: [32, 32]
+  data.input_seq_len: 128
+  data.num_kv_pairs: 16
+  data.vocab_size: 640
+  data.train_examples: 20000  val_examples: 2000  test_examples: 2000
+  data.fixed_examples: True
+  train.lr: 0.0003
+  train.epochs: 20
+  num_parameters_trainable: 3095840
+  tags(backbone,fusion,stride): multiscale_mamba2_attention_lm, residual, 4
+--- end resolved config ---
+epoch 1/20 train loss=5.7733 acc=0.0036 em=0.0000 | val loss=5.7818 acc=0.0034 em=0.0000 | random≈0.0016
+  saved best_loss.pt (val_answer_loss=5.781834)
+  saved best_acc.pt (val_answer_accuracy=0.003438)
+epoch 2/20 train loss=5.7376 acc=0.0065 em=0.0000 | val loss=5.7885 acc=0.0030 em=0.0000 | random≈0.0016
+epoch 3/20 train loss=5.5805 acc=0.0242 em=0.0000 | val loss=5.8181 acc=0.0032 em=0.0000 | random≈0.0016
+epoch 4/20 train loss=5.1785 acc=0.0782 em=0.0000 | val loss=5.9284 acc=0.0030 em=0.0000 | random≈0.0016
+epoch 5/20 train loss=4.7066 acc=0.1590 em=0.0000 | val loss=6.0632 acc=0.0034 em=0.0000 | random≈0.0016
+early stopping at epoch 5: val answer_loss did not improve by min_delta=0.0001 for 4 epochs
+test [best_loss_ckpt] loss=5.782416 acc=0.003281 em=0.000000
+test [best_acc_ckpt]  loss=5.782416 acc=0.003281 em=0.000000 random_baseline≈0.001563
+done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/mqar_vocab640_ms_attention_stride4_dropout00_kv16_lr3e4_seed42/meta_metrics.csv

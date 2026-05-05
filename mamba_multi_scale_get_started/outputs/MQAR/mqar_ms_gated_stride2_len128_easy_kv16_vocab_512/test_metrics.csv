@@ -1,0 +1,2 @@
+split,answer_loss,answer_ppl,answer_accuracy,exact_match
+test,0.006987252399325371,1.0070117202017441,0.99875,0.98
