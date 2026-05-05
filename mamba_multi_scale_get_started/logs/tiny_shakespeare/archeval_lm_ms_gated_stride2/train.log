@@ -1,0 +1,23 @@
+experiment=archeval_lm_ms_gated_stride2 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/lm_ms_gated_stride2
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/10 train_loss=3.0259 val_loss=2.4734 val_ppl=11.86 val_bpc=3.5684
+  saved best.pt (val_loss=2.473402)
+epoch 2/10 train_loss=2.2525 val_loss=2.1494 val_ppl=8.58 val_bpc=3.1009
+  saved best.pt (val_loss=2.149411)
+epoch 3/10 train_loss=1.9780 val_loss=1.9759 val_ppl=7.21 val_bpc=2.8507
+  saved best.pt (val_loss=1.975945)
+epoch 4/10 train_loss=1.7935 val_loss=1.8635 val_ppl=6.45 val_bpc=2.6885
+  saved best.pt (val_loss=1.863524)
+epoch 5/10 train_loss=1.6623 val_loss=1.7759 val_ppl=5.91 val_bpc=2.5621
+  saved best.pt (val_loss=1.775942)
+epoch 6/10 train_loss=1.5728 val_loss=1.7127 val_ppl=5.54 val_bpc=2.4709
+  saved best.pt (val_loss=1.712703)
+epoch 7/10 train_loss=1.5018 val_loss=1.6676 val_ppl=5.30 val_bpc=2.4058
+  saved best.pt (val_loss=1.667579)
+epoch 8/10 train_loss=1.4421 val_loss=1.6291 val_ppl=5.10 val_bpc=2.3504
+  saved best.pt (val_loss=1.629148)
+epoch 9/10 train_loss=1.4047 val_loss=1.5994 val_ppl=4.95 val_bpc=2.3075
+  saved best.pt (val_loss=1.599442)
+epoch 10/10 train_loss=1.3649 val_loss=1.5758 val_ppl=4.83 val_bpc=2.2733
+  saved best.pt (val_loss=1.575762)
+meta_metrics: train=28.51s eval=244.94s loop=279.03s setup=2.88s → meta_metrics.csv

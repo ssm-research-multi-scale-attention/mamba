@@ -1,0 +1,25 @@
+# Unified arch eval registry: LM + MQAR + timing configs per architecture tag.
+architectures:
+  - name: mamba2_depth4
+    type: baseline
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_depth4.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_depth4_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2.yaml
+
+  - name: mamba2_depth6
+    type: equal_param_baseline
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_depth6.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_depth6_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_depth6.yaml
+
+  - name: ms_gated_stride2
+    type: candidate
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_gated_stride2.yaml
+    mqar_config: configs/MQAR/mqar_ms_gated_stride2_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_gated_stride2.yaml
+
+  - name: ms_attention_stride4
+    type: candidate
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_attention_stride4.yaml
+    mqar_config: configs/MQAR/mqar_ms_attention_stride4_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_attention_stride4.yaml
