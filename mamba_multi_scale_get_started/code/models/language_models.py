@@ -1,7 +1,7 @@
 """Character-level language models: LSTM, Mamba2, multi-scale Mamba2."""
 from __future__ import annotations
 
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 import torch
 import torch.nn as nn
@@ -224,6 +224,116 @@ class MultiScaleMamba2AttentionLanguageModel(nn.Module):
         return F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
 
 
+class MultiAxisMamba2LanguageModel(nn.Module):
+    """
+    Fast Mamba on full sequence + N stridden Mamba branches.
+
+    Each branch output is upsampled back to fast length and fused with one of:
+    - residual_gated_sum: fast + sum_i sigmoid(g_i([fast, slow_i])) * slow_i
+    - residual_sum: fast + sum_i slow_i
+    - concat_project: Linear([fast, slow_1, ..., slow_N])
+    """
+
+    def __init__(
+        self,
+        vocab_size: int,
+        d_model: int,
+        fast_layer_headdims: Sequence[int],
+        branches: Sequence[Mapping[str, Any]],
+        fusion: str = "residual_gated_sum",
+        gate_type: str = "vector",
+        **mamba_kwargs: Any,
+    ):
+        super().__init__()
+        if not branches:
+            raise ValueError("multiscale.branches must be a non-empty list.")
+        fusion_l = str(fusion).strip().lower()
+        valid_fusions = {"residual_gated_sum", "residual_sum", "concat_project"}
+        if fusion_l not in valid_fusions:
+            raise ValueError(
+                f"multiscale.fusion must be one of {sorted(valid_fusions)}, got {fusion!r}."
+            )
+        gate_type_l = str(gate_type).strip().lower()
+        valid_gate_types = {"vector", "scalar"}
+        if gate_type_l not in valid_gate_types:
+            raise ValueError(
+                f"multiscale.gate_type must be one of {sorted(valid_gate_types)}, got {gate_type!r}."
+            )
+
+        self.fusion = fusion_l
+        self.gate_type = gate_type_l
+        self.embed = nn.Embedding(vocab_size, d_model)
+        self.fast_seq = nn.Sequential(
+            *[MambaLayer(d_model=d_model, headdim=h, **mamba_kwargs) for h in fast_layer_headdims]
+        )
+
+        self.branch_names: list[str] = []
+        self.branch_strides: list[int] = []
+        self.slow_seqs = nn.ModuleList()
+        self.gate_projs = nn.ModuleList()
+
+        gate_out_dim = d_model if self.gate_type == "vector" else 1
+        for branch in branches:
+            name = str(branch["name"])
+            stride = int(branch["stride"])
+            layer_headdims = [int(h) for h in list(branch["layer_headdims"])]
+            self.branch_names.append(name)
+            self.branch_strides.append(stride)
+            self.slow_seqs.append(
+                nn.Sequential(
+                    *[
+                        MambaLayer(d_model=d_model, headdim=h, **mamba_kwargs)
+                        for h in layer_headdims
+                    ]
+                )
+            )
+            if self.fusion == "residual_gated_sum":
+                self.gate_projs.append(nn.Linear(2 * d_model, gate_out_dim))
+
+        self.concat_proj = (
+            nn.Linear((1 + len(self.slow_seqs)) * d_model, d_model)
+            if self.fusion == "concat_project"
+            else None
+        )
+        self.out_norm = nn.LayerNorm(d_model)
+        self.lm_head = nn.Linear(d_model, vocab_size)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        emb = self.embed(x)
+        fast = self.fast_seq(emb)
+        seq_len = emb.size(1)
+
+        slow_ups: list[torch.Tensor] = []
+        for stride, slow_seq in zip(self.branch_strides, self.slow_seqs):
+            slow_emb = emb[:, ::stride, :]
+            slow = slow_seq(slow_emb)
+            slow_up = slow.repeat_interleave(stride, dim=1)
+            if slow_up.size(1) < seq_len:
+                pad_len = seq_len - slow_up.size(1)
+                slow_up = F.pad(slow_up, (0, 0, 0, pad_len))
+            slow_ups.append(slow_up[:, :seq_len, :])
+
+        if self.fusion == "residual_sum":
+            fused = fast
+            for slow_up in slow_ups:
+                fused = fused + slow_up
+        elif self.fusion == "concat_project":
+            proj = self.concat_proj
+            if proj is None:
+                raise RuntimeError("concat_project fusion requires concat_proj")
+            fused = proj(torch.cat([fast, *slow_ups], dim=-1))
+        else:
+            fused = fast
+            for gate_proj, slow_up in zip(self.gate_projs, slow_ups):
+                gate = torch.sigmoid(gate_proj(torch.cat([fast, slow_up], dim=-1)))
+                fused = fused + gate * slow_up
+
+        return self.lm_head(self.out_norm(fused))
+
+    def loss(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        return F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
+
+
 def build_lm(cfg) -> nn.Module:
     """Build LM from ``cfg.model`` (OmegaConf / dict-like)."""
     from omegaconf import OmegaConf
@@ -302,6 +412,74 @@ def build_lm(cfg) -> nn.Module:
             attention_heads=attn_heads,
             fusion=fusion,
             dropout=drop,
+            **mamba_kw,
+        )
+
+    if backbone == "multiscale_mamba2_multiaxis_lm":
+        fast_hd = OmegaConf.select(cfg, "model.multiscale.fast_layer_headdims", default=None)
+        fb = OmegaConf.select(cfg, "model.layer_headdims", default=None)
+        if fast_hd is not None:
+            fast_layer_headdims = [int(h) for h in list(fast_hd)]
+        elif fb is not None:
+            fast_layer_headdims = [int(h) for h in list(fb)]
+        else:
+            raise ValueError(
+                "multiscale_mamba2_multiaxis_lm: set model.multiscale.fast_layer_headdims "
+                "or model.layer_headdims."
+            )
+        if not fast_layer_headdims:
+            raise ValueError("multiscale_mamba2_multiaxis_lm: fast headdims must be non-empty.")
+
+        branches_raw = OmegaConf.select(cfg, "model.multiscale.branches", default=None)
+        if branches_raw is None:
+            raise ValueError("multiscale_mamba2_multiaxis_lm: model.multiscale.branches is required.")
+        branches_list = OmegaConf.to_container(branches_raw, resolve=True)
+        if not isinstance(branches_list, list) or len(branches_list) == 0:
+            raise ValueError("multiscale_mamba2_multiaxis_lm: multiscale.branches must be a non-empty list.")
+
+        names_seen: set[str] = set()
+        normalized_branches: list[dict[str, Any]] = []
+        for idx, br in enumerate(branches_list):
+            if not isinstance(br, dict):
+                raise ValueError(f"multiscale.branches[{idx}] must be a mapping.")
+            name = str(br.get("name", "")).strip()
+            if not name:
+                raise ValueError(f"multiscale.branches[{idx}].name must be a non-empty string.")
+            if name in names_seen:
+                raise ValueError(f"multiscale.branches contains duplicate name {name!r}.")
+            names_seen.add(name)
+
+            stride_raw = br.get("stride", None)
+            if stride_raw is None:
+                raise ValueError(f"multiscale.branches[{idx}].stride is required.")
+            stride = int(stride_raw)
+            if stride <= 1:
+                raise ValueError(
+                    f"multiscale.branches[{idx}].stride must be > 1 for slow branches, got {stride}."
+                )
+
+            layer_headdims_raw = br.get("layer_headdims", None)
+            if not isinstance(layer_headdims_raw, list) or len(layer_headdims_raw) == 0:
+                raise ValueError(f"multiscale.branches[{idx}].layer_headdims must be a non-empty list.")
+            layer_headdims = [int(h) for h in layer_headdims_raw]
+
+            normalized_branches.append(
+                {
+                    "name": name,
+                    "stride": stride,
+                    "layer_headdims": layer_headdims,
+                }
+            )
+
+        fusion = str(OmegaConf.select(cfg, "model.multiscale.fusion", default="residual_gated_sum"))
+        gate_type = str(OmegaConf.select(cfg, "model.multiscale.gate_type", default="vector"))
+        return MultiAxisMamba2LanguageModel(
+            vocab_size=vocab,
+            d_model=d_model,
+            fast_layer_headdims=fast_layer_headdims,
+            branches=normalized_branches,
+            fusion=fusion,
+            gate_type=gate_type,
             **mamba_kw,
         )
 

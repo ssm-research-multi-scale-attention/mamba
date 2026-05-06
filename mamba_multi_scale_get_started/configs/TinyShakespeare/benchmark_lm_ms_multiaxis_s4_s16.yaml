@@ -1,0 +1,86 @@
+experiment:
+  name: benchmark_ms_multiaxis_s4_s16_lm
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: tiny_shakespeare
+  data_dir: data/tiny_shakespeare
+  block_size: 256
+
+loader:
+  batch_size: 1
+  num_workers: 0
+
+model:
+  backbone: multiscale_mamba2_multiaxis_lm
+  d_model: 256
+  layer_headdims: [32, 32, 32, 32]
+  vocab_size: 65
+  multiscale:
+    fusion: residual_gated_sum
+    gate_type: vector
+    fast_layer_headdims: [32, 32, 32, 32]
+    branches:
+      - name: slow
+        stride: 4
+        layer_headdims: [32, 32]
+      - name: slow2
+        stride: 16
+        layer_headdims: [32]
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+
+train:
+  epochs: 1
+
+logging:
+  output_dir: outputs/_benchmark_unused/${experiment.name}
+experiment:
+  name: benchmark_ms_multiaxis_s4_s16_lm
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: tiny_shakespeare
+  data_dir: data/tiny_shakespeare
+  block_size: 256
+
+loader:
+  batch_size: 1
+  num_workers: 0
+
+model:
+  backbone: multiscale_mamba2_multiaxis_lm
+  d_model: 256
+  layer_headdims: [32, 32, 32, 32]
+  vocab_size: 65
+  multiscale:
+    fusion: residual_gated_sum
+    gate_type: vector
+    fast_layer_headdims: [32, 32, 32, 32]
+    branches:
+      - name: slow
+        stride: 4
+        layer_headdims: [32, 32]
+      - name: slow2
+        stride: 16
+        layer_headdims: [32]
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+
+train:
+  epochs: 1
+
+logging:
+  output_dir: outputs/_benchmark_unused/${experiment.name}

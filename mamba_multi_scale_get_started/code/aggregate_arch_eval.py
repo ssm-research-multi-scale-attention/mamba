@@ -113,11 +113,47 @@ def main() -> int:
         type=Path,
         default=ROOT / "configs/EvalRegistry/architectures.yaml",
     )
+    ap.add_argument(
+        "--output-file",
+        type=str,
+        default=None,
+        help=(
+            "Output summary filename/path. Relative paths are written inside outputs/ArchEval/. "
+            "Absolute paths are used as-is. Default: outputs/ArchEval/summary_arch_eval.csv"
+        ),
+    )
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="Allow overwriting default summary_arch_eval.csv for non-full registries.",
+    )
     args = ap.parse_args()
     reg = args.registry.resolve()
     if not reg.is_file():
         print(f"Missing registry {reg}", file=sys.stderr)
         return 1
+
+    default_out = ARCH_EVAL / "summary_arch_eval.csv"
+    output_file_provided = args.output_file is not None
+    if output_file_provided:
+        raw_out = Path(args.output_file)
+        outp = raw_out.resolve() if raw_out.is_absolute() else (ARCH_EVAL / raw_out).resolve()
+    else:
+        outp = default_out.resolve()
+
+    if (
+        reg.name != "architectures.yaml"
+        and not output_file_provided
+        and outp == default_out.resolve()
+        and not args.force
+    ):
+        print(
+            "Refusing to overwrite summary_arch_eval.csv for non-full registry. "
+            "Pass --output-file or --force.",
+            file=sys.stderr,
+        )
+        return 1
+
     cfg = OmegaConf.load(reg)
     arch_list = OmegaConf.select(cfg, "architectures", default=[])
     if not arch_list:
@@ -290,8 +326,7 @@ def main() -> int:
                     }
                 )
 
-    ARCH_EVAL.mkdir(parents=True, exist_ok=True)
-    outp = ARCH_EVAL / "summary_arch_eval.csv"
+    outp.parent.mkdir(parents=True, exist_ok=True)
     with outp.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDNAMES)
         w.writeheader()

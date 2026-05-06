@@ -40,3 +40,5 @@ early stopping at epoch 7: val answer_loss did not improve by min_delta=0.0001 f
 test [best_loss_ckpt] loss=5.959316 acc=0.013562 em=0.000000
 test [best_acc_ckpt]  loss=6.012921 acc=0.017250 em=0.000000 random_baseline≈0.001302
 done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/mqar_trans768_mamba2_depth6_seed43/meta_metrics.csv
+JOB timing arch=ms_multiaxis_s2_s8 -> outputs/ArchEval/timing_ms_multiaxis_s2_s8.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_multiaxis_s2_s8.csv

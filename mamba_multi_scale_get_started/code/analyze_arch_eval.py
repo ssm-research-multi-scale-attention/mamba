@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import argparse
 import statistics
 import sys
 from collections import defaultdict
@@ -12,6 +13,11 @@ _ROOT = Path(__file__).resolve().parents[1]
 _DEF_SUMMARY = _ROOT / "outputs" / "ArchEval" / "summary_arch_eval.csv"
 _OUT_REP = _ROOT / "outputs" / "ArchEval" / "report_arch_eval.txt"
 _OUT_SCORE = _ROOT / "outputs" / "ArchEval" / "scorecard_arch_eval.csv"
+_DEFAULT_BASELINE_FALLBACKS = [
+    _ROOT / "outputs" / "ArchEval" / "scorecard_arch_eval.csv",
+    _ROOT / "outputs" / "ArchEval" / "summary_arch_eval_full.csv",
+    _ROOT / "outputs" / "ArchEval" / "summary_arch_eval_baselines.csv",
+]
 
 
 def _sf(s: str) -> float | None:
@@ -56,15 +62,105 @@ def _pct_speed_penalty(t_cand: float | None, t_base: float | None) -> str:
     return f"{100.0 * (1.0 - t_cand / t_base):.4f}"
 
 
+def _parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument(
+        "summary",
+        nargs="?",
+        default=str(_DEF_SUMMARY),
+        help="Path to summary_arch_eval.csv (default: outputs/ArchEval/summary_arch_eval.csv).",
+    )
+    p.add_argument(
+        "--baseline-summary",
+        type=str,
+        default="",
+        help="Optional path to summary CSV with baseline rows (mamba2_depth4/depth6).",
+    )
+    p.add_argument(
+        "--out-scorecard",
+        type=str,
+        default=str(_OUT_SCORE),
+        help="Output scorecard CSV path.",
+    )
+    p.add_argument(
+        "--out-report",
+        type=str,
+        default=str(_OUT_REP),
+        help="Output text report path.",
+    )
+    return p.parse_args()
+
+
+def _load_csv_rows(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+def _has_required_baselines(rows: list[dict[str, str]]) -> bool:
+    present = {
+        str(r.get("arch_name", "")).strip()
+        for r in rows
+        if str(r.get("task", "")).strip() == "lm"
+    }
+    return "mamba2_depth4" in present and "mamba2_depth6" in present
+
+
+def _append_missing_baseline_rows(
+    base_rows: list[dict[str, str]],
+    baseline_rows: list[dict[str, str]],
+) -> list[dict[str, str]]:
+    existing = {
+        (str(r.get("task", "")), str(r.get("arch_name", "")), str(r.get("setting", "")), str(r.get("seed", "")))
+        for r in base_rows
+    }
+    out = list(base_rows)
+    for r in baseline_rows:
+        arch = str(r.get("arch_name", "")).strip()
+        if arch not in ("mamba2_depth4", "mamba2_depth6"):
+            continue
+        key = (str(r.get("task", "")), arch, str(r.get("setting", "")), str(r.get("seed", "")))
+        if key not in existing:
+            out.append(r)
+            existing.add(key)
+    return out
+
+
 def main() -> int:
-    inp = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else _DEF_SUMMARY
+    args = _parse_args()
+    inp = Path(args.summary).resolve()
+    out_score = Path(args.out_scorecard).resolve()
+    out_rep = Path(args.out_report).resolve()
+
     if not inp.is_file():
         print(f"Missing summary {inp}", file=sys.stderr)
         return 1
 
-    rows: list[dict[str, str]] = []
-    with inp.open(newline="", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
+    rows = _load_csv_rows(inp)
+    if not _has_required_baselines(rows):
+        baseline_candidates: list[Path] = []
+        if args.baseline_summary:
+            baseline_candidates.append(Path(args.baseline_summary).resolve())
+        baseline_candidates.extend(_DEFAULT_BASELINE_FALLBACKS)
+        seen: set[Path] = set()
+        for cand in baseline_candidates:
+            if cand in seen or not cand.is_file() or cand == inp:
+                continue
+            seen.add(cand)
+            try:
+                extra_rows = _load_csv_rows(cand)
+            except Exception:
+                continue
+            rows = _append_missing_baseline_rows(rows, extra_rows)
+            if _has_required_baselines(rows):
+                break
+
+    if not _has_required_baselines(rows):
+        print(
+            "Missing baseline rows: mamba2_depth4, mamba2_depth6. "
+            "Run full registry or pass --baseline-summary.",
+            file=sys.stderr,
+        )
+        return 1
 
     mqar = [r for r in rows if r.get("task") == "mqar"]
     lm_rows = [r for r in rows if r.get("task") == "lm"]
@@ -267,7 +363,15 @@ def main() -> int:
         "decision",
     ]
 
-    _OUT_REP.parent.mkdir(parents=True, exist_ok=True)
+    out_rep.parent.mkdir(parents=True, exist_ok=True)
+    out_score.parent.mkdir(parents=True, exist_ok=True)
+
+    if out_score == _OUT_SCORE and not _has_required_baselines(_load_csv_rows(inp)):
+        print(
+            "Warning: input summary has no baselines; writing to default scorecard path may overwrite a prior full scorecard. "
+            "Use --out-scorecard to write to a separate file.",
+            file=sys.stderr,
+        )
 
     rep.append("Per-architecture:")
     for s in score_lines:
@@ -284,14 +388,14 @@ def main() -> int:
     rep.append("  PASS_LM: LM below depth6. TRADEOFF: ≥1 transition EM win vs baselines but LM/speed/collapse dip.")
     rep.append("  Inspect raw summary_arch_eval.csv for per-seed rows.")
 
-    with _OUT_SCORE.open("w", newline="", encoding="utf-8") as f:
+    with out_score.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
         w.writerows(score_lines)
 
-    _OUT_REP.write_text("\n".join(rep) + "\n", encoding="utf-8")
-    print(f"Wrote {_OUT_SCORE}")
-    print(f"Wrote {_OUT_REP}")
+    out_rep.write_text("\n".join(rep) + "\n", encoding="utf-8")
+    print(f"Wrote {out_score}")
+    print(f"Wrote {out_rep}")
     return 0
 
 

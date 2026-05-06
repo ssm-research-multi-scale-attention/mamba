@@ -23,3 +23,15 @@ architectures:
     lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_attention_stride4.yaml
     mqar_config: configs/MQAR/mqar_ms_attention_stride4_len128.yaml
     timing_config: configs/TinyShakespeare/benchmark_lm_ms_attention_stride4.yaml
+
+  - name: ms_multiaxis_s2_s8
+    type: candidate
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_multiaxis_s2_s8.yaml
+    mqar_config: configs/MQAR/mqar_ms_multiaxis_s2_s8_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_multiaxis_s2_s8.yaml
+
+  - name: ms_multiaxis_s4_s16
+    type: candidate
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_multiaxis_s4_s16.yaml
+    mqar_config: configs/MQAR/mqar_ms_multiaxis_s4_s16_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_multiaxis_s4_s16.yaml
