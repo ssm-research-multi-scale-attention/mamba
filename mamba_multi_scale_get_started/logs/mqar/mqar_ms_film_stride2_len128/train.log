@@ -1,0 +1,29 @@
+mqar_split_hashes: n_train=256 uniq_train=256 | n_val=128 uniq_val=128 | n_test=128 uniq_test=128
+mqar_answer_positions[train]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[val]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[test]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+experiment=mqar_ms_film_stride2_len128 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/mqar_ms_film_stride2_len128
+mqar data: fixed_examples=True random_baseline_acc≈1/vocab=0.000977 (vocab_size=1024)
+--- mqar resolved config (sanity) ---
+  experiment.name: mqar_ms_film_stride2_len128
+  model.backbone: multiscale_mamba2_film_lm
+  model.layer_headdims: [32, 32, 32, 32]
+  model.multiscale.fast_layer_headdims: [32, 32, 32, 32]
+  model.multiscale.slow_layer_headdims: [32, 32]
+  data.input_seq_len: 128
+  data.num_kv_pairs: 16
+  data.vocab_size: 1024
+  data.train_examples: 256  val_examples: 128  test_examples: 128
+  data.fixed_examples: True
+  data.min_query_pos: null
+  train.lr: 0.0003
+  train.epochs: 1
+  num_parameters_trainable: 3160224
+  tags(backbone,fusion,stride): multiscale_mamba2_film_lm, film, 2
+--- end resolved config ---
+epoch 1/1 train loss=6.2259 acc=0.0974 em=0.0000 | val loss=6.9771 acc=0.0039 em=0.0000 | random≈0.0010
+  saved best_loss.pt (val_answer_loss=6.977132)
+  saved best_acc.pt (val_answer_accuracy=0.003906)
+test [best_loss_ckpt] loss=6.963437 acc=0.000977 em=0.000000
+test [best_acc_ckpt]  loss=6.963437 acc=0.000977 em=0.000000 random_baseline≈0.000977
+done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQAR/mqar_ms_film_stride2_len128/meta_metrics.csv

@@ -37,9 +37,22 @@ done
 mkdir -p logs/arch_eval
 mkdir -p outputs/ArchEval
 
+if [[ "$ARCH_REGISTRY" = /* ]]; then
+  ARCH_REGISTRY_ABS="$ARCH_REGISTRY"
+else
+  ARCH_REGISTRY_ABS="$ROOT/$ARCH_REGISTRY"
+fi
+
+REG_BASENAME="$(basename "$ARCH_REGISTRY_ABS")"
+REG_STEM="${REG_BASENAME%.yaml}"
+IS_FULL_REGISTRY=0
+if [[ "$REG_BASENAME" == "architectures.yaml" ]]; then
+  IS_FULL_REGISTRY=1
+fi
+
 MANIFEST="$(mktemp)"
 trap 'rm -f "$MANIFEST"' EXIT
-"$PYTHON" code/arch_eval_emit_manifest.py "$ROOT/$ARCH_REGISTRY" >"$MANIFEST" || exit 1
+"$PYTHON" code/arch_eval_emit_manifest.py "$ARCH_REGISTRY_ABS" >"$MANIFEST" || exit 1
 
 JOBIDX=()
 
@@ -204,11 +217,30 @@ for ((start = 0; start < n; start += NUM_GPUS)); do
 done
 
 echo "========== aggregate =========="
-"$PYTHON" code/aggregate_arch_eval.py --registry "$ROOT/$ARCH_REGISTRY"
-echo "========== analyze =========="
-"$PYTHON" code/analyze_arch_eval.py
+SUMMARY_PATH="$ROOT/outputs/ArchEval/summary_arch_eval.csv"
+if [[ "$IS_FULL_REGISTRY" -eq 1 ]]; then
+  "$PYTHON" code/aggregate_arch_eval.py --registry "$ARCH_REGISTRY_ABS"
+else
+  OUT_NAME="summary_arch_eval_${REG_STEM}.csv"
+  "$PYTHON" code/aggregate_arch_eval.py --registry "$ARCH_REGISTRY_ABS" --output-file "$OUT_NAME"
+  SUMMARY_PATH="$ROOT/outputs/ArchEval/$OUT_NAME"
+fi
 
-REP="$ROOT/outputs/ArchEval/report_arch_eval.txt"
+echo "========== analyze =========="
+if [[ "$IS_FULL_REGISTRY" -eq 1 ]]; then
+  "$PYTHON" code/analyze_arch_eval.py "$SUMMARY_PATH"
+  REP="$ROOT/outputs/ArchEval/report_arch_eval.txt"
+else
+  REPORT_NAME="report_arch_eval_${REG_STEM}.txt"
+  SCORECARD_NAME="scorecard_arch_eval_${REG_STEM}.csv"
+  "$PYTHON" code/analyze_arch_eval.py \
+    "$SUMMARY_PATH" \
+    --baseline-summary "$ROOT/outputs/ArchEval/summary_arch_eval_full.csv" \
+    --out-scorecard "$ROOT/outputs/ArchEval/$SCORECARD_NAME" \
+    --out-report "$ROOT/outputs/ArchEval/$REPORT_NAME"
+  REP="$ROOT/outputs/ArchEval/$REPORT_NAME"
+fi
+
 if [[ -f "$REP" ]]; then
   echo "========== $REP =========="
   cat "$REP"

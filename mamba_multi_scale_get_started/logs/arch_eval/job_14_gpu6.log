@@ -164,3 +164,39 @@ epoch 20/20 train loss=0.0027 acc=1.0000 em=1.0000 | val loss=0.2451 acc=0.9265 
 test [best_loss_ckpt] loss=0.254802 acc=0.923500 em=0.291500
 test [best_acc_ckpt]  loss=0.254802 acc=0.923500 em=0.291500 random_baseline≈0.001420
 done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/mqar_trans704_ms_multiaxis_s4_s16_seed42/meta_metrics.csv
+JOB mqar setting=trans704 arch=ms_film_stride4 seed=42
+mqar_split_hashes: n_train=20000 uniq_train=20000 | n_val=2000 uniq_val=2000 | n_test=2000 uniq_test=2000
+mqar_answer_positions[train]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[val]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[test]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+experiment=archeval_mqar_trans704_ms_film_stride4_seed42 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/mqar_trans704_ms_film_stride4_seed42
+mqar data: fixed_examples=True random_baseline_acc≈1/vocab=0.001420 (vocab_size=704)
+--- mqar resolved config (sanity) ---
+  experiment.name: archeval_mqar_trans704_ms_film_stride4_seed42
+  model.backbone: multiscale_mamba2_film_lm
+  model.layer_headdims: [32, 32, 32, 32]
+  model.multiscale.fast_layer_headdims: [32, 32, 32, 32]
+  model.multiscale.slow_layer_headdims: [32, 32]
+  data.input_seq_len: 128
+  data.num_kv_pairs: 16
+  data.vocab_size: 704
+  data.train_examples: 20000  val_examples: 2000  test_examples: 2000
+  data.fixed_examples: True
+  data.min_query_pos: null
+  train.lr: 0.0003
+  train.epochs: 20
+  num_parameters_trainable: 2996064
+  tags(backbone,fusion,stride): multiscale_mamba2_film_lm, film, 4
+--- end resolved config ---
+epoch 1/20 train loss=5.8712 acc=0.0033 em=0.0000 | val loss=5.8796 acc=0.0027 em=0.0000 | random≈0.0014
+  saved best_loss.pt (val_answer_loss=5.879560)
+  saved best_acc.pt (val_answer_accuracy=0.002750)
+epoch 2/20 train loss=5.8199 acc=0.0076 em=0.0000 | val loss=5.8849 acc=0.0035 em=0.0000 | random≈0.0014
+  saved best_acc.pt (val_answer_accuracy=0.003469)
+epoch 3/20 train loss=5.6250 acc=0.0295 em=0.0000 | val loss=5.9179 acc=0.0032 em=0.0000 | random≈0.0014
+epoch 4/20 train loss=5.1397 acc=0.1045 em=0.0000 | val loss=6.0337 acc=0.0029 em=0.0000 | random≈0.0014
+epoch 5/20 train loss=4.5761 acc=0.2142 em=0.0000 | val loss=6.1804 acc=0.0029 em=0.0000 | random≈0.0014
+early stopping at epoch 5: val answer_loss did not improve by min_delta=0.0001 for 4 epochs
+test [best_loss_ckpt] loss=5.881311 acc=0.003344 em=0.000000
+test [best_acc_ckpt]  loss=5.887001 acc=0.002750 em=0.000000 random_baseline≈0.001420
+done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/mqar_trans704_ms_film_stride4_seed42/meta_metrics.csv

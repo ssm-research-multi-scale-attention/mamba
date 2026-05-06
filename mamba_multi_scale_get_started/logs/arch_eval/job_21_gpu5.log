@@ -64,3 +64,5 @@ yaml.constructor.ConstructorError: while constructing a mapping
   in "/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/benchmark_lm_ms_multiaxis_s4_s16.yaml", line 1, column 1
 found duplicate key experiment
   in "/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/benchmark_lm_ms_multiaxis_s4_s16.yaml", line 44, column 1
+JOB timing arch=ms_film_stride4 -> outputs/ArchEval/timing_ms_film_stride4.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_film_stride4.csv

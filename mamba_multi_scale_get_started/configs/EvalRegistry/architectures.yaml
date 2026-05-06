@@ -35,3 +35,15 @@ architectures:
     lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_multiaxis_s4_s16.yaml
     mqar_config: configs/MQAR/mqar_ms_multiaxis_s4_s16_len128.yaml
     timing_config: configs/TinyShakespeare/benchmark_lm_ms_multiaxis_s4_s16.yaml
+
+  - name: ms_film_stride2
+    type: candidate
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_film_stride2.yaml
+    mqar_config: configs/MQAR/mqar_ms_film_stride2_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_film_stride2.yaml
+
+  - name: ms_film_stride4
+    type: candidate
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_film_stride4.yaml
+    mqar_config: configs/MQAR/mqar_ms_film_stride4_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_film_stride4.yaml

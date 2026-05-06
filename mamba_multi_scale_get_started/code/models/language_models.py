@@ -334,6 +334,67 @@ class MultiAxisMamba2LanguageModel(nn.Module):
         return F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
 
 
+class MultiScaleMamba2FiLMLanguageModel(nn.Module):
+    """Fast Mamba residual path modulated by slow branch via FiLM."""
+
+    def __init__(
+        self,
+        vocab_size: int,
+        d_model: int,
+        fast_layer_headdims: Sequence[int],
+        slow_layer_headdims: Sequence[int],
+        stride: int = 4,
+        fusion: str = "film",
+        film_init_zero: bool = True,
+        **mamba_kwargs: Any,
+    ):
+        super().__init__()
+        st = int(stride)
+        if st < 1:
+            raise ValueError(f"stride must be >= 1, got {stride!r}")
+        fusion_l = str(fusion).strip().lower()
+        if fusion_l != "film":
+            raise ValueError(f"multiscale_mamba2_film_lm requires multiscale.fusion='film', got {fusion!r}.")
+        if not fast_layer_headdims:
+            raise ValueError("multiscale_mamba2_film_lm: fast_layer_headdims must be non-empty.")
+        if not slow_layer_headdims:
+            raise ValueError("multiscale_mamba2_film_lm: slow_layer_headdims must be non-empty.")
+
+        self.stride = st
+        self.embed = nn.Embedding(vocab_size, d_model)
+        self.fast_seq = nn.Sequential(
+            *[MambaLayer(d_model=d_model, headdim=h, **mamba_kwargs) for h in fast_layer_headdims]
+        )
+        self.slow_seq = nn.Sequential(
+            *[MambaLayer(d_model=d_model, headdim=h, **mamba_kwargs) for h in slow_layer_headdims]
+        )
+        self.film_proj = nn.Linear(d_model, 2 * d_model)
+        if bool(film_init_zero):
+            nn.init.zeros_(self.film_proj.weight)
+            nn.init.zeros_(self.film_proj.bias)
+        self.out_norm = nn.LayerNorm(d_model)
+        self.lm_head = nn.Linear(d_model, vocab_size)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        emb = self.embed(x)
+        fast = self.fast_seq(emb)
+        slow_emb = emb[:, :: self.stride, :]
+        slow = self.slow_seq(slow_emb)
+        seq_len = emb.size(1)
+        slow_up = slow.repeat_interleave(self.stride, dim=1)
+        if slow_up.size(1) < seq_len:
+            pad_len = seq_len - slow_up.size(1)
+            slow_up = F.pad(slow_up, (0, 0, 0, pad_len))
+        slow_up = slow_up[:, :seq_len, :]
+
+        gamma, beta = self.film_proj(slow_up).chunk(2, dim=-1)
+        fused = fast * (1.0 + gamma) + beta
+        return self.lm_head(self.out_norm(fused))
+
+    def loss(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        return F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
+
+
 def build_lm(cfg) -> nn.Module:
     """Build LM from ``cfg.model`` (OmegaConf / dict-like)."""
     from omegaconf import OmegaConf
@@ -480,6 +541,40 @@ def build_lm(cfg) -> nn.Module:
             branches=normalized_branches,
             fusion=fusion,
             gate_type=gate_type,
+            **mamba_kw,
+        )
+
+    if backbone == "multiscale_mamba2_film_lm":
+        fast_hd = OmegaConf.select(cfg, "model.multiscale.fast_layer_headdims", default=None)
+        slow_hd = OmegaConf.select(cfg, "model.multiscale.slow_layer_headdims", default=None)
+        fb = OmegaConf.select(cfg, "model.layer_headdims", default=None)
+        if fast_hd is not None:
+            fast_layer_headdims = [int(h) for h in list(fast_hd)]
+        elif fb is not None:
+            fast_layer_headdims = [int(h) for h in list(fb)]
+        else:
+            raise ValueError(
+                "multiscale_mamba2_film_lm: set model.multiscale.fast_layer_headdims or model.layer_headdims."
+            )
+        if not fast_layer_headdims:
+            raise ValueError("multiscale_mamba2_film_lm: fast headdims must be non-empty.")
+        if slow_hd is not None:
+            slow_layer_headdims = [int(h) for h in list(slow_hd)]
+        else:
+            raise ValueError("multiscale_mamba2_film_lm: model.multiscale.slow_layer_headdims is required.")
+        if not slow_layer_headdims:
+            raise ValueError("multiscale_mamba2_film_lm: slow headdims must be non-empty.")
+        stride = int(OmegaConf.select(cfg, "model.multiscale.stride", default=4))
+        fusion = str(OmegaConf.select(cfg, "model.multiscale.fusion", default="film"))
+        film_init_zero = bool(OmegaConf.select(cfg, "model.multiscale.film_init_zero", default=True))
+        return MultiScaleMamba2FiLMLanguageModel(
+            vocab_size=vocab,
+            d_model=d_model,
+            fast_layer_headdims=fast_layer_headdims,
+            slow_layer_headdims=slow_layer_headdims,
+            stride=stride,
+            fusion=fusion,
+            film_init_zero=film_init_zero,
             **mamba_kw,
         )
 

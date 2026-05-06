@@ -1,0 +1,5 @@
+experiment=tiny_shakespeare_ms_film_stride2_random_windows device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TinyShakespeare/tiny_shakespeare_ms_film_stride2_random_windows
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/1 train_loss=4.3051 val_loss=4.0024 val_ppl=54.73 val_bpc=5.7742
+  saved best.pt (val_loss=4.002364)
+meta_metrics: train=26.14s eval=54.73s loop=81.05s setup=1.03s → meta_metrics.csv
