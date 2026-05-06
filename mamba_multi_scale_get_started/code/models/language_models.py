@@ -395,6 +395,232 @@ class MultiScaleMamba2FiLMLanguageModel(nn.Module):
         return F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
 
 
+class MultiScaleMamba2WindowSummaryLanguageModel(nn.Module):
+    """Fast full-seq Mamba + causal window-summary slow streams with residual fusion."""
+
+    def __init__(
+        self,
+        vocab_size: int,
+        d_model: int,
+        fast_layer_headdims: Sequence[int],
+        slow_layer_headdims: Sequence[int],
+        window_size: int = 8,
+        offsets: Sequence[int] = (0,),
+        summary_mode: str = "mean",
+        causal_mode: str = "completed",
+        fusion: str = "window_residual_gated",
+        gate_type: str = "vector",
+        diagnostics: bool = False,
+        **mamba_kwargs: Any,
+    ):
+        super().__init__()
+        ws = int(window_size)
+        if ws <= 1:
+            raise ValueError(f"multiscale.window_size must be > 1, got {window_size!r}.")
+        offs = [int(o) for o in list(offsets)]
+        if not offs:
+            raise ValueError("multiscale.offsets must be a non-empty list.")
+        if len(set(offs)) != len(offs):
+            raise ValueError(f"multiscale.offsets must be unique, got {offs!r}.")
+        bad_offsets = [o for o in offs if o < 0 or o >= ws]
+        if bad_offsets:
+            raise ValueError(
+                f"multiscale.offsets must satisfy 0 <= offset < window_size ({ws}), got {bad_offsets!r}."
+            )
+        sm = str(summary_mode).strip().lower()
+        if sm not in ("mean", "last"):
+            raise ValueError(f"multiscale.summary_mode must be 'mean' or 'last', got {summary_mode!r}.")
+        cm = str(causal_mode).strip().lower()
+        if cm not in ("completed", "current"):
+            raise ValueError(f"multiscale.causal_mode must be 'completed' or 'current', got {causal_mode!r}.")
+        fusion_l = str(fusion).strip().lower()
+        if fusion_l not in ("window_residual_gated", "window_residual_sum", "window_fast_only"):
+            raise ValueError(
+                "multiscale.fusion must be 'window_residual_gated', 'window_residual_sum', or "
+                "'window_fast_only', "
+                f"got {fusion!r}."
+            )
+        gate_type_l = str(gate_type).strip().lower()
+        if gate_type_l not in ("vector", "scalar"):
+            raise ValueError(f"multiscale.gate_type must be 'vector' or 'scalar', got {gate_type!r}.")
+        if not fast_layer_headdims:
+            raise ValueError("multiscale_mamba2_window_summary_lm: fast_layer_headdims must be non-empty.")
+        if not slow_layer_headdims:
+            raise ValueError("multiscale_mamba2_window_summary_lm: slow_layer_headdims must be non-empty.")
+
+        self.window_size = ws
+        self.offsets = offs
+        self.summary_mode = sm
+        self.causal_mode = cm
+        self.fusion = fusion_l
+        self.gate_type = gate_type_l
+        self.diagnostics = bool(diagnostics)
+        self.last_window_debug: dict[str, float | int | list[dict[str, int]] | list[float]] = {}
+        self.embed = nn.Embedding(vocab_size, d_model)
+        self.fast_seq = nn.Sequential(
+            *[MambaLayer(d_model=d_model, headdim=h, **mamba_kwargs) for h in fast_layer_headdims]
+        )
+        self.slow_seqs = nn.ModuleList(
+            [
+                nn.Sequential(
+                    *[MambaLayer(d_model=d_model, headdim=h, **mamba_kwargs) for h in slow_layer_headdims]
+                )
+                for _ in self.offsets
+            ]
+        )
+        gate_out_dim = d_model if self.gate_type == "vector" else 1
+        self.gate_projs = nn.ModuleList(
+            [nn.Linear(2 * d_model, gate_out_dim) for _ in self.offsets]
+        )
+        self.out_norm = nn.LayerNorm(d_model)
+        self.lm_head = nn.Linear(d_model, vocab_size)
+
+    def _build_stream_summaries(
+        self, emb: torch.Tensor, seq_len: int, offset: int
+    ) -> tuple[torch.Tensor | None, torch.Tensor, torch.Tensor, torch.Tensor]:
+        device = emb.device
+        batch = emb.size(0)
+        d_model = emb.size(-1)
+        starts = torch.arange(offset, seq_len, self.window_size, device=device)
+        if starts.numel() == 0:
+            empty = torch.empty((0,), dtype=torch.long, device=device)
+            return None, torch.full((seq_len,), -1, dtype=torch.long, device=device), empty, empty
+
+        ends_inclusive = torch.minimum(starts + self.window_size - 1, torch.full_like(starts, seq_len - 1))
+        ends_exclusive = ends_inclusive + 1
+        summaries: list[torch.Tensor] = []
+        for s, e in zip(starts.tolist(), ends_inclusive.tolist()):
+            w = emb[:, s : e + 1, :]
+            if self.summary_mode == "mean":
+                summaries.append(w.mean(dim=1))
+            else:
+                summaries.append(w[:, -1, :])
+        summary_seq = torch.stack(summaries, dim=1) if summaries else None
+
+        token_idx = torch.arange(seq_len, device=device).unsqueeze(1)
+        if self.causal_mode == "completed":
+            valid = ends_exclusive.unsqueeze(0) <= (token_idx + 1)
+        else:
+            valid = starts.unsqueeze(0) <= token_idx
+        last_idx = valid.to(torch.long).sum(dim=1) - 1
+        if summary_seq is not None:
+            valid_mask = last_idx >= 0
+            if valid_mask.any():
+                chosen_tokens = torch.arange(seq_len, device=device)[valid_mask]
+                if self.causal_mode == "completed":
+                    chosen_ends_ex = ends_exclusive[last_idx[valid_mask]]
+                    if not bool(torch.all(chosen_ends_ex <= (chosen_tokens + 1))):
+                        raise RuntimeError(
+                            "Causal window mapping violated in completed mode: found end_exclusive > token+1."
+                        )
+                else:
+                    chosen_starts = starts[last_idx[valid_mask]]
+                    if not bool(torch.all(chosen_starts <= chosen_tokens)):
+                        raise RuntimeError(
+                            "Window mapping violated in current mode: found start > token index."
+                        )
+
+        if summary_seq is None:
+            empty = torch.empty((0,), dtype=torch.long, device=device)
+            return None, torch.full((seq_len,), -1, dtype=torch.long, device=device), empty, empty
+        return summary_seq, last_idx, starts, ends_inclusive
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        emb = self.embed(x)
+        fast_out = self.fast_seq(emb)
+        seq_len = emb.size(1)
+        batch = emb.size(0)
+        d_model = emb.size(-1)
+
+        slow_ups: list[torch.Tensor] = []
+        stream_maps: list[dict[str, int]] = []
+        for offset, slow_seq in zip(self.offsets, self.slow_seqs):
+            summary_seq, last_idx, starts, ends_inclusive = self._build_stream_summaries(
+                emb, seq_len, offset
+            )
+            slow_up = emb.new_zeros((batch, seq_len, d_model))
+            if summary_seq is not None:
+                slow_out = slow_seq(summary_seq)
+                valid = last_idx >= 0
+                if valid.any():
+                    gather_idx = last_idx[valid]
+                    slow_up[:, valid, :] = slow_out[:, gather_idx, :]
+                if self.diagnostics and batch > 0 and starts.numel() > 0:
+                    sample_tokens = list(range(min(41, seq_len)))
+                    for t in sample_tokens:
+                        wi = int(last_idx[t].item())
+                        if wi >= 0:
+                            stream_maps.append(
+                                {
+                                    "offset": int(offset),
+                                    "token": int(t),
+                                    "window_index": wi,
+                                    "window_start": int(starts[wi].item()),
+                                    "window_end": int(ends_inclusive[wi].item()),
+                                }
+                            )
+            slow_ups.append(slow_up)
+
+        gate_vals: list[torch.Tensor] = []
+        if self.fusion == "window_fast_only":
+            fused = fast_out
+        elif self.fusion == "window_residual_sum":
+            stacked = torch.stack(slow_ups, dim=0)
+            fused = fast_out + stacked.mean(dim=0)
+        else:
+            fused = fast_out
+            for gate_proj, slow_up in zip(self.gate_projs, slow_ups):
+                gate = torch.sigmoid(gate_proj(torch.cat([fast_out, slow_up], dim=-1)))
+                gate_vals.append(gate)
+                fused = fused + gate * slow_up
+
+        logits = self.lm_head(self.out_norm(fused))
+        if self.diagnostics:
+            with torch.no_grad():
+                slow_cat = torch.stack(slow_ups, dim=0) if slow_ups else None
+                slow_nonzero_frac = 0.0
+                slow_norm_mean = 0.0
+                slow_norm_std = 0.0
+                if slow_cat is not None:
+                    slow_abs = slow_cat.abs().sum(dim=-1)
+                    slow_nonzero_frac = float((slow_abs > 0).float().mean().item())
+                    slow_norm = slow_cat.norm(dim=-1)
+                    slow_norm_mean = float(slow_norm.mean().item())
+                    slow_norm_std = float(slow_norm.std(unbiased=False).item())
+                fast_norm = fast_out.norm(dim=-1)
+                gate_mean = 0.0
+                gate_std = 0.0
+                gate_sample: list[float] = []
+                if gate_vals:
+                    gate_cat = torch.cat([g.reshape(-1) for g in gate_vals], dim=0)
+                    gate_mean = float(gate_cat.mean().item())
+                    gate_std = float(gate_cat.std(unbiased=False).item())
+                    gate_sample = [float(v) for v in gate_cat[:8].tolist()]
+                self.last_window_debug = {
+                    "seq_len": int(seq_len),
+                    "window_size": int(self.window_size),
+                    "offsets": [int(o) for o in self.offsets],
+                    "summary_mode": str(self.summary_mode),
+                    "causal_mode": str(self.causal_mode),
+                    "fusion": str(self.fusion),
+                    "slow_up_nonzero_fraction": slow_nonzero_frac,
+                    "fast_norm_mean": float(fast_norm.mean().item()),
+                    "fast_norm_std": float(fast_norm.std(unbiased=False).item()),
+                    "slow_norm_mean": slow_norm_mean,
+                    "slow_norm_std": slow_norm_std,
+                    "gate_mean": gate_mean,
+                    "gate_std": gate_std,
+                    "gate_sample": gate_sample,
+                    "nan_in_fast": int(torch.isnan(fast_out).any().item()),
+                    "nan_in_logits": int(torch.isnan(logits).any().item()),
+                    "mapping_sample": stream_maps[:120],
+                }
+        return logits
+
+    def loss(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        return F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
+
+
 def build_lm(cfg) -> nn.Module:
     """Build LM from ``cfg.model`` (OmegaConf / dict-like)."""
     from omegaconf import OmegaConf
@@ -575,6 +801,51 @@ def build_lm(cfg) -> nn.Module:
             stride=stride,
             fusion=fusion,
             film_init_zero=film_init_zero,
+            **mamba_kw,
+        )
+
+    if backbone == "multiscale_mamba2_window_summary_lm":
+        fast_hd = OmegaConf.select(cfg, "model.multiscale.fast_layer_headdims", default=None)
+        slow_hd = OmegaConf.select(cfg, "model.multiscale.slow_layer_headdims", default=None)
+        fb = OmegaConf.select(cfg, "model.layer_headdims", default=None)
+        if fast_hd is not None:
+            fast_layer_headdims = [int(h) for h in list(fast_hd)]
+        elif fb is not None:
+            fast_layer_headdims = [int(h) for h in list(fb)]
+        else:
+            raise ValueError(
+                "multiscale_mamba2_window_summary_lm: set model.multiscale.fast_layer_headdims "
+                "or model.layer_headdims."
+            )
+        if not fast_layer_headdims:
+            raise ValueError("multiscale_mamba2_window_summary_lm: fast headdims must be non-empty.")
+        if slow_hd is None:
+            raise ValueError("multiscale_mamba2_window_summary_lm: model.multiscale.slow_layer_headdims is required.")
+        slow_layer_headdims = [int(h) for h in list(slow_hd)]
+        if not slow_layer_headdims:
+            raise ValueError("multiscale_mamba2_window_summary_lm: slow headdims must be non-empty.")
+        window_size = int(OmegaConf.select(cfg, "model.multiscale.window_size", default=8))
+        offsets_raw = OmegaConf.select(cfg, "model.multiscale.offsets", default=[0])
+        offsets = [int(o) for o in list(offsets_raw)]
+        summary_mode = str(OmegaConf.select(cfg, "model.multiscale.summary_mode", default="mean"))
+        causal_mode = str(OmegaConf.select(cfg, "model.multiscale.causal_mode", default="completed"))
+        fusion = str(
+            OmegaConf.select(cfg, "model.multiscale.fusion", default="window_residual_gated")
+        )
+        gate_type = str(OmegaConf.select(cfg, "model.multiscale.gate_type", default="vector"))
+        diagnostics = bool(OmegaConf.select(cfg, "model.multiscale.diagnostics", default=False))
+        return MultiScaleMamba2WindowSummaryLanguageModel(
+            vocab_size=vocab,
+            d_model=d_model,
+            fast_layer_headdims=fast_layer_headdims,
+            slow_layer_headdims=slow_layer_headdims,
+            window_size=window_size,
+            offsets=offsets,
+            summary_mode=summary_mode,
+            causal_mode=causal_mode,
+            fusion=fusion,
+            gate_type=gate_type,
+            diagnostics=diagnostics,
             **mamba_kw,
         )
 

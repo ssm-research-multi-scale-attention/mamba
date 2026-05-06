@@ -1,0 +1,12 @@
+architectures:
+  - name: ms_window_ws8_o0
+    type: candidate
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_window_ws8_o0.yaml
+    mqar_config: configs/MQAR/mqar_ms_window_ws8_o0_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_window_ws8_o0.yaml
+
+  - name: ms_window_ws8_o0_o4
+    type: candidate
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_window_ws8_o0_o4.yaml
+    mqar_config: configs/MQAR/mqar_ms_window_ws8_o0_o4_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_window_ws8_o0_o4.yaml

@@ -44,3 +44,9 @@ JOB timing arch=ms_multiaxis_s2_s8 -> outputs/ArchEval/timing_ms_multiaxis_s2_s8
 Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_multiaxis_s2_s8.csv
 JOB timing arch=ms_film_stride2 -> outputs/ArchEval/timing_ms_film_stride2.csv
 Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_film_stride2.csv
+JOB timing arch=ms_window_ws8_o0 -> outputs/ArchEval/timing_ms_window_ws8_o0.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_window_ws8_o0.csv
+JOB timing arch=ms_window_ws8_o0 -> outputs/ArchEval/timing_ms_window_ws8_o0.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_window_ws8_o0.csv
+JOB timing arch=ms_window_ws8_o0 -> outputs/ArchEval/timing_ms_window_ws8_o0.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_window_ws8_o0.csv

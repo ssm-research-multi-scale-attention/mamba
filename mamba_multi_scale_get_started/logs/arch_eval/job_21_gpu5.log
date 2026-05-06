@@ -66,3 +66,9 @@ found duplicate key experiment
   in "/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/configs/TinyShakespeare/benchmark_lm_ms_multiaxis_s4_s16.yaml", line 44, column 1
 JOB timing arch=ms_film_stride4 -> outputs/ArchEval/timing_ms_film_stride4.csv
 Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_film_stride4.csv
+JOB timing arch=ms_window_ws8_o0_o4 -> outputs/ArchEval/timing_ms_window_ws8_o0_o4.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_window_ws8_o0_o4.csv
+JOB timing arch=ms_window_ws8_o0_o4 -> outputs/ArchEval/timing_ms_window_ws8_o0_o4.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_window_ws8_o0_o4.csv
+JOB timing arch=ms_window_ws8_o0_o4 -> outputs/ArchEval/timing_ms_window_ws8_o0_o4.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_window_ws8_o0_o4.csv

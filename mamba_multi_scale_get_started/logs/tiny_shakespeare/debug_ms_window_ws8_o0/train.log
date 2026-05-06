@@ -1,0 +1,5 @@
+experiment=debug_ms_window_ws8_o0 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/debug_ms_window_ws8_o0
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/1 train_loss=4.3165 val_loss=3.9352 val_ppl=51.17 val_bpc=5.6773
+  saved best.pt (val_loss=3.935191)
+meta_metrics: train=26.48s eval=66.23s loop=92.91s setup=1.07s → meta_metrics.csv
