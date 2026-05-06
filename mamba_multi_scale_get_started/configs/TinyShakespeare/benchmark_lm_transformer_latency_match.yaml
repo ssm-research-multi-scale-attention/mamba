@@ -1,0 +1,33 @@
+experiment:
+  name: benchmark_lm_transformer_latency_match
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: tiny_shakespeare
+  data_dir: data/tiny_shakespeare
+  block_size: 256
+
+loader:
+  batch_size: 1
+  num_workers: 0
+
+model:
+  backbone: transformer_lm
+  d_model: 192
+  vocab_size: 65
+  transformer:
+    n_layers: 3
+    n_heads: 4
+    mlp_ratio: 4
+    dropout: 0.1
+    max_seq_len: 1024
+    norm_first: true
+
+train:
+  epochs: 1
+
+logging:
+  output_dir: outputs/_benchmark_unused/${experiment.name}

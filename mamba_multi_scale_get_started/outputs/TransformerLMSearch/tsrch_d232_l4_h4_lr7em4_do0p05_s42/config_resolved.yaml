@@ -1,0 +1,37 @@
+experiment:
+  name: tsrch_d232_l4_h4_lr7em4_do0p05_s42
+  seed: 42
+device: cuda:0
+cuda_device: 0
+data:
+  dataset: tiny_shakespeare
+  data_dir: data/tiny_shakespeare
+  block_size: 256
+  train_ratio: 0.9
+  sampling: random_windows
+  steps_per_epoch: 2000
+loader:
+  batch_size: 128
+  num_workers: 0
+model:
+  backbone: transformer_lm
+  d_model: 232
+  vocab_size: 65
+  transformer:
+    n_layers: 4
+    n_heads: 4
+    mlp_ratio: 4
+    dropout: 0.05
+    max_seq_len: 1024
+    norm_first: true
+train:
+  epochs: 50
+  lr: 0.0007
+  weight_decay: 0.01
+  grad_clip: 1.0
+  debug_initial_eval: false
+  early_stopping:
+    patience: 8
+    min_delta: 0.0001
+logging:
+  output_dir: outputs/TransformerLMSearch/tsrch_d232_l4_h4_lr7em4_do0p05_s42

@@ -238,6 +238,12 @@ def _run_lm_initial_diagnostics(
     init_val = ""
     model.eval()
     assert not model.training
+    embed = getattr(model, "embed", None) or getattr(model, "tok_embed", None)
+    if embed is None:
+        raise AttributeError(
+            "LM diagnostics need model.embed or model.tok_embed (e.g. Mamba vs transformer_lm)."
+        )
+    emb_dim = int(embed.embedding_dim)
     with torch.no_grad():
         for name, loader in (("train", train_loader), ("val", val_loader)):
             x, y = next(iter(loader))
@@ -245,8 +251,8 @@ def _run_lm_initial_diagnostics(
             y = y.to(device, non_blocking=True)
             assert x.shape == y.shape and x.dim() == 2
             b, t = x.shape
-            emb = model.embed(x)
-            assert emb.shape == (b, t, model.embed.embedding_dim)
+            emb = embed(x)
+            assert emb.shape == (b, t, emb_dim)
             assert emb.dtype in (torch.float32, torch.float16, torch.bfloat16)
             logits = model(x)
             assert logits.shape == (b, t, voc)

@@ -1,0 +1,43 @@
+experiment=sanity_pm_lr1em4_do0p0_seed42 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TransformerLMSanity/sanity_pm_lr1em4_do0p0_seed42
+early_stopping: patience=5 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/20 train_loss=3.8033 val_loss=3.3763 val_ppl=29.26 val_bpc=4.8709
+  saved best.pt (val_loss=3.376260)
+epoch 2/20 train_loss=3.1959 val_loss=3.1043 val_ppl=22.29 val_bpc=4.4786
+  saved best.pt (val_loss=3.104339)
+epoch 3/20 train_loss=2.9913 val_loss=2.9446 val_ppl=19.00 val_bpc=4.2482
+  saved best.pt (val_loss=2.944630)
+epoch 4/20 train_loss=2.8631 val_loss=2.8376 val_ppl=17.07 val_bpc=4.0938
+  saved best.pt (val_loss=2.837593)
+epoch 5/20 train_loss=2.7730 val_loss=2.7661 val_ppl=15.90 val_bpc=3.9906
+  saved best.pt (val_loss=2.766087)
+epoch 6/20 train_loss=2.7136 val_loss=2.7039 val_ppl=14.94 val_bpc=3.9009
+  saved best.pt (val_loss=2.703888)
+epoch 7/20 train_loss=2.6632 val_loss=2.6569 val_ppl=14.25 val_bpc=3.8332
+  saved best.pt (val_loss=2.656940)
+epoch 8/20 train_loss=2.6303 val_loss=2.6227 val_ppl=13.77 val_bpc=3.7837
+  saved best.pt (val_loss=2.622661)
+epoch 9/20 train_loss=2.5994 val_loss=2.5977 val_ppl=13.43 val_bpc=3.7477
+  saved best.pt (val_loss=2.597710)
+epoch 10/20 train_loss=2.5819 val_loss=2.5772 val_ppl=13.16 val_bpc=3.7181
+  saved best.pt (val_loss=2.577158)
+epoch 11/20 train_loss=2.5660 val_loss=2.5622 val_ppl=12.96 val_bpc=3.6965
+  saved best.pt (val_loss=2.562221)
+epoch 12/20 train_loss=2.5521 val_loss=2.5504 val_ppl=12.81 val_bpc=3.6794
+  saved best.pt (val_loss=2.550400)
+epoch 13/20 train_loss=2.5394 val_loss=2.5403 val_ppl=12.68 val_bpc=3.6649
+  saved best.pt (val_loss=2.540326)
+epoch 14/20 train_loss=2.5305 val_loss=2.5318 val_ppl=12.58 val_bpc=3.6527
+  saved best.pt (val_loss=2.531827)
+epoch 15/20 train_loss=2.5269 val_loss=2.5236 val_ppl=12.47 val_bpc=3.6407
+  saved best.pt (val_loss=2.523554)
+epoch 16/20 train_loss=2.5136 val_loss=2.5175 val_ppl=12.40 val_bpc=3.6321
+  saved best.pt (val_loss=2.517549)
+epoch 17/20 train_loss=2.5081 val_loss=2.5112 val_ppl=12.32 val_bpc=3.6228
+  saved best.pt (val_loss=2.511160)
+epoch 18/20 train_loss=2.5000 val_loss=2.5055 val_ppl=12.25 val_bpc=3.6146
+  saved best.pt (val_loss=2.505460)
+epoch 19/20 train_loss=2.4966 val_loss=2.5008 val_ppl=12.19 val_bpc=3.6078
+  saved best.pt (val_loss=2.500752)
+epoch 20/20 train_loss=2.4874 val_loss=2.4974 val_ppl=12.15 val_bpc=3.6029
+  saved best.pt (val_loss=2.497369)
+meta_metrics: train=10.40s eval=193.90s loop=207.88s setup=2.60s → meta_metrics.csv

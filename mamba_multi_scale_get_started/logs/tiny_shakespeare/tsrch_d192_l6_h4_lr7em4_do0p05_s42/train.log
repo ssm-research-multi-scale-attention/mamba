@@ -1,0 +1,103 @@
+experiment=tsrch_d192_l6_h4_lr7em4_do0p05_s42 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TransformerLMSearch/tsrch_d192_l6_h4_lr7em4_do0p05_s42
+early_stopping: patience=8 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/50 train_loss=3.1387 val_loss=2.7829 val_ppl=16.17 val_bpc=4.0149
+  saved best.pt (val_loss=2.782909)
+epoch 2/50 train_loss=2.6736 val_loss=2.5981 val_ppl=13.44 val_bpc=3.7483
+  saved best.pt (val_loss=2.598141)
+epoch 3/50 train_loss=2.5720 val_loss=2.5383 val_ppl=12.66 val_bpc=3.6619
+  saved best.pt (val_loss=2.538263)
+epoch 4/50 train_loss=2.5284 val_loss=2.5126 val_ppl=12.34 val_bpc=3.6249
+  saved best.pt (val_loss=2.512611)
+epoch 5/50 train_loss=2.5024 val_loss=2.4963 val_ppl=12.14 val_bpc=3.6014
+  saved best.pt (val_loss=2.496296)
+epoch 6/50 train_loss=2.4868 val_loss=2.4792 val_ppl=11.93 val_bpc=3.5767
+  saved best.pt (val_loss=2.479180)
+epoch 7/50 train_loss=2.4718 val_loss=2.4737 val_ppl=11.87 val_bpc=3.5688
+  saved best.pt (val_loss=2.473724)
+epoch 8/50 train_loss=2.4581 val_loss=2.4609 val_ppl=11.72 val_bpc=3.5503
+  saved best.pt (val_loss=2.460878)
+epoch 9/50 train_loss=2.4401 val_loss=2.4391 val_ppl=11.46 val_bpc=3.5189
+  saved best.pt (val_loss=2.439142)
+epoch 10/50 train_loss=2.4224 val_loss=2.4189 val_ppl=11.23 val_bpc=3.4898
+  saved best.pt (val_loss=2.418930)
+epoch 11/50 train_loss=2.4029 val_loss=2.3916 val_ppl=10.93 val_bpc=3.4504
+  saved best.pt (val_loss=2.391604)
+epoch 12/50 train_loss=2.3779 val_loss=2.3658 val_ppl=10.65 val_bpc=3.4132
+  saved best.pt (val_loss=2.365827)
+epoch 13/50 train_loss=2.3450 val_loss=2.3286 val_ppl=10.26 val_bpc=3.3594
+  saved best.pt (val_loss=2.328574)
+epoch 14/50 train_loss=2.3148 val_loss=2.3262 val_ppl=10.24 val_bpc=3.3560
+  saved best.pt (val_loss=2.326213)
+epoch 15/50 train_loss=2.2973 val_loss=2.2641 val_ppl=9.62 val_bpc=3.2664
+  saved best.pt (val_loss=2.264069)
+epoch 16/50 train_loss=2.2443 val_loss=2.2255 val_ppl=9.26 val_bpc=3.2106
+  saved best.pt (val_loss=2.225451)
+epoch 17/50 train_loss=2.2078 val_loss=2.1967 val_ppl=9.00 val_bpc=3.1692
+  saved best.pt (val_loss=2.196749)
+epoch 18/50 train_loss=2.1725 val_loss=2.1629 val_ppl=8.70 val_bpc=3.1204
+  saved best.pt (val_loss=2.162881)
+epoch 19/50 train_loss=2.1469 val_loss=2.1353 val_ppl=8.46 val_bpc=3.0805
+  saved best.pt (val_loss=2.135250)
+epoch 20/50 train_loss=2.1104 val_loss=2.1215 val_ppl=8.34 val_bpc=3.0607
+  saved best.pt (val_loss=2.121496)
+epoch 21/50 train_loss=2.0857 val_loss=2.0892 val_ppl=8.08 val_bpc=3.0140
+  saved best.pt (val_loss=2.089164)
+epoch 22/50 train_loss=2.0519 val_loss=2.0694 val_ppl=7.92 val_bpc=2.9855
+  saved best.pt (val_loss=2.069420)
+epoch 23/50 train_loss=2.0301 val_loss=2.0480 val_ppl=7.75 val_bpc=2.9546
+  saved best.pt (val_loss=2.047956)
+epoch 24/50 train_loss=2.0051 val_loss=2.0315 val_ppl=7.63 val_bpc=2.9308
+  saved best.pt (val_loss=2.031507)
+epoch 25/50 train_loss=1.9767 val_loss=2.0053 val_ppl=7.43 val_bpc=2.8930
+  saved best.pt (val_loss=2.005258)
+epoch 26/50 train_loss=1.9567 val_loss=1.9872 val_ppl=7.29 val_bpc=2.8669
+  saved best.pt (val_loss=1.987175)
+epoch 27/50 train_loss=1.9287 val_loss=1.9724 val_ppl=7.19 val_bpc=2.8456
+  saved best.pt (val_loss=1.972402)
+epoch 28/50 train_loss=1.9157 val_loss=1.9529 val_ppl=7.05 val_bpc=2.8175
+  saved best.pt (val_loss=1.952946)
+epoch 29/50 train_loss=1.8796 val_loss=1.9365 val_ppl=6.93 val_bpc=2.7938
+  saved best.pt (val_loss=1.936521)
+epoch 30/50 train_loss=1.8592 val_loss=1.9256 val_ppl=6.86 val_bpc=2.7781
+  saved best.pt (val_loss=1.925637)
+epoch 31/50 train_loss=1.8403 val_loss=1.9093 val_ppl=6.75 val_bpc=2.7545
+  saved best.pt (val_loss=1.909252)
+epoch 32/50 train_loss=1.8170 val_loss=1.8893 val_ppl=6.61 val_bpc=2.7257
+  saved best.pt (val_loss=1.889315)
+epoch 33/50 train_loss=1.8018 val_loss=1.8777 val_ppl=6.54 val_bpc=2.7090
+  saved best.pt (val_loss=1.877737)
+epoch 34/50 train_loss=1.7806 val_loss=1.8581 val_ppl=6.41 val_bpc=2.6806
+  saved best.pt (val_loss=1.858051)
+epoch 35/50 train_loss=1.7662 val_loss=1.8416 val_ppl=6.31 val_bpc=2.6568
+  saved best.pt (val_loss=1.841555)
+epoch 36/50 train_loss=1.7462 val_loss=1.8359 val_ppl=6.27 val_bpc=2.6487
+  saved best.pt (val_loss=1.835932)
+epoch 37/50 train_loss=1.7293 val_loss=1.8201 val_ppl=6.17 val_bpc=2.6259
+  saved best.pt (val_loss=1.820144)
+epoch 38/50 train_loss=1.7225 val_loss=1.8105 val_ppl=6.11 val_bpc=2.6120
+  saved best.pt (val_loss=1.810474)
+epoch 39/50 train_loss=1.7005 val_loss=1.7916 val_ppl=6.00 val_bpc=2.5848
+  saved best.pt (val_loss=1.791635)
+epoch 40/50 train_loss=1.6958 val_loss=1.7855 val_ppl=5.96 val_bpc=2.5759
+  saved best.pt (val_loss=1.785497)
+epoch 41/50 train_loss=1.6727 val_loss=1.7799 val_ppl=5.93 val_bpc=2.5679
+  saved best.pt (val_loss=1.779932)
+epoch 42/50 train_loss=1.6646 val_loss=1.7702 val_ppl=5.87 val_bpc=2.5538
+  saved best.pt (val_loss=1.770155)
+epoch 43/50 train_loss=1.6525 val_loss=1.7574 val_ppl=5.80 val_bpc=2.5354
+  saved best.pt (val_loss=1.757409)
+epoch 44/50 train_loss=1.6400 val_loss=1.7477 val_ppl=5.74 val_bpc=2.5215
+  saved best.pt (val_loss=1.747743)
+epoch 45/50 train_loss=1.6278 val_loss=1.7312 val_ppl=5.65 val_bpc=2.4975
+  saved best.pt (val_loss=1.731154)
+epoch 46/50 train_loss=1.6142 val_loss=1.7290 val_ppl=5.64 val_bpc=2.4944
+  saved best.pt (val_loss=1.729013)
+epoch 47/50 train_loss=1.6092 val_loss=1.7159 val_ppl=5.56 val_bpc=2.4755
+  saved best.pt (val_loss=1.715902)
+epoch 48/50 train_loss=1.6040 val_loss=1.7105 val_ppl=5.53 val_bpc=2.4677
+  saved best.pt (val_loss=1.710483)
+epoch 49/50 train_loss=1.5921 val_loss=1.7068 val_ppl=5.51 val_bpc=2.4624
+  saved best.pt (val_loss=1.706807)
+epoch 50/50 train_loss=1.5786 val_loss=1.6941 val_ppl=5.44 val_bpc=2.4441
+  saved best.pt (val_loss=1.694110)
+meta_metrics: train=28.81s eval=470.38s loop=511.81s setup=3.49s → meta_metrics.csv

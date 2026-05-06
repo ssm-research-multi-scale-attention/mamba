@@ -1,4 +1,4 @@
-"""Character-level language models: LSTM, Mamba2, multi-scale Mamba2."""
+"""Character-level language models: LSTM, Mamba2, multi-scale Mamba2, Transformer LM."""
 from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
@@ -8,6 +8,126 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from sequence_backbones import MambaLayer
+
+
+class TransformerLanguageModel(nn.Module):
+    """
+    Causal decoder-only Transformer: token + learned position embeddings,
+    stacked causal self-attention blocks, final LayerNorm, LM head.
+    """
+
+    @staticmethod
+    def _causal_self_attn_mask(
+        seq_len: int, *, device: torch.device, dtype: torch.dtype
+    ) -> torch.Tensor:
+        return torch.triu(
+            torch.full((seq_len, seq_len), float("-inf"), device=device, dtype=dtype),
+            diagonal=1,
+        )
+
+    class _Block(nn.Module):
+        def __init__(
+            self,
+            d_model: int,
+            n_heads: int,
+            mlp_ratio: float,
+            dropout: float,
+            norm_first: bool,
+        ):
+            super().__init__()
+            self.norm_first = bool(norm_first)
+            self.self_attn = nn.MultiheadAttention(
+                d_model, n_heads, dropout=dropout, batch_first=True
+            )
+            self.norm1 = nn.LayerNorm(d_model)
+            self.norm2 = nn.LayerNorm(d_model)
+            dmlp = int(mlp_ratio * d_model)
+            self.mlp = nn.Sequential(
+                nn.Linear(d_model, dmlp),
+                nn.GELU(),
+                nn.Dropout(dropout),
+                nn.Linear(dmlp, d_model),
+                nn.Dropout(dropout),
+            )
+            self.dropout = nn.Dropout(dropout)
+
+        def forward(self, x: torch.Tensor, attn_mask: torch.Tensor) -> torch.Tensor:
+            if self.norm_first:
+                z = self.norm1(x)
+                attn_out, _ = self.self_attn(z, z, z, attn_mask=attn_mask, need_weights=False)
+                x = x + self.dropout(attn_out)
+                x = x + self.mlp(self.norm2(x))
+                return x
+            attn_out, _ = self.self_attn(x, x, x, attn_mask=attn_mask, need_weights=False)
+            x = self.norm1(x + self.dropout(attn_out))
+            x = self.norm2(x + self.mlp(x))
+            return x
+
+    def __init__(
+        self,
+        vocab_size: int,
+        d_model: int,
+        n_layers: int,
+        n_heads: int,
+        mlp_ratio: float = 4.0,
+        dropout: float = 0.1,
+        max_seq_len: int = 1024,
+        norm_first: bool = True,
+    ):
+        super().__init__()
+        if vocab_size < 1:
+            raise ValueError(f"vocab_size must be >= 1, got {vocab_size!r}")
+        if n_layers <= 0:
+            raise ValueError(f"transformer.n_layers must be > 0, got {n_layers!r}")
+        if d_model % n_heads != 0:
+            raise ValueError(
+                f"d_model ({d_model}) must be divisible by n_heads ({n_heads}); "
+                "set transformer.n_heads so d_model % n_heads == 0."
+            )
+        if max_seq_len < 1:
+            raise ValueError(f"transformer.max_seq_len must be >= 1, got {max_seq_len!r}")
+
+        self.vocab_size = int(vocab_size)
+        self.d_model = int(d_model)
+        self.max_seq_len = int(max_seq_len)
+        self.norm_first = bool(norm_first)
+
+        self.tok_embed = nn.Embedding(vocab_size, d_model)
+        self.pos_embed = nn.Embedding(max_seq_len, d_model)
+        self.drop = nn.Dropout(float(dropout))
+        self.blocks = nn.ModuleList(
+            [
+                TransformerLanguageModel._Block(
+                    d_model,
+                    n_heads,
+                    mlp_ratio,
+                    float(dropout),
+                    norm_first,
+                )
+                for _ in range(int(n_layers))
+            ]
+        )
+        self.out_norm = nn.LayerNorm(d_model)
+        self.lm_head = nn.Linear(d_model, vocab_size)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if x.dim() != 2:
+            raise ValueError(f"expected input_ids of shape [B, T], got shape {tuple(x.shape)}")
+        _b, t = x.shape
+        if t > self.max_seq_len:
+            raise ValueError(
+                f"sequence length ({t}) exceeds transformer.max_seq_len ({self.max_seq_len}); "
+                "increase model.transformer.max_seq_len or shorten sequences."
+            )
+        pos = torch.arange(t, device=x.device, dtype=torch.long).unsqueeze(0).expand(x.size(0), -1)
+        h = self.drop(self.tok_embed(x) + self.pos_embed(pos))
+        attn_mask = self._causal_self_attn_mask(t, device=h.device, dtype=h.dtype)
+        for blk in self.blocks:
+            h = blk(h, attn_mask)
+        return self.lm_head(self.out_norm(h))
+
+    def loss(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        return F.cross_entropy(logits.reshape(-1, logits.size(-1)), targets.reshape(-1))
 
 
 class LstmLanguageModel(nn.Module):
@@ -847,6 +967,33 @@ def build_lm(cfg) -> nn.Module:
             gate_type=gate_type,
             diagnostics=diagnostics,
             **mamba_kw,
+        )
+
+    if backbone == "transformer_lm":
+        tr_raw = OmegaConf.select(cfg, "model.transformer", default=None)
+        if tr_raw is None:
+            raise ValueError("transformer_lm requires model.transformer with n_layers, n_heads, etc.")
+        tr = OmegaConf.to_container(tr_raw, resolve=True)
+        if not isinstance(tr, dict):
+            raise ValueError("model.transformer must be a mapping (e.g. n_layers, n_heads).")
+        for key in ("n_layers", "n_heads", "max_seq_len"):
+            if key not in tr:
+                raise ValueError(f"transformer_lm: model.transformer.{key} is required.")
+        n_layers = int(tr["n_layers"])
+        n_heads = int(tr["n_heads"])
+        mlp_ratio = float(tr.get("mlp_ratio", 4.0))
+        dropout = float(tr.get("dropout", 0.0))
+        max_seq_len = int(tr["max_seq_len"])
+        norm_first = bool(tr.get("norm_first", True))
+        return TransformerLanguageModel(
+            vocab_size=vocab,
+            d_model=d_model,
+            n_layers=n_layers,
+            n_heads=n_heads,
+            mlp_ratio=mlp_ratio,
+            dropout=dropout,
+            max_seq_len=max_seq_len,
+            norm_first=norm_first,
         )
 
     raise ValueError(f"Unknown model.backbone for LM: {backbone!r}")

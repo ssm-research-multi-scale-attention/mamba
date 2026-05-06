@@ -1,0 +1,5 @@
+experiment=debug_transformer_param_match device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/debug_transformer_param_match
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/1 train_loss=4.3552 val_loss=4.1114 val_ppl=61.03 val_bpc=5.9315
+  saved best.pt (val_loss=4.111382)
+meta_metrics: train=0.29s eval=22.21s loop=22.72s setup=0.76s → meta_metrics.csv

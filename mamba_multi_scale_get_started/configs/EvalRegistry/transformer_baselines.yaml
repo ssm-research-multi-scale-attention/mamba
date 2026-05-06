@@ -1,0 +1,12 @@
+architectures:
+  - name: transformer_param_match
+    type: transformer_baseline
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_transformer_param_match.yaml
+    mqar_config: configs/MQAR/mqar_transformer_param_match_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_transformer_param_match.yaml
+
+  - name: transformer_latency_match
+    type: transformer_baseline
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_transformer_latency_match.yaml
+    mqar_config: configs/MQAR/mqar_transformer_latency_match_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_transformer_latency_match.yaml

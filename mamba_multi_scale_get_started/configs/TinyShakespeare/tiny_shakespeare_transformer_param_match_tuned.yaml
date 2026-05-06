@@ -1,0 +1,45 @@
+# LM tuning: Transformer на TinyShakespeare сильнее недообучается при lr=3e-4/chop@10epochs vs Mamba;
+# см. sanity sweep runners/eval/run_transformer_lm_sanity.sh. Базово: ниже dropout, выше LR, больше эпох — ближе к Mamba-кривым.
+experiment:
+  name: tiny_shakespeare_transformer_param_match_tuned
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: tiny_shakespeare
+  data_dir: data/tiny_shakespeare
+  block_size: 256
+  train_ratio: 0.9
+  sampling: random_windows
+  steps_per_epoch: 2000
+
+loader:
+  batch_size: 128
+  num_workers: 64
+
+model:
+  backbone: transformer_lm
+  d_model: 232
+  vocab_size: 65
+  transformer:
+    n_layers: 4
+    n_heads: 4
+    mlp_ratio: 4
+    dropout: 0.0
+    max_seq_len: 1024
+    norm_first: true
+
+train:
+  epochs: 20
+  lr: 0.001
+  weight_decay: 0.01
+  grad_clip: 1.0
+  debug_initial_eval: false
+  early_stopping:
+    patience: 5
+    min_delta: 0.0001
+
+logging:
+  output_dir: outputs/TinyShakespeare/${experiment.name}

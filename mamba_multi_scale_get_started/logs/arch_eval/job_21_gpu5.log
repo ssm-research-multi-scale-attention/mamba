@@ -72,3 +72,5 @@ JOB timing arch=ms_window_ws8_o0_o4 -> outputs/ArchEval/timing_ms_window_ws8_o0_
 Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_window_ws8_o0_o4.csv
 JOB timing arch=ms_window_ws8_o0_o4 -> outputs/ArchEval/timing_ms_window_ws8_o0_o4.csv
 Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_window_ws8_o0_o4.csv
+JOB timing arch=transformer_latency_match -> outputs/ArchEval/timing_transformer_latency_match.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_transformer_latency_match.csv

@@ -1,0 +1,7 @@
+======== sanity_pm_lr1em3_do0p1_seed42 ========
+gpu=5 lr=1e-3 dropout=0.1 seed=42
+cmd: /home/jovyan/.mlspace/envs/nvidenisov-other-4/bin/python code/train_lm.py --config /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/runners/configs/TinyShakespeare/tiny_shakespeare_transformer_param_match.yaml experiment.name=sanity_pm_lr1em3_do0p1_seed42 logging.output_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/runners/outputs/TransformerLMSanity/sanity_pm_lr1em3_do0p1_seed42 train.lr=1e-3 model.transformer.dropout=0.1 train.epochs=20 train.early_stopping.patience=5 experiment.seed=42 loader.batch_size=128 loader.num_workers=0 cuda_device=0 device=cuda:0
+
+/home/jovyan/.mlspace/envs/nvidenisov-other-4/bin/python: can't open file '/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/runners/code/train_lm.py': [Errno 2] No such file or directory
+
+======== finished sanity_pm_lr1em3_do0p1_seed42 rc=2 elapsed_sec=0.1 ========

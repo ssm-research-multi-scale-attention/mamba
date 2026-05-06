@@ -1,0 +1,2 @@
+experiment=sanity_pm_lr1e-4_do0.0_seed42 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/TransformerLMSanity/sanity_pm_lr1e-4_do0.0_seed42
+early_stopping: patience=5 min_delta=0.0001 (disable with train.early_stopping.patience=0)
