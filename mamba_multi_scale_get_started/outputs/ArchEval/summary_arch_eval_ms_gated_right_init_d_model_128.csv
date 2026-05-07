@@ -1,0 +1,14 @@
+arch_name,arch_type,task,setting,seed,params,lm_val_loss,lm_bpc,lm_ppl,mqar_answer_acc,mqar_exact_match,mqar_regime,timing_batch,latency_ms_mean,latency_ms_p50,latency_ms_p95,tokens_per_second,max_cuda_memory_mb
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,lm,,42,2573825,1.64470584,2.37280896,5.17948609,,,,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,mqar,easy,42,2688704,1.64470584,2.37280896,5.17948609,0.99140625,0.87300000,too_easy,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,mqar,easy,43,2688704,1.64470584,2.37280896,5.17948609,0.98796875,0.82450000,too_easy,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,mqar,easy,44,2688704,1.64470584,2.37280896,5.17948609,0.99243750,0.88700000,too_easy,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,mqar,trans704,42,2738048,1.64470584,2.37280896,5.17948609,0.01631250,0.00000000,too_hard,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,mqar,trans704,43,2738048,1.64470584,2.37280896,5.17948609,0.02200000,0.00000000,too_hard,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,mqar,trans704,44,2738048,1.64470584,2.37280896,5.17948609,0.00771875,0.00000000,too_hard,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,mqar,trans768,42,2754496,1.64470584,2.37280896,5.17948609,0.00593750,0.00000000,too_hard,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,mqar,trans768,43,2754496,1.64470584,2.37280896,5.17948609,0.00462500,0.00000000,too_hard,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,mqar,trans768,44,2754496,1.64470584,2.37280896,5.17948609,0.00403125,0.00000000,too_hard,,,,,,
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,timing,,,2754496,1.64470584,2.37280896,5.17948609,,,,1,6.538052,6.530624,6.762367,156621.5756,54.3491
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,timing,,,2754496,1.64470584,2.37280896,5.17948609,,,,8,6.522472,6.521171,6.652958,1255965.5623,141.9312
+ms_gated_right_init_d_model_128,candidate_timescale_init_d_model_128,timing,,,2754496,1.64470584,2.37280896,5.17948609,,,,16,6.679235,6.665284,6.869182,2452975.6824,243.0249

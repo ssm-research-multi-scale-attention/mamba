@@ -199,6 +199,12 @@ class MultiScaleMamba2LanguageModel(nn.Module):
         slow_layer_headdims: Sequence[int],
         stride: int = 4,
         fusion: str = "sum",
+        fast_A_init_range: tuple[float, float] = (0.1, 4.0),
+        slow_A_init_range: tuple[float, float] = (4.0, 32.0),
+        fast_dt_min: float = 0.0001,
+        fast_dt_max: float = 0.03,
+        slow_dt_min: float = 0.003,
+        slow_dt_max: float = 0.3,
         **mamba_kwargs: Any,
     ):
         super().__init__()
@@ -213,10 +219,10 @@ class MultiScaleMamba2LanguageModel(nn.Module):
 
         self.embed = nn.Embedding(vocab_size, d_model)
         self.fast_seq = nn.Sequential(
-            *[MambaLayer(d_model=d_model, headdim=h, **mamba_kwargs) for h in fast_layer_headdims]
+            *[MambaLayer(d_model=d_model, headdim=h, A_init_range=fast_A_init_range, dt_min=fast_dt_min, dt_max=fast_dt_max, **mamba_kwargs) for h in fast_layer_headdims]
         )
         self.slow_seq = nn.Sequential(
-            *[MambaLayer(d_model=d_model, headdim=h, **mamba_kwargs) for h in slow_layer_headdims]
+            *[MambaLayer(d_model=d_model, headdim=h, A_init_range=slow_A_init_range, dt_min=slow_dt_min, dt_max=slow_dt_max, **mamba_kwargs) for h in slow_layer_headdims]
         )
         self.fusion_proj = nn.Linear(2 * d_model, d_model) if fusion_l == "concat" else None
         self.gate = (
@@ -779,6 +785,12 @@ def build_lm(cfg) -> nn.Module:
             slow_layer_headdims = [32, 32]
         stride = int(OmegaConf.select(cfg, "model.multiscale.stride", default=4))
         fusion = str(OmegaConf.select(cfg, "model.multiscale.fusion", default="sum"))
+        fast_A_init_range = OmegaConf.select(cfg, "model.multiscale.fast_A_init_range", default=None)
+        slow_A_init_range = OmegaConf.select(cfg, "model.multiscale.slow_A_init_range", default=None)
+        fast_dt_min = OmegaConf.select(cfg, "model.multiscale.fast_dt_min", default=None)
+        fast_dt_max = OmegaConf.select(cfg, "model.multiscale.fast_dt_max", default=None)
+        slow_dt_min = OmegaConf.select(cfg, "model.multiscale.slow_dt_min", default=None)
+        slow_dt_max = OmegaConf.select(cfg, "model.multiscale.slow_dt_max", default=None)
         return MultiScaleMamba2LanguageModel(
             vocab,
             d_model,
@@ -786,6 +798,12 @@ def build_lm(cfg) -> nn.Module:
             slow_layer_headdims,
             stride=stride,
             fusion=fusion,
+            fast_A_init_range=fast_A_init_range,
+            slow_A_init_range=slow_A_init_range,
+            fast_dt_min=fast_dt_min,
+            fast_dt_max=fast_dt_max,
+            slow_dt_min=slow_dt_min,
+            slow_dt_max=slow_dt_max,
             **mamba_kw,
         )
 

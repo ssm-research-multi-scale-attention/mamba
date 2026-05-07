@@ -1,0 +1,7 @@
+architectures:
+  - name: mamba2_split_ts_50_50_depth_6
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_split_ts_50_50_depth_6.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_split_ts_50_50_depth_6_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_split_ts_50_50_depth_6.yaml
+  

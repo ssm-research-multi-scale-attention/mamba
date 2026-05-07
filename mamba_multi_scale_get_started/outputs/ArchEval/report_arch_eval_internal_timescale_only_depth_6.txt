@@ -1,0 +1,14 @@
+Architectural evaluation scorecard
+  source: /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/summary_arch_eval_internal_timescale_only_depth_6.csv
+
+Per-architecture:
+  mamba2_depth4 (BASELINE): lm_loss=1.59202970 mq704_em=0.56483333 tps16= speed_pen16=
+  mamba2_depth6 (BASELINE): lm_loss=1.53943708 mq704_em=0.00000000 tps16= speed_pen16=
+  mamba2_split_ts_50_50_depth_6 (TRADEOFF): lm_loss=1.55339102 mq704_em=0.00000000 tps16=3870724.171000 speed_pen16=
+
+Notes:
+  collapse_rate = fraction(seeds with regime too_hard); saturation_rate = fraction(too_easy).
+  PASS_RECALL: trans704/768 EM > max(Mamba2 d4,d6); collapse lower than both baselines on both;
+    LM val loss ≤ depth6 × 1.02.
+  PASS_LM: LM below depth6. TRADEOFF: ≥1 transition EM win vs baselines but LM/speed/collapse dip.
+  Inspect raw summary_arch_eval.csv for per-seed rows.

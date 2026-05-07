@@ -1,0 +1,6 @@
+architectures:
+  - name: ms_gated_right_init_d_model_128
+    type: candidate_timescale_init_d_model_128
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_gated_stride2_right_init_d_model_128.yaml
+    mqar_config: configs/MQAR/mqar_ms_gated_stride2_len128_right_init_d_model_128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_gated_stride2_right_init_d_model_128.yaml

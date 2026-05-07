@@ -1,0 +1,14 @@
+arch_name,arch_type,task,setting,seed,params,lm_val_loss,lm_bpc,lm_ppl,mqar_answer_acc,mqar_exact_match,mqar_regime,timing_batch,latency_ms_mean,latency_ms_p50,latency_ms_p95,tokens_per_second,max_cuda_memory_mb
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,lm,,42,2536673,1.55339102,2.24106952,4.72747399,,,,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,mqar,easy,42,2765984,1.55339102,2.24106952,4.72747399,0.99731250,0.95850000,too_easy,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,mqar,easy,43,2765984,1.55339102,2.24106952,4.72747399,0.99725000,0.95750000,too_easy,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,mqar,easy,44,2765984,1.55339102,2.24106952,4.72747399,0.99737500,0.96000000,too_easy,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,mqar,trans704,42,2864480,1.55339102,2.24106952,4.72747399,0.01865625,0.00000000,too_hard,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,mqar,trans704,43,2864480,1.55339102,2.24106952,4.72747399,0.03268750,0.00000000,too_hard,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,mqar,trans704,44,2864480,1.55339102,2.24106952,4.72747399,0.04150000,0.00000000,too_hard,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,mqar,trans768,42,2897312,1.55339102,2.24106952,4.72747399,0.02196875,0.00000000,too_hard,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,mqar,trans768,43,2897312,1.55339102,2.24106952,4.72747399,0.02296875,0.00000000,too_hard,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,mqar,trans768,44,2897312,1.55339102,2.24106952,4.72747399,0.99418750,0.91250000,too_easy,,,,,,
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,timing,,,2897312,1.55339102,2.24106952,4.72747399,,,,1,3.28933,3.287401,3.379854,311309.601,55.6982
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,timing,,,2897312,1.55339102,2.24106952,4.72747399,,,,8,3.438265,3.428401,3.495519,2382597.2254,153.7803
+mamba2_split_ts_50_50_depth_6,candidate_timescale_init,timing,,,2897312,1.55339102,2.24106952,4.72747399,,,,16,4.2328,4.15631,4.398788,3870724.171,266.874

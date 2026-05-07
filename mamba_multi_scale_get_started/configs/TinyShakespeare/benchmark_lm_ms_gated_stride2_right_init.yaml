@@ -1,0 +1,43 @@
+experiment:
+  name: benchmark_ms_gated_stride4_right_init_lm
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: tiny_shakespeare
+  data_dir: data/tiny_shakespeare
+  block_size: 256
+
+loader:
+  batch_size: 1
+  num_workers: 0
+
+model:
+  backbone: multiscale_mamba2_lm
+  d_model: 256
+  layer_headdims: [32, 32, 32, 32]
+  vocab_size: 65
+  multiscale:
+    stride: 2
+    fusion: gated
+    fast_layer_headdims: [32, 32, 32, 32]
+    slow_layer_headdims: [32, 32]
+    fast_A_init_range: [0.1, 4.0]
+    slow_A_init_range: [4.0, 32.0]
+    fast_dt_min: 0.0001
+    fast_dt_max: 0.03
+    slow_dt_min: 0.003
+    slow_dt_max: 0.3
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+
+train:
+  epochs: 1
+
+logging:
+  output_dir: outputs/_benchmark_unused/${experiment.name}

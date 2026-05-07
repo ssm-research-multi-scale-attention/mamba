@@ -1,0 +1,6 @@
+architectures:
+  - name: ms_gated_right_init
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_gated_stride2_right_init.yaml
+    mqar_config: configs/MQAR/mqar_ms_gated_stride2_len128_right_init.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_gated_stride2_right_init.yaml

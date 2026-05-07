@@ -1,0 +1,14 @@
+arch_name,arch_type,task,setting,seed,params,lm_val_loss,lm_bpc,lm_ppl,mqar_answer_acc,mqar_exact_match,mqar_regime,timing_batch,latency_ms_mean,latency_ms_p50,latency_ms_p95,tokens_per_second,max_cuda_memory_mb
+ms_gated_right_init,candidate_timescale_init,lm,,42,2669025,1.58004216,2.27951899,4.85516050,,,,,,,,,
+ms_gated_right_init,candidate_timescale_init,mqar,easy,42,2898336,1.58004216,2.27951899,4.85516050,0.99859375,0.97750000,too_easy,,,,,,
+ms_gated_right_init,candidate_timescale_init,mqar,easy,43,2898336,1.58004216,2.27951899,4.85516050,0.99862500,0.97850000,too_easy,,,,,,
+ms_gated_right_init,candidate_timescale_init,mqar,easy,44,2898336,1.58004216,2.27951899,4.85516050,0.99746875,0.95950000,too_easy,,,,,,
+ms_gated_right_init,candidate_timescale_init,mqar,trans704,42,2996832,1.58004216,2.27951899,4.85516050,0.99790625,0.96800000,too_easy,,,,,,
+ms_gated_right_init,candidate_timescale_init,mqar,trans704,43,2996832,1.58004216,2.27951899,4.85516050,0.99753125,0.96150000,too_easy,,,,,,
+ms_gated_right_init,candidate_timescale_init,mqar,trans704,44,2996832,1.58004216,2.27951899,4.85516050,0.99634375,0.94400000,too_easy,,,,,,
+ms_gated_right_init,candidate_timescale_init,mqar,trans768,42,3029664,1.58004216,2.27951899,4.85516050,0.99634375,0.94250000,too_easy,,,,,,
+ms_gated_right_init,candidate_timescale_init,mqar,trans768,43,3029664,1.58004216,2.27951899,4.85516050,0.99728125,0.95750000,too_easy,,,,,,
+ms_gated_right_init,candidate_timescale_init,mqar,trans768,44,3029664,1.58004216,2.27951899,4.85516050,0.99825000,0.97250000,too_easy,,,,,,
+ms_gated_right_init,candidate_timescale_init,timing,,,3029664,1.58004216,2.27951899,4.85516050,,,,1,3.449423,3.441986,3.644802,296861.2387,56.2031
+ms_gated_right_init,candidate_timescale_init,timing,,,3029664,1.58004216,2.27951899,4.85516050,,,,8,3.557917,3.51616,3.84284,2302471.0463,154.2852
+ms_gated_right_init,candidate_timescale_init,timing,,,3029664,1.58004216,2.27951899,4.85516050,,,,16,3.837812,3.797429,4.030137,4269099.4301,267.3789
