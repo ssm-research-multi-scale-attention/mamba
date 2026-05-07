@@ -82,3 +82,5 @@ epoch 20/20 train loss=0.0014 acc=1.0000 em=1.0000 | val loss=0.0057 acc=0.9997 
 test [best_loss_ckpt] loss=0.005985 acc=0.999469 em=0.991500
 test [best_acc_ckpt]  loss=0.006540 acc=0.999437 em=0.991000 random_baseline≈0.001953
 done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/mqar_easy_ms_attention_stride4_seed42/meta_metrics.csv
+JOB timing arch=mamba2_split_ts_25slow_75fast -> outputs/ArchEval/timing_mamba2_split_ts_25slow_75fast.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_mamba2_split_ts_25slow_75fast.csv

@@ -1,0 +1,44 @@
+experiment:
+  name: benchmark_mamba2_split_ts_25slow_75fast_lm
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: tiny_shakespeare
+  data_dir: data/tiny_shakespeare
+  block_size: 256
+
+loader:
+  batch_size: 1
+  num_workers: 0
+
+model:
+  backbone: mamba2_lm
+  d_model: 256
+  layer_headdims: [32, 32, 32, 32]
+  vocab_size: 65
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+    timescale_init: split_heads
+    timescale_splits:
+      - name: slow
+        fraction: 0.25
+        A_init_range: [0.1, 4.0]
+        dt_min: 0.0001
+        dt_max: 0.03
+      - name: fast
+        fraction: 0.75
+        A_init_range: [4.0, 32.0]
+        dt_min: 0.003
+        dt_max: 0.3
+
+train:
+  epochs: 1
+
+logging:
+  output_dir: outputs/_benchmark_unused/${experiment.name}

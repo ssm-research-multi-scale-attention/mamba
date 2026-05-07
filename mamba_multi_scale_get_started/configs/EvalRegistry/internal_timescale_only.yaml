@@ -1,0 +1,18 @@
+architectures:
+  - name: mamba2_split_ts_50_50
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_split_ts_50_50.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_split_ts_50_50_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_split_ts_50_50.yaml
+
+  - name: mamba2_split_ts_25slow_75fast
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_split_ts_25slow_75fast.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_split_ts_25slow_75fast_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_split_ts_25slow_75fast.yaml
+
+  - name: mamba2_split_ts_75slow_25fast
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_split_ts_75slow_25fast.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_split_ts_75slow_25fast_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_split_ts_75slow_25fast.yaml

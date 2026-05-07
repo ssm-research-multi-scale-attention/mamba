@@ -1,6 +1,7 @@
 """Sequence classifiers over token ids: Mamba2 stack, LSTM, GRU (+ mean pool + linear head)."""
 from __future__ import annotations
 
+import math
 from typing import Any, Sequence
 
 import torch
@@ -31,10 +32,135 @@ def masked_token_mean_pool(
 class MambaLayer(nn.Module):
     def __init__(self, d_model: int, headdim: int, **mamba_kwargs):
         super().__init__()
+        timescale_init = str(mamba_kwargs.pop("timescale_init", "single")).strip().lower()
+        timescale_splits = mamba_kwargs.pop("timescale_splits", None)
         self.block = Mamba2(d_model=d_model, headdim=headdim, **mamba_kwargs)
+        self.timescale_groups: list[dict[str, Any]] = []
+        self._maybe_apply_split_timescale_init(timescale_init, timescale_splits)
 
     def forward(self, x):
         return x + self.block(x)
+
+    @staticmethod
+    def _inv_softplus(x: torch.Tensor) -> torch.Tensor:
+        # Stable inverse softplus: y = x + log(-expm1(-x)).
+        return x + torch.log(-torch.expm1(-x))
+
+    @staticmethod
+    def _sample_log_uniform(
+        n: int, lo: float, hi: float, *, device: torch.device, dtype: torch.dtype
+    ) -> torch.Tensor:
+        if n <= 0:
+            return torch.empty((0,), device=device, dtype=dtype)
+        u = torch.rand((n,), device=device, dtype=dtype)
+        return torch.exp(math.log(lo) + u * (math.log(hi) - math.log(lo)))
+
+    def _validate_and_normalize_splits(
+        self, splits_raw: Any, nheads: int
+    ) -> tuple[list[dict[str, Any]], list[int]]:
+        if not isinstance(splits_raw, list) or len(splits_raw) == 0:
+            raise ValueError("timescale_splits must be a non-empty list when timescale_init='split_heads'.")
+        names_seen: set[str] = set()
+        total_fraction = 0.0
+        normalized: list[dict[str, Any]] = []
+        for idx, split in enumerate(splits_raw):
+            if not isinstance(split, dict):
+                raise ValueError(f"timescale_splits[{idx}] must be a mapping.")
+            name = str(split.get("name", f"group_{idx}")).strip()
+            if not name:
+                raise ValueError(f"timescale_splits[{idx}].name must be non-empty.")
+            if name in names_seen:
+                raise ValueError(f"Duplicate timescale_splits name: {name!r}.")
+            names_seen.add(name)
+            if "fraction" not in split:
+                raise ValueError(f"timescale_splits[{idx}].fraction is required.")
+            fraction = float(split["fraction"])
+            if fraction < 0.0 or fraction > 1.0:
+                raise ValueError(f"timescale_splits[{idx}].fraction must be in [0, 1], got {fraction}.")
+            total_fraction += fraction
+            if "A_init_range" not in split:
+                raise ValueError(f"timescale_splits[{idx}].A_init_range is required.")
+            a_init_range = split["A_init_range"]
+            if not isinstance(a_init_range, (list, tuple)) or len(a_init_range) != 2:
+                raise ValueError(f"timescale_splits[{idx}].A_init_range must be [min, max].")
+            a_lo = float(a_init_range[0])
+            a_hi = float(a_init_range[1])
+            if not (a_lo > 0.0 and a_hi > 0.0 and a_hi > a_lo):
+                raise ValueError(
+                    f"timescale_splits[{idx}].A_init_range must satisfy 0 < min < max, got {a_init_range!r}."
+                )
+            if "dt_min" not in split or "dt_max" not in split:
+                raise ValueError(f"timescale_splits[{idx}] must contain dt_min and dt_max.")
+            dt_min = float(split["dt_min"])
+            dt_max = float(split["dt_max"])
+            if not (dt_min > 0.0 and dt_max > dt_min):
+                raise ValueError(
+                    f"timescale_splits[{idx}] must satisfy 0 < dt_min < dt_max, got dt_min={dt_min}, dt_max={dt_max}."
+                )
+            normalized.append(
+                {
+                    "name": name,
+                    "fraction": fraction,
+                    "A_init_range": (a_lo, a_hi),
+                    "dt_min": dt_min,
+                    "dt_max": dt_max,
+                }
+            )
+
+        if total_fraction <= 0.0:
+            raise ValueError("timescale_splits fractions must sum to > 0.")
+        if total_fraction > 1.0 + 1e-8:
+            raise ValueError(f"timescale_splits fractions must sum to <= 1.0, got {total_fraction}.")
+
+        counts: list[int] = []
+        allocated = 0
+        for split in normalized[:-1]:
+            c = int(nheads * float(split["fraction"]))
+            counts.append(c)
+            allocated += c
+        counts.append(max(0, nheads - allocated))
+        return normalized, counts
+
+    def _maybe_apply_split_timescale_init(self, timescale_init: str, timescale_splits: Any) -> None:
+        if timescale_init == "single":
+            return
+        if timescale_init != "split_heads":
+            raise ValueError(
+                f"Unsupported model.mamba.timescale_init={timescale_init!r}. Use 'single' or 'split_heads'."
+            )
+        if not hasattr(self.block, "A_log") or not hasattr(self.block, "dt_bias"):
+            raise ValueError("Mamba2 block must expose A_log and dt_bias for split_heads timescale init.")
+        nheads = int(self.block.A_log.numel())
+        if int(self.block.dt_bias.numel()) != nheads:
+            raise ValueError("Expected A_log and dt_bias to have matching [nheads] shape.")
+        splits, counts = self._validate_and_normalize_splits(timescale_splits, nheads)
+        device = self.block.A_log.device
+        dtype = self.block.A_log.dtype
+        offset = 0
+        group_meta: list[dict[str, Any]] = []
+        with torch.no_grad():
+            for split, count in zip(splits, counts):
+                start = offset
+                end = start + count
+                if count > 0:
+                    a_lo, a_hi = split["A_init_range"]
+                    a_vals = self._sample_log_uniform(count, a_lo, a_hi, device=device, dtype=dtype)
+                    dt_vals = self._sample_log_uniform(
+                        count, float(split["dt_min"]), float(split["dt_max"]), device=device, dtype=dtype
+                    )
+                    self.block.A_log[start:end].copy_(torch.log(a_vals))
+                    self.block.dt_bias[start:end].copy_(self._inv_softplus(dt_vals))
+                group_meta.append(
+                    {
+                        "name": split["name"],
+                        "start": start,
+                        "end": end,
+                        "count": count,
+                        "fraction": float(split["fraction"]),
+                    }
+                )
+                offset = end
+        self.timescale_groups = group_meta
 
 
 class MambaHeadsClassifier(nn.Module):

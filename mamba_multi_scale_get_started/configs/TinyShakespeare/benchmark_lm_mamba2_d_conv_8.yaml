@@ -1,0 +1,32 @@
+experiment:
+  name: benchmark_mamba2_lm
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: tiny_shakespeare
+  data_dir: data/tiny_shakespeare
+  block_size: 256
+
+loader:
+  batch_size: 1
+  num_workers: 0
+
+model:
+  backbone: mamba2_lm
+  d_model: 256
+  layer_headdims: [32, 32, 32, 32]
+  vocab_size: 65
+  mamba:
+    d_state: 32
+    d_conv: 8
+    expand: 2
+    ngroups: 1
+
+train:
+  epochs: 1
+
+logging:
+  output_dir: outputs/_benchmark_unused/${experiment.name}

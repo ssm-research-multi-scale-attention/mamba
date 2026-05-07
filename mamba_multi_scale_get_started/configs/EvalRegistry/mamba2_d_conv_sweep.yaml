@@ -1,0 +1,36 @@
+architectures:
+  - name: mamba2_depth4_d_conv_2
+    type: candidate_depth_4_d_conv_2
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_depth4_d_conv_2.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_depth4_len128_d_conv_2.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_d_conv_2.yaml
+
+  - name: mamba2_depth4_d_conv_8
+    type: candidate_depth_4_d_conv_8
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_depth4_d_conv_8.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_depth4_len128_d_conv_8.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_d_conv_8.yaml
+  
+  - name: mamba2_depth4_d_conv_16
+    type: candidate_depth_4_d_conv_16
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_depth4_d_conv_16.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_depth4_len128_d_conv_16.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_d_conv_16.yaml
+
+  - name: mamba2_depth6_d_conv_2
+    type: candidate_depth_6_d_conv_2
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_depth6_d_conv_2.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_depth6_len128_d_conv_2.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_depth6_d_conv_2.yaml
+
+  - name: mamba2_depth6_d_conv_8
+    type: candidate_depth_6_d_conv_8
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_depth6_d_conv_8.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_depth6_len128_d_conv_8.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_depth6_d_conv_8.yaml
+
+  - name: mamba2_depth6_d_conv_16
+    type: candidate_depth_6_d_conv_16
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_depth6_d_conv_16.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_depth6_len128_d_conv_16.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_depth6_d_conv_16.yaml

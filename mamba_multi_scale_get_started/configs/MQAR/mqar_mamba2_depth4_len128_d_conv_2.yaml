@@ -1,0 +1,46 @@
+experiment:
+  name: mqar_mamba2_depth4_len128
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: mqar
+  input_seq_len: 128
+  num_kv_pairs: 16
+  vocab_size: 1024
+  train_examples: 20000
+  val_examples: 2000
+  test_examples: 2000
+  num_passes: 1
+  random_non_queries: true
+  fixed_examples: true
+  power_a: 0.01
+
+loader:
+  batch_size: 128
+  num_workers: 8
+
+train:
+  epochs: 20
+  lr: 0.0003
+  weight_decay: 0.01
+  grad_clip: 1.0
+  early_stopping:
+    patience: 4
+    min_delta: 0.0001
+
+logging:
+  output_dir: outputs/MQAR/${experiment.name}
+
+model:
+  backbone: mamba2_lm
+  d_model: 256
+  layer_headdims: [32, 32, 32, 32]
+  vocab_size: 1024
+  mamba:
+    d_state: 32
+    d_conv: 2
+    expand: 2
+    ngroups: 1
