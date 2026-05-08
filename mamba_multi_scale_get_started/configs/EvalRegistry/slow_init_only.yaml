@@ -1,0 +1,7 @@
+# ArchEval slice: mamba2_slow_init (LM + MQAR + timing).
+architectures:
+  - name: mamba2_slow_init
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_slow_init.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_slow_init_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_slow_init.yaml

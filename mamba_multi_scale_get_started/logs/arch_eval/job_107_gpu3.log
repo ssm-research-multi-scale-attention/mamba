@@ -1,0 +1,2 @@
+JOB timing arch=ms_gated_right_init repeat=2 -> outputs/ArchEval/timing_ms_gated_right_init_repeat2.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_gated_right_init_repeat2.csv

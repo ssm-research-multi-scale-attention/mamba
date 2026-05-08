@@ -85,3 +85,4 @@ test [best_acc_ckpt]  loss=0.018943 acc=0.995844 em=0.934500 random_baseline≈0
 done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/mqar_trans768_ms_gated_stride2_seed44/meta_metrics.csv
 JOB timing arch=mamba2_split_ts_50_50 -> outputs/ArchEval/timing_mamba2_split_ts_50_50.csv
 Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_mamba2_split_ts_50_50.csv
+SKIP mqar setting=easy arch=mamba2_slow_init seed=42

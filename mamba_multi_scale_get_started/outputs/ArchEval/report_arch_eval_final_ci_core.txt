@@ -1,0 +1,16 @@
+Architectural evaluation scorecard
+  source: /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/summary_arch_eval_final_ci_core.csv
+
+Per-architecture:
+  mamba2_depth4 (BASELINE): lm_loss=1.58755169 mq704_em=0.33890000 tps16=5819544.904580 speed_pen16=0.0000
+  mamba2_slow_init (PASS_RECALL): lm_loss=1.58999058 mq704_em=0.92730000 tps16=5765734.182880 speed_pen16=0.9247
+  mamba2_split_ts_slow_veryslow (PASS_RECALL): lm_loss=1.59495533 mq704_em=0.97560000 tps16=5784886.108160 speed_pen16=0.5956
+  ms_gated_right_init (PASS_RECALL): lm_loss=1.57902169 mq704_em=0.94770000 tps16=4293010.367220 speed_pen16=26.2312
+  transformer_param_match (BASELINE): lm_loss=2.50429950 mq704_em=1.00000000 tps16=1845156.412760 speed_pen16=68.2938
+
+Notes:
+  mqar_* collapse_rate/saturation_rate: fraction(per-seed) too_hard/too_easy (legacy mqar regime).
+  mqar_* group_label ∈ {stable,transition,collapsed} uses collapse_rate + mean EM threshold rules.
+  LM / MQAR / timing columns with _n_ok/_mean/_std/_sem/_ci95_* summarise across seeds/repeats.
+  PASS_RECALL thresholds use best available Mamba2 baseline (depth6 if present else depth4).
+  Inspect the summary CSV for per-seed / per-repeat detail rows.

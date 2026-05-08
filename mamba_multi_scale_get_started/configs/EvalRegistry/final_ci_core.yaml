@@ -1,0 +1,31 @@
+# ArchEval core slice (final CI experiments): LM + MQAR + timing configs per architecture tag.
+architectures:
+  - name: mamba2_depth4
+    type: baseline
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_depth4.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_depth4_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2.yaml
+
+  - name: mamba2_slow_init
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_slow_init.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_slow_init_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_slow_init.yaml
+
+  - name: mamba2_split_ts_slow_veryslow
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_split_ts_slow_veryslow.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_split_ts_slow_veryslow_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_split_ts_slow_veryslow.yaml
+
+  - name: ms_gated_right_init
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_gated_stride2_right_init.yaml
+    mqar_config: configs/MQAR/mqar_ms_gated_stride2_len128_right_init.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_gated_stride2_right_init.yaml
+
+  - name: transformer_param_match
+    type: transformer_baseline
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_transformer_param_match.yaml
+    mqar_config: configs/MQAR/mqar_transformer_param_match_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_transformer_param_match.yaml

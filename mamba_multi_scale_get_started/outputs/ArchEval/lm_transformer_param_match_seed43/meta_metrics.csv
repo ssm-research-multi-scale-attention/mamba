@@ -1,0 +1,2 @@
+experiment_name,seed,device,cuda_device_name,epochs_planned,epochs_completed,early_stopped,best_val_loss,num_parameters_trainable,wall_setup_sec,wall_train_phases_sec,wall_eval_phases_sec,wall_training_loop_sec,wall_overhead_sec,finished_at_utc,dataset,data_sampling,debug_initial_train_ce,debug_initial_val_ce,debug_shift_ok,status
+archeval_lm_transformer_param_match_seed43,43,cuda:0,NVIDIA H100 80GB HBM3,10,10,False,2.50685803,2863873,3.067412,30.15113,610.603015,642.505999,1.751854,2026-05-08T20:42:15.263135+00:00,tiny_shakespeare,random_windows,,,,ok

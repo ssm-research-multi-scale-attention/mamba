@@ -161,3 +161,4 @@ epoch 20/20 train loss=0.0006 acc=1.0000 em=1.0000 | val loss=0.0049 acc=0.9989 
 test [best_loss_ckpt] loss=0.004035 acc=0.999219 em=0.987500
 test [best_acc_ckpt]  loss=0.004035 acc=0.999219 em=0.987500 random_baseline≈0.001953
 done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/mqar_easy_mamba2_split_ts_75slow_25fast_seed42/meta_metrics.csv
+SKIP mqar setting=trans704 arch=mamba2_depth4 seed=43

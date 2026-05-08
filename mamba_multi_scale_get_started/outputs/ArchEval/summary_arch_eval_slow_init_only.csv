@@ -1,0 +1,14 @@
+arch_name,arch_type,task,setting,seed,params,lm_val_loss,lm_bpc,lm_ppl,mqar_answer_acc,mqar_exact_match,mqar_regime,timing_batch,latency_ms_mean,latency_ms_p50,latency_ms_p95,tokens_per_second,max_cuda_memory_mb
+mamba2_slow_init,candidate_timescale_init,lm,,42,1702401,1.59292496,2.29810494,4.91811320,,,,,,,,,
+mamba2_slow_init,candidate_timescale_init,mqar,easy,42,1931712,1.59292496,2.29810494,4.91811320,0.99821875,0.97150000,too_easy,,,,,,
+mamba2_slow_init,candidate_timescale_init,mqar,easy,43,1931712,1.59292496,2.29810494,4.91811320,0.99906250,0.98500000,too_easy,,,,,,
+mamba2_slow_init,candidate_timescale_init,mqar,easy,44,1931712,1.59292496,2.29810494,4.91811320,0.99787500,0.96650000,too_easy,,,,,,
+mamba2_slow_init,candidate_timescale_init,mqar,trans704,42,2030208,1.59292496,2.29810494,4.91811320,0.99834375,0.97350000,too_easy,,,,,,
+mamba2_slow_init,candidate_timescale_init,mqar,trans704,43,2030208,1.59292496,2.29810494,4.91811320,0.99768750,0.96300000,too_easy,,,,,,
+mamba2_slow_init,candidate_timescale_init,mqar,trans704,44,2030208,1.59292496,2.29810494,4.91811320,0.98331250,0.76550000,interesting,,,,,,
+mamba2_slow_init,candidate_timescale_init,mqar,trans768,42,2063040,1.59292496,2.29810494,4.91811320,0.99728125,0.95650000,too_easy,,,,,,
+mamba2_slow_init,candidate_timescale_init,mqar,trans768,43,2063040,1.59292496,2.29810494,4.91811320,0.99871875,0.97950000,too_easy,,,,,,
+mamba2_slow_init,candidate_timescale_init,mqar,trans768,44,2063040,1.59292496,2.29810494,4.91811320,0.99818750,0.97150000,too_easy,,,,,,
+mamba2_slow_init,candidate_timescale_init,timing,,,2063040,1.59292496,2.29810494,4.91811320,,,,1,2.274177,2.255766,2.419997,450272.8538,52.5127
+mamba2_slow_init,candidate_timescale_init,timing,,,2063040,1.59292496,2.29810494,4.91811320,,,,8,2.399945,2.340136,2.617081,3413411.7717,150.5947
+mamba2_slow_init,candidate_timescale_init,timing,,,2063040,1.59292496,2.29810494,4.91811320,,,,16,2.836013,2.833614,2.857924,5777123.4702,263.6885

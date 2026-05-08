@@ -143,6 +143,7 @@ def _write_meta_metrics_csv(path: Path, row: dict[str, str | int | float | bool]
         "debug_initial_train_ce",
         "debug_initial_val_ce",
         "debug_shift_ok",
+        "status",
     ]
     with path.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
@@ -447,6 +448,7 @@ def main(config_path: str, debug_initial_eval: bool, overrides: tuple[str, ...])
             "debug_initial_train_ce": dbg_train_ce,
             "debug_initial_val_ce": dbg_val_ce,
             "debug_shift_ok": dbg_shift,
+            "status": "ok",
         },
     )
     log_line(

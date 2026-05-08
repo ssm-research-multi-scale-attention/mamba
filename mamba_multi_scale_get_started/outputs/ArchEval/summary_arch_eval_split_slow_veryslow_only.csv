@@ -1,0 +1,14 @@
+arch_name,arch_type,task,setting,seed,params,lm_val_loss,lm_bpc,lm_ppl,mqar_answer_acc,mqar_exact_match,mqar_regime,timing_batch,latency_ms_mean,latency_ms_p50,latency_ms_p95,tokens_per_second,max_cuda_memory_mb
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,lm,,42,1702401,1.59292012,2.29809796,4.91808939,,,,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,mqar,easy,42,1931712,1.59292012,2.29809796,4.91808939,0.99853125,0.97700000,too_easy,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,mqar,easy,43,1931712,1.59292012,2.29809796,4.91808939,0.99818750,0.97100000,too_easy,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,mqar,easy,44,1931712,1.59292012,2.29809796,4.91808939,0.99828125,0.97250000,too_easy,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,mqar,trans704,42,2030208,1.59292012,2.29809796,4.91808939,0.99812500,0.97000000,too_easy,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,mqar,trans704,43,2030208,1.59292012,2.29809796,4.91808939,0.99900000,0.98450000,too_easy,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,mqar,trans704,44,2030208,1.59292012,2.29809796,4.91808939,0.99834375,0.97350000,too_easy,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,mqar,trans768,42,2063040,1.59292012,2.29809796,4.91808939,0.99625000,0.94300000,too_easy,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,mqar,trans768,43,2063040,1.59292012,2.29809796,4.91808939,0.99881250,0.98100000,too_easy,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,mqar,trans768,44,2063040,1.59292012,2.29809796,4.91808939,0.99675000,0.94850000,too_easy,,,,,,
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,timing,,,2063040,1.59292012,2.29809796,4.91808939,,,,1,2.244407,2.23265,2.336311,456245.1721,52.5127
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,timing,,,2063040,1.59292012,2.29809796,4.91808939,,,,8,2.342534,2.313737,2.589115,3497067.7191,150.5947
+mamba2_split_ts_slow_veryslow,candidate_timescale_init,timing,,,2063040,1.59292012,2.29809796,4.91808939,,,,16,2.818976,2.81713,2.843529,5812040.2251,263.6885

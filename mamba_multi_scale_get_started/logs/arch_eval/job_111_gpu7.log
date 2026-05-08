@@ -1,0 +1,2 @@
+JOB timing arch=transformer_param_match repeat=1 -> outputs/ArchEval/timing_transformer_param_match_repeat1.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_transformer_param_match_repeat1.csv

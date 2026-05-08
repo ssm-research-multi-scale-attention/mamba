@@ -1,0 +1,7 @@
+# ArchEval slice: mamba2_split_ts_slow_veryslow (LM + MQAR + timing).
+architectures:
+  - name: mamba2_split_ts_slow_veryslow
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_mamba2_split_ts_slow_veryslow.yaml
+    mqar_config: configs/MQAR/mqar_mamba2_split_ts_slow_veryslow_len128.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_mamba2_split_ts_slow_veryslow.yaml
