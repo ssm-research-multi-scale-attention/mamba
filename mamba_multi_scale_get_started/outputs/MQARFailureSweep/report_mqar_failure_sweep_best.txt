@@ -1,0 +1,315 @@
+MQAR failure sweep report (root=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQARFailureSweep)
+Per-run summary: /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQARFailureSweep/summary_mqar_failure_sweep_best.csv
+
+## model_name=mamba2_slow_init
+
+Grouped by model_name / vocab_size (seeds aggregated): mean_acc, std_acc, mean_em, std_em, collapse_rate (fraction regime==too_hard), saturation_rate (fraction regime==too_easy), label.
+
+vocab_size=512
+  mean_acc=0.9984 std_acc=0.0006 mean_em=0.9748 std_em=0.0099
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=640
+  mean_acc=0.9976 std_acc=0.0012 mean_em=0.9625 std_em=0.0178
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=704
+  mean_acc=0.9934 std_acc=0.0084 mean_em=0.9042 std_em=0.1163
+  collapse_rate=0.000 saturation_rate=0.667 label=stable
+
+vocab_size=768
+  mean_acc=0.9982 std_acc=0.0007 mean_em=0.9712 std_em=0.0113
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=896
+  mean_acc=0.9979 std_acc=0.0011 mean_em=0.9675 std_em=0.0173
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1024
+  mean_acc=0.9972 std_acc=0.0007 mean_em=0.9570 std_em=0.0104
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1280
+  mean_acc=0.0015 std_acc=0.0001 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=1536
+  mean_acc=0.0013 std_acc=0.0002 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=2048
+  mean_acc=0.0011 std_acc=0.0005 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+estimated_failure_point: first_collapsed_vocab=1280 last_stable_vocab=1024
+
+## model_name=mamba2_split_ts_50_50
+
+Grouped by model_name / vocab_size (seeds aggregated): mean_acc, std_acc, mean_em, std_em, collapse_rate (fraction regime==too_hard), saturation_rate (fraction regime==too_easy), label.
+
+vocab_size=512
+  mean_acc=0.9991 std_acc=0.0001 mean_em=0.9858 std_em=0.0019
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=640
+  mean_acc=0.9989 std_acc=0.0007 mean_em=0.9820 std_em=0.0104
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=704
+  mean_acc=0.9981 std_acc=0.0007 mean_em=0.9698 std_em=0.0108
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=768
+  mean_acc=0.9982 std_acc=0.0010 mean_em=0.9712 std_em=0.0158
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=896
+  mean_acc=0.6619 std_acc=0.5713 mean_em=0.5838 std_em=0.5083
+  collapse_rate=0.333 saturation_rate=0.667 label=transition
+
+vocab_size=1024
+  mean_acc=0.0019 std_acc=0.0001 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=1280
+  mean_acc=0.0017 std_acc=0.0001 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=1536
+  mean_acc=0.0014 std_acc=0.0002 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=2048
+  mean_acc=0.0009 std_acc=0.0002 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+estimated_failure_point: first_collapsed_vocab=1024 last_stable_vocab=768
+
+## model_name=mamba2_split_ts_slow_default
+
+Grouped by model_name / vocab_size (seeds aggregated): mean_acc, std_acc, mean_em, std_em, collapse_rate (fraction regime==too_hard), saturation_rate (fraction regime==too_easy), label.
+
+vocab_size=512
+  mean_acc=0.9991 std_acc=0.0002 mean_em=0.9857 std_em=0.0030
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab=640	(no completed ok runs in summary)
+
+vocab=704	(no completed ok runs in summary)
+
+vocab_size=768
+  mean_acc=0.9980 std_acc=0.0008 mean_em=0.9692 std_em=0.0131
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=896
+  mean_acc=0.9971 std_acc=0.0013 mean_em=0.9537 std_em=0.0203
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1024
+  mean_acc=0.3337 std_acc=0.5748 mean_em=0.3197 std_em=0.5537
+  collapse_rate=0.667 saturation_rate=0.333 label=transition
+
+vocab_size=1280
+  mean_acc=0.0017 std_acc=0.0001 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab=1536	(no completed ok runs in summary)
+
+vocab=2048	(no completed ok runs in summary)
+
+estimated_failure_point: first_collapsed_vocab=1280 last_stable_vocab=896
+
+## model_name=mamba2_split_ts_slow_veryslow
+
+Grouped by model_name / vocab_size (seeds aggregated): mean_acc, std_acc, mean_em, std_em, collapse_rate (fraction regime==too_hard), saturation_rate (fraction regime==too_easy), label.
+
+vocab_size=512
+  mean_acc=0.9984 std_acc=0.0003 mean_em=0.9743 std_em=0.0045
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab=640	(no completed ok runs in summary)
+
+vocab=704	(no completed ok runs in summary)
+
+vocab_size=768
+  mean_acc=0.9974 std_acc=0.0014 mean_em=0.9600 std_em=0.0210
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=896
+  mean_acc=0.9979 std_acc=0.0004 mean_em=0.9667 std_em=0.0063
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1024
+  mean_acc=0.9981 std_acc=0.0006 mean_em=0.9693 std_em=0.0095
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1280
+  mean_acc=0.0018 std_acc=0.0001 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab=1536	(no completed ok runs in summary)
+
+vocab=2048	(no completed ok runs in summary)
+
+estimated_failure_point: first_collapsed_vocab=1280 last_stable_vocab=1024
+
+## model_name=mamba2_wide_init
+
+Grouped by model_name / vocab_size (seeds aggregated): mean_acc, std_acc, mean_em, std_em, collapse_rate (fraction regime==too_hard), saturation_rate (fraction regime==too_easy), label.
+
+vocab_size=512
+  mean_acc=0.6685 std_acc=0.5649 mean_em=0.6132 std_em=0.5328
+  collapse_rate=0.333 saturation_rate=0.667 label=transition
+
+vocab_size=640
+  mean_acc=0.6607 std_acc=0.5604 mean_em=0.5218 std_em=0.4658
+  collapse_rate=0.333 saturation_rate=0.333 label=transition
+
+vocab_size=704
+  mean_acc=0.0147 std_acc=0.0182 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=768
+  mean_acc=0.0035 std_acc=0.0014 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=896
+  mean_acc=0.0022 std_acc=0.0002 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=1024
+  mean_acc=0.0021 std_acc=0.0001 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=1280
+  mean_acc=0.0014 std_acc=0.0003 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=1536
+  mean_acc=0.0014 std_acc=0.0002 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=2048
+  mean_acc=0.0011 std_acc=0.0004 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+estimated_failure_point: first_collapsed_vocab=704 last_stable_vocab=None
+
+## model_name=ms_gated_right_init
+
+Grouped by model_name / vocab_size (seeds aggregated): mean_acc, std_acc, mean_em, std_em, collapse_rate (fraction regime==too_hard), saturation_rate (fraction regime==too_easy), label.
+
+vocab_size=512
+  mean_acc=0.9982 std_acc=0.0006 mean_em=0.9715 std_em=0.0104
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=640
+  mean_acc=0.9978 std_acc=0.0014 mean_em=0.9663 std_em=0.0198
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=704
+  mean_acc=0.9975 std_acc=0.0004 mean_em=0.9605 std_em=0.0075
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=768
+  mean_acc=0.9974 std_acc=0.0008 mean_em=0.9597 std_em=0.0129
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=896
+  mean_acc=0.9972 std_acc=0.0002 mean_em=0.9562 std_em=0.0025
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1024
+  mean_acc=0.6669 std_acc=0.5665 mean_em=0.6047 std_em=0.5241
+  collapse_rate=0.333 saturation_rate=0.667 label=transition
+
+vocab_size=1280
+  mean_acc=0.0016 std_acc=0.0001 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=1536
+  mean_acc=0.0013 std_acc=0.0002 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab_size=2048
+  mean_acc=0.0010 std_acc=0.0001 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+estimated_failure_point: first_collapsed_vocab=1280 last_stable_vocab=896
+
+## model_name=ms_gated_slow_init
+
+Grouped by model_name / vocab_size (seeds aggregated): mean_acc, std_acc, mean_em, std_em, collapse_rate (fraction regime==too_hard), saturation_rate (fraction regime==too_easy), label.
+
+vocab_size=512
+  mean_acc=0.9984 std_acc=0.0008 mean_em=0.9752 std_em=0.0129
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab=640	(no completed ok runs in summary)
+
+vocab=704	(no completed ok runs in summary)
+
+vocab_size=768
+  mean_acc=0.9975 std_acc=0.0009 mean_em=0.9622 std_em=0.0137
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=896
+  mean_acc=0.9974 std_acc=0.0004 mean_em=0.9595 std_em=0.0065
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1024
+  mean_acc=0.6667 std_acc=0.5662 mean_em=0.6020 std_em=0.5221
+  collapse_rate=0.333 saturation_rate=0.667 label=transition
+
+vocab_size=1280
+  mean_acc=0.0016 std_acc=0.0001 mean_em=0.0000 std_em=0.0000
+  collapse_rate=1.000 saturation_rate=0.000 label=collapsed
+
+vocab=1536	(no completed ok runs in summary)
+
+vocab=2048	(no completed ok runs in summary)
+
+estimated_failure_point: first_collapsed_vocab=1280 last_stable_vocab=896
+
+## model_name=transformer_param_match
+
+Grouped by model_name / vocab_size (seeds aggregated): mean_acc, std_acc, mean_em, std_em, collapse_rate (fraction regime==too_hard), saturation_rate (fraction regime==too_easy), label.
+
+vocab_size=512
+  mean_acc=1.0000 std_acc=0.0000 mean_em=1.0000 std_em=0.0000
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=640
+  mean_acc=1.0000 std_acc=0.0000 mean_em=1.0000 std_em=0.0000
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=704
+  mean_acc=1.0000 std_acc=0.0000 mean_em=1.0000 std_em=0.0000
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=768
+  mean_acc=1.0000 std_acc=0.0000 mean_em=1.0000 std_em=0.0000
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=896
+  mean_acc=1.0000 std_acc=0.0000 mean_em=1.0000 std_em=0.0000
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1024
+  mean_acc=1.0000 std_acc=0.0000 mean_em=1.0000 std_em=0.0000
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1280
+  mean_acc=1.0000 std_acc=0.0000 mean_em=1.0000 std_em=0.0000
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=1536
+  mean_acc=1.0000 std_acc=0.0000 mean_em=1.0000 std_em=0.0000
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+vocab_size=2048
+  mean_acc=1.0000 std_acc=0.0000 mean_em=1.0000 std_em=0.0000
+  collapse_rate=0.000 saturation_rate=1.000 label=stable
+
+estimated_failure_point: first_collapsed_vocab=None last_stable_vocab=2048
+
