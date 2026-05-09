@@ -1,0 +1,1 @@
+SKIP timing arch=mamba2_slow_init repeat=2 → outputs/ArchEval/timing_mamba2_slow_init_repeat2.csv

@@ -1,1 +1,2 @@
 SKIP mqar setting=trans768 arch=mamba2_split_ts_slow_veryslow seed=42
+SKIP mqar setting=easy arch=mamba2_slow_init seed=42

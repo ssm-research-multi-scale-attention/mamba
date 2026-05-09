@@ -1,0 +1,1 @@
+SKIP timing arch=mamba2_depth4 repeat=4 → outputs/ArchEval/timing_mamba2_depth4_repeat4.csv

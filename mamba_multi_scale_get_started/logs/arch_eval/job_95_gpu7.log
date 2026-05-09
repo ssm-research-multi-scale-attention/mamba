@@ -1,2 +1,3 @@
 JOB timing arch=mamba2_slow_init repeat=0 -> outputs/ArchEval/timing_mamba2_slow_init_repeat0.csv
 Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_mamba2_slow_init_repeat0.csv
+SKIP mqar setting=trans704 arch=mamba2_split_ts_slow_veryslow seed=42

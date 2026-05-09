@@ -20,6 +20,12 @@ Slow-biased ablations with vocab subset:
   NUM_GPUS=8 python runners/mqar/py/run_mqar_failure_sweep_best.py --num-gpus 8 --skip-completed \\
     --models mamba2_split_ts_slow_default,mamba2_split_ts_slow_veryslow,ms_gated_slow_init \\
     --vocabs 512,768,896,1024,1280
+
+More seeds for core models (10 seeds × 9 vocabs × 4 models = 360 jobs):
+  NUM_GPUS=8 python runners/mqar/py/run_mqar_failure_sweep_best.py --num-gpus 8 --skip-completed \\
+    --models mamba2_slow_init,mamba2_split_ts_slow_veryslow,ms_gated_right_init,transformer_param_match \\
+    --vocabs 512,640,704,768,896,1024,1280,1536,2048 \\
+    --seeds 42,43,44,45,46,47,48,49,50,51
 """
 from __future__ import annotations
 
@@ -70,8 +76,8 @@ MODELS: list[tuple[str, Path]] = [
     ),
 ]
 VOCAB_SIZES = [512, 640, 704, 768, 896, 1024, 1280, 1536, 2048]
-SEEDS = [42, 43, 44]
-FULL_SWEEP_JOB_COUNT = len(MODELS) * len(VOCAB_SIZES) * len(SEEDS)
+DEFAULT_SEEDS = [42, 43, 44]
+FULL_SWEEP_JOB_COUNT = len(MODELS) * len(VOCAB_SIZES) * len(DEFAULT_SEEDS)
 
 
 def _job_out_dir(exp_name: str) -> Path:
@@ -93,13 +99,28 @@ def _is_job_completed_ok(exp_name: str) -> bool:
     return rows[0].get("status", "").strip() == "ok"
 
 
-def _build_jobs(vocab_sizes: list[int]) -> list[dict[str, str | int]]:
+def _parse_seeds_csv(s: str) -> list[int]:
+    out: list[int] = []
+    for part in str(s).replace(" ", "").split(","):
+        if not part:
+            continue
+        out.append(int(part))
+    seen: set[int] = set()
+    deduped: list[int] = []
+    for x in out:
+        if x not in seen:
+            seen.add(x)
+            deduped.append(x)
+    return deduped
+
+
+def _build_jobs(vocab_sizes: list[int], seeds: list[int]) -> list[dict[str, str | int]]:
     jobs: list[dict[str, str | int]] = []
     for model_name, cfg_path in MODELS:
         if not cfg_path.is_file():
             raise FileNotFoundError(f"Missing MQAR config: {cfg_path}")
         for vs in vocab_sizes:
-            for seed in SEEDS:
+            for seed in seeds:
                 exp = f"mqar_fail_{model_name}_v{vs}_seed{seed}"
                 jobs.append(
                     {
@@ -111,6 +132,28 @@ def _build_jobs(vocab_sizes: list[int]) -> list[dict[str, str | int]]:
                     }
                 )
     return jobs
+
+
+def _job_breakdown(
+    jobs: list[dict[str, str | int]], skip_completed: bool
+) -> tuple[int, int, int, dict[str, tuple[int, int, int]]]:
+    """Returns (selected, skipped_ok, scheduled, per_model: (sel, skip, sched))."""
+    selected = len(jobs)
+    skipped = 0
+    by_model: dict[str, list[dict[str, str | int]]] = {}
+    for j in jobs:
+        mn = str(j["model_name"])
+        by_model.setdefault(mn, []).append(j)
+    per_m: dict[str, tuple[int, int, int]] = {}
+    for mn, lst in by_model.items():
+        sk = 0
+        for j in lst:
+            if skip_completed and _is_job_completed_ok(str(j["experiment_name"])):
+                sk += 1
+        per_m[mn] = (len(lst), sk, len(lst) - sk if skip_completed else len(lst))
+        skipped += sk
+    scheduled = selected - skipped if skip_completed else selected
+    return selected, skipped, scheduled, per_m
 
 
 def _job_cmd(job: dict[str, str | int]) -> list[str]:
@@ -225,6 +268,12 @@ def main() -> None:
             f"Default: full list ({len(VOCAB_SIZES)} values)."
         ),
     )
+    ap.add_argument(
+        "--seeds",
+        type=str,
+        default=",".join(str(s) for s in DEFAULT_SEEDS),
+        help=f"Comma-separated RNG seeds (default: {','.join(str(s) for s in DEFAULT_SEEDS)}).",
+    )
     args = ap.parse_args()
     num_gpus = max(1, int(args.num_gpus))
     if args.vocabs.strip():
@@ -236,7 +285,10 @@ def main() -> None:
                 raise ValueError(f"Invalid vocab_size={v!r}")
     else:
         vocab_sizes = list(VOCAB_SIZES)
-    jobs = _build_jobs(vocab_sizes)
+    seeds = _parse_seeds_csv(args.seeds)
+    if not seeds:
+        raise ValueError("--seeds must list at least one integer.")
+    jobs = _build_jobs(vocab_sizes, seeds)
     if args.models.strip():
         allow = {m.strip() for m in args.models.split(",") if m.strip()}
         known = {name for name, _ in MODELS}
@@ -246,23 +298,32 @@ def main() -> None:
         jobs = [j for j in jobs if j["model_name"] in allow]
 
     if args.dry_run:
-        todo = [j for j in jobs if not (args.skip_completed and _is_job_completed_ok(j["experiment_name"]))]
-        skip_n = len(jobs) - len(todo)
-        print(
-            f"dry-run: {len(jobs)} jobs in selection "
-            f"(full default: {FULL_SWEEP_JOB_COUNT} = {len(MODELS)} models × "
-            f"{len(VOCAB_SIZES)} vocabs × {len(SEEDS)} seeds)"
-        )
+        selected, skipped_ok, scheduled, per_m = _job_breakdown(jobs, args.skip_completed)
+        n_models = len({j["model_name"] for j in jobs})
+        print("dry-run summary")
+        print(f"  selected_jobs: {selected}  (= {n_models} models × {len(vocab_sizes)} vocabs × {len(seeds)} seeds)")
         if args.skip_completed:
-            print(f"  with --skip-completed: would run {len(todo)}, skip {skip_n} already ok")
+            print(f"  skipped_jobs (meta status=ok): {skipped_ok}")
+            print(f"  scheduled_jobs: {scheduled}")
+        else:
+            print(f"  skipped_jobs: 0  (pass --skip-completed to skip completed ok)")
+            print(f"  scheduled_jobs: {scheduled}")
+        print("  breakdown_by_model (selected, skipped_ok, scheduled):")
+        for mn in sorted(per_m):
+            s, k, sc = per_m[mn]
+            print(f"    {mn}: {s}, {k}, {sc}")
+        print("")
+        print("job list (scheduled; skipped runs omitted when --skip-completed):")
         for j in jobs:
-            mark = ""
             if args.skip_completed and _is_job_completed_ok(j["experiment_name"]):
-                mark = "  [skip: completed ok]"
+                continue
             print(
                 f"  {j['experiment_name']} model={j['model_name']} "
-                f"vocab={j['vocab_size']} seed={j['seed']}{mark}"
+                f"vocab={j['vocab_size']} seed={j['seed']}"
             )
+        if args.skip_completed and skipped_ok:
+            print("")
+            print(f"skipped completed ok ({skipped_ok} jobs, not listed above)")
         return
 
     if not TRAIN_MQAR.is_file():

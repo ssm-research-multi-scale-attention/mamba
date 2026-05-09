@@ -1,0 +1,81 @@
+mqar_split_hashes: n_train=20000 uniq_train=20000 | n_val=2000 uniq_val=2000 | n_test=2000 uniq_test=2000
+mqar_answer_positions[train]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[val]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+mqar_answer_positions[test]: min=16 mean=16.0000 max=16 (expected 16 per sample)
+experiment=mqar_fail_transformer_param_match_v2048_seed50 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQARFailureSweep/mqar_fail_transformer_param_match_v2048_seed50
+mqar data: fixed_examples=True random_baseline_acc≈1/vocab=0.000488 (vocab_size=2048)
+--- mqar resolved config (sanity) ---
+  experiment.name: mqar_fail_transformer_param_match_v2048_seed50
+  model.backbone: transformer_lm
+  model.layer_headdims: —
+  model.multiscale.fast_layer_headdims: —
+  model.multiscale.slow_layer_headdims: —
+  model.multiscale.window_size: —
+  model.multiscale.offsets: —
+  model.multiscale.summary_mode: —
+  model.multiscale.causal_mode: —
+  model.multiscale.gate_type: —
+  data.input_seq_len: 128
+  data.num_kv_pairs: 16
+  data.vocab_size: 2048
+  data.train_examples: 20000  val_examples: 2000  test_examples: 2000
+  data.fixed_examples: True
+  data.min_query_pos: null
+  train.lr: 0.0003
+  train.epochs: 20
+  num_parameters_trainable: 3785968
+  tags(backbone,fusion,stride): transformer_lm, , 
+--- end resolved config ---
+epoch 1/20 train loss=6.9461 acc=0.0011 em=0.0000 | val loss=6.9498 acc=0.0010 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=6.949781)
+  saved best_acc.pt (val_answer_accuracy=0.001031)
+epoch 2/20 train loss=6.9415 acc=0.0012 em=0.0000 | val loss=6.9472 acc=0.0009 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=6.947237)
+epoch 3/20 train loss=6.9378 acc=0.0012 em=0.0000 | val loss=6.9439 acc=0.0013 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=6.943930)
+  saved best_acc.pt (val_answer_accuracy=0.001281)
+epoch 4/20 train loss=6.9132 acc=0.0028 em=0.0000 | val loss=6.9391 acc=0.0018 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=6.939074)
+  saved best_acc.pt (val_answer_accuracy=0.001781)
+epoch 5/20 train loss=6.4476 acc=0.0567 em=0.0000 | val loss=6.5608 acc=0.0512 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=6.560761)
+  saved best_acc.pt (val_answer_accuracy=0.051156)
+epoch 6/20 train loss=5.9068 acc=0.0795 em=0.0000 | val loss=6.1065 acc=0.0659 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=6.106476)
+  saved best_acc.pt (val_answer_accuracy=0.065906)
+epoch 7/20 train loss=5.4522 acc=0.0925 em=0.0000 | val loss=5.7492 acc=0.0718 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=5.749213)
+  saved best_acc.pt (val_answer_accuracy=0.071813)
+epoch 8/20 train loss=5.0648 acc=0.1042 em=0.0000 | val loss=5.4660 acc=0.0742 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=5.465961)
+  saved best_acc.pt (val_answer_accuracy=0.074188)
+epoch 9/20 train loss=4.7251 acc=0.1158 em=0.0000 | val loss=5.2358 acc=0.0754 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=5.235752)
+  saved best_acc.pt (val_answer_accuracy=0.075375)
+epoch 10/20 train loss=4.4341 acc=0.1280 em=0.0000 | val loss=5.0587 acc=0.0746 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=5.058659)
+epoch 11/20 train loss=4.1820 acc=0.1426 em=0.0000 | val loss=4.9201 acc=0.0788 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=4.920117)
+  saved best_acc.pt (val_answer_accuracy=0.078750)
+epoch 12/20 train loss=3.8398 acc=0.1859 em=0.0000 | val loss=4.6958 acc=0.0998 em=0.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=4.695826)
+  saved best_acc.pt (val_answer_accuracy=0.099812)
+epoch 13/20 train loss=0.0102 acc=0.9997 em=0.9950 | val loss=0.0126 acc=0.9996 em=0.9935 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=0.012628)
+  saved best_acc.pt (val_answer_accuracy=0.999594)
+epoch 14/20 train loss=0.0012 acc=1.0000 em=0.9999 | val loss=0.0015 acc=0.9999 em=0.9990 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=0.001465)
+  saved best_acc.pt (val_answer_accuracy=0.999938)
+epoch 15/20 train loss=0.0006 acc=1.0000 em=1.0000 | val loss=0.0007 acc=1.0000 em=1.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=0.000653)
+epoch 16/20 train loss=0.0003 acc=1.0000 em=1.0000 | val loss=0.0004 acc=1.0000 em=1.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=0.000387)
+epoch 17/20 train loss=0.0002 acc=1.0000 em=1.0000 | val loss=0.0003 acc=1.0000 em=1.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=0.000266)
+epoch 18/20 train loss=0.0002 acc=1.0000 em=1.0000 | val loss=0.0002 acc=1.0000 em=1.0000 | random≈0.0005
+epoch 19/20 train loss=0.0001 acc=1.0000 em=1.0000 | val loss=0.0002 acc=1.0000 em=1.0000 | random≈0.0005
+  saved best_loss.pt (val_answer_loss=0.000152)
+epoch 20/20 train loss=0.0001 acc=1.0000 em=1.0000 | val loss=0.0001 acc=1.0000 em=1.0000 | random≈0.0005
+test [best_loss_ckpt] loss=0.000160 acc=1.000000 em=1.000000
+test [best_acc_ckpt]  loss=0.001381 acc=1.000000 em=1.000000 random_baseline≈0.000488
+done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/MQARFailureSweep/mqar_fail_transformer_param_match_v2048_seed50/meta_metrics.csv

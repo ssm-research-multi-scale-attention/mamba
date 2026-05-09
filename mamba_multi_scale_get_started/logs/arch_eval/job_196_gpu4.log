@@ -1,0 +1,1 @@
+SKIP timing arch=mamba2_split_ts_slow_veryslow repeat=1 → outputs/ArchEval/timing_mamba2_split_ts_slow_veryslow_repeat1.csv

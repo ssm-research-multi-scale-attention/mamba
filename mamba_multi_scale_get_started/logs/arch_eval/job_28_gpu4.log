@@ -214,3 +214,4 @@ early stopping at epoch 5: val answer_loss did not improve by min_delta=0.0001 f
 test [best_loss_ckpt] loss=5.968347 acc=0.002719 em=0.000000
 test [best_acc_ckpt]  loss=5.988965 acc=0.022312 em=0.000000 random_baseline≈0.001302
 done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/mqar_trans768_mamba2_depth4_seed45/meta_metrics.csv
+SKIP mqar setting=easy arch=mamba2_depth4 seed=45

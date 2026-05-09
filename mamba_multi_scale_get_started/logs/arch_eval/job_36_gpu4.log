@@ -38,3 +38,4 @@ test [best_loss_ckpt] loss=5.877231 acc=0.007812 em=0.000000
 test [best_acc_ckpt]  loss=5.891064 acc=0.011125 em=0.000000 random_baseline≈0.001420
 done. meta_metrics → /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/mqar_trans704_ms_attention_stride4_seed44/meta_metrics.csv
 SKIP mqar setting=trans704 arch=mamba2_slow_init seed=43
+SKIP mqar setting=trans704 arch=mamba2_depth4 seed=43

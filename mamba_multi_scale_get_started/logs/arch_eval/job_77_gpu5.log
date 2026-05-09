@@ -1,1 +1,2 @@
 SKIP mqar setting=easy arch=transformer_param_match seed=44
+SKIP mqar setting=trans768 arch=mamba2_slow_init seed=44

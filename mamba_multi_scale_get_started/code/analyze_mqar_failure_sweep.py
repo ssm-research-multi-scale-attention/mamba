@@ -2,7 +2,8 @@
 """Aggregate MQAR failure sweep runs under outputs/MQARFailureSweep/ → CSV + report.
 
 Scans all subdirs with meta_metrics.csv; model_name is parsed from experiment_name
-(mqar_fail_<model>_v<vocab>_seed<seed>) with no hardcoded model list.
+(mqar_fail_<model>_v<vocab>_seed<seed>) with no hardcoded model list or seed set.
+Grouped stats use every status=ok row per (model, vocab); reports include n_ok counts.
 """
 from __future__ import annotations
 
@@ -250,7 +251,7 @@ def main() -> None:
                     return "nan"
                 return f"{a:.4f}"
 
-            lines.append(f"vocab_size={vs}")
+            lines.append(f"vocab_size={vs}  n_ok={len(rows_g)}")
             lines.append(
                 f"  mean_acc={_ft(mean_acc)} std_acc={_ft(std_acc)} "
                 f"mean_em={_ft(mean_em)} std_em={_ft(std_em)}"

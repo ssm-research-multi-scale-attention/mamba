@@ -1,0 +1,2 @@
+JOB timing arch=mamba2_slow_init repeat=5 -> outputs/ArchEval/timing_mamba2_slow_init_repeat5.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_mamba2_slow_init_repeat5.csv

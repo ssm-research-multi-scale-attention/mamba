@@ -1,0 +1,2 @@
+JOB timing arch=mamba2_split_ts_slow_veryslow repeat=8 -> outputs/ArchEval/timing_mamba2_split_ts_slow_veryslow_repeat8.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_mamba2_split_ts_slow_veryslow_repeat8.csv
