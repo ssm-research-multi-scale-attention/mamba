@@ -1,0 +1,14 @@
+Architectural evaluation scorecard
+  source: /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/summary_arch_eval_ms_gated_right_init_equal_param.csv
+
+Per-architecture:
+  mamba2_depth4 (BASELINE): lm_loss=1.59202970 mq704_em=0.56483333 tps16= speed_pen16=
+  mamba2_depth6 (BASELINE): lm_loss=1.53943708 mq704_em=0.00000000 tps16= speed_pen16=
+  ms_gated_right_init_equal_param (TRADEOFF): lm_loss=1.66924799 mq704_em=0.99533333 tps16=3563672.393167 speed_pen16=
+
+Notes:
+  mqar_* collapse_rate/saturation_rate: fraction(per-seed) too_hard/too_easy (legacy mqar regime).
+  mqar_* group_label ∈ {stable,transition,collapsed} uses collapse_rate + mean EM threshold rules.
+  LM / MQAR / timing columns with _n_ok/_mean/_std/_sem/_ci95_* summarise across seeds/repeats.
+  PASS_RECALL thresholds use best available Mamba2 baseline (depth6 if present else depth4).
+  Inspect the summary CSV for per-seed / per-repeat detail rows.

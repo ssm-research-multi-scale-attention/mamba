@@ -1,0 +1,25 @@
+experiment=archeval_lm_ms_gated_right_init_equal_param_seed43 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/lm_ms_gated_right_init_equal_param_seed43
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+experiment=archeval_lm_ms_gated_right_init_equal_param_seed43 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/lm_ms_gated_right_init_equal_param_seed43
+early_stopping: patience=3 min_delta=0.0001 (disable with train.early_stopping.patience=0)
+epoch 1/10 train_loss=3.2983 val_loss=2.7198 val_ppl=15.18 val_bpc=3.9239
+  saved best.pt (val_loss=2.719821)
+epoch 2/10 train_loss=2.4864 val_loss=2.3424 val_ppl=10.41 val_bpc=3.3794
+  saved best.pt (val_loss=2.342449)
+epoch 3/10 train_loss=2.1842 val_loss=2.1340 val_ppl=8.45 val_bpc=3.0787
+  saved best.pt (val_loss=2.134020)
+epoch 4/10 train_loss=1.9768 val_loss=1.9965 val_ppl=7.36 val_bpc=2.8803
+  saved best.pt (val_loss=1.996505)
+epoch 5/10 train_loss=1.8301 val_loss=1.9028 val_ppl=6.70 val_bpc=2.7452
+  saved best.pt (val_loss=1.902828)
+epoch 6/10 train_loss=1.7206 val_loss=1.8353 val_ppl=6.27 val_bpc=2.6478
+  saved best.pt (val_loss=1.835341)
+epoch 7/10 train_loss=1.6395 val_loss=1.7805 val_ppl=5.93 val_bpc=2.5687
+  saved best.pt (val_loss=1.780472)
+epoch 8/10 train_loss=1.5781 val_loss=1.7375 val_ppl=5.68 val_bpc=2.5066
+  saved best.pt (val_loss=1.737471)
+epoch 9/10 train_loss=1.5239 val_loss=1.6994 val_ppl=5.47 val_bpc=2.4518
+  saved best.pt (val_loss=1.699424)
+epoch 10/10 train_loss=1.4796 val_loss=1.6746 val_ppl=5.34 val_bpc=2.4159
+  saved best.pt (val_loss=1.674601)
+meta_metrics: train=135.53s eval=343.16s loop=480.00s setup=3.31s → meta_metrics.csv

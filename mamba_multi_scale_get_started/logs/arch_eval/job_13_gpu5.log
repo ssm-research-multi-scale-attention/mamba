@@ -22,3 +22,5 @@ epoch 9/10 train_loss=1.4298 val_loss=1.6189 val_ppl=5.05 val_bpc=2.3356
 epoch 10/10 train_loss=1.3940 val_loss=1.5970 val_ppl=4.94 val_bpc=2.3040
   saved best.pt (val_loss=1.597032)
 meta_metrics: train=26.46s eval=192.33s loop=220.07s setup=1.79s → meta_metrics.csv
+JOB timing arch=ms_gated_right_init_equal_param repeat=1 -> outputs/ArchEval/timing_ms_gated_right_init_equal_param_repeat1.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_gated_right_init_equal_param_repeat1.csv

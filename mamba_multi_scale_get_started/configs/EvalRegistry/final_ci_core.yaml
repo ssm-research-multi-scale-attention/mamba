@@ -24,6 +24,13 @@ architectures:
     mqar_config: configs/MQAR/mqar_ms_gated_stride2_len128_right_init.yaml
     timing_config: configs/TinyShakespeare/benchmark_lm_ms_gated_stride2_right_init.yaml
 
+  # Optional: MS-gated + right-ish init shrunk to TinyShakespeare-param parity with mamba2_depth4 (~±5%).
+  - name: ms_gated_right_init_equal_param
+    type: candidate_timescale_init
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_gated_stride2_right_init_equal_param.yaml
+    mqar_config: configs/MQAR/mqar_ms_gated_stride2_len128_right_init_equal_param.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_gated_stride2_right_init_equal_param.yaml
+
   - name: transformer_param_match
     type: transformer_baseline
     lm_config: configs/TinyShakespeare/tiny_shakespeare_transformer_param_match.yaml

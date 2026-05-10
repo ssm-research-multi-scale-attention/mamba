@@ -1,1 +1,3 @@
 SKIP lm arch=mamba2_split_ts_slow_veryslow seed=44 (outputs/ArchEval/lm_mamba2_split_ts_slow_veryslow_seed44)
+JOB timing arch=ms_gated_right_init_equal_param repeat=0 -> outputs/ArchEval/timing_ms_gated_right_init_equal_param_repeat0.csv
+Wrote /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/ArchEval/timing_ms_gated_right_init_equal_param_repeat0.csv
