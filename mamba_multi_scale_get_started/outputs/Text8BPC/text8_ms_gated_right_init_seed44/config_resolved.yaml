@@ -1,0 +1,64 @@
+experiment:
+  name: text8_ms_gated_right_init_seed44
+  seed: 44
+device: auto
+cuda_device: 0
+data:
+  dataset: text8
+  data_dir: data/text8
+  block_size: 256
+  train_ratio: 0.9
+  sampling: random_windows
+  steps_per_epoch: 2000
+loader:
+  batch_size: 128
+  num_workers: 0
+model:
+  backbone: multiscale_mamba2_lm
+  d_model: 256
+  layer_headdims:
+  - 32
+  - 32
+  - 32
+  - 32
+  vocab_size: 27
+  multiscale:
+    stride: 2
+    fusion: gated
+    fast_layer_headdims:
+    - 32
+    - 32
+    - 32
+    - 32
+    slow_layer_headdims:
+    - 32
+    - 32
+    fast_A_init_range:
+    - 0.1
+    - 4.0
+    slow_A_init_range:
+    - 4.0
+    - 32.0
+    fast_dt_min: 0.0001
+    fast_dt_max: 0.03
+    slow_dt_min: 0.003
+    slow_dt_max: 0.3
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+train:
+  epochs: 10
+  lr: 0.0003
+  weight_decay: 0.01
+  grad_clip: 1.0
+  debug_initial_eval: false
+  early_stopping:
+    patience: 0
+    min_delta: 0.0001
+  max_steps: 20000
+logging:
+  output_dir: outputs/Text8BPC/text8_ms_gated_right_init_seed44
+eval:
+  max_batches: 1000

@@ -1,0 +1,68 @@
+# Minimal Text8 LM smoke (finishes in minutes): workers=0, capped train/eval batches.
+#
+# Repo root (CLI requires `--config`; overrides are positional OmegaConf args, not `--set`):
+#
+#   python code/train_lm.py --config configs/Text8/text8_smoke_quick.yaml
+#
+#   python code/train_lm.py --config configs/Text8/text8_mamba_2_depth_4.yaml \
+#       train.debug_timing=true \
+#       train.max_steps=20 \
+#       eval.max_batches=10 \
+#       loader.num_workers=0 \
+#       loader.batch_size=8 \
+#       train.epochs=1 \
+#       train.log_every_steps=1 \
+#       train.save_best_checkpoint=false
+
+experiment:
+  name: text8_smoke_quick
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: text8
+  data_dir: data/text8
+  block_size: 256
+  train_ratio: 0.9
+  sampling: random_windows
+  steps_per_epoch: 128
+  use_encoded_cache: true
+
+loader:
+  batch_size: 8
+  num_workers: 0
+  pin_memory: false
+  persistent_workers: false
+
+model:
+  backbone: mamba2_lm
+  d_model: 256
+  layer_headdims: [32, 32, 32, 32]
+  vocab_size: 0
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+
+train:
+  epochs: 3
+  max_steps: 20
+  lr: 0.0003
+  weight_decay: 0.01
+  grad_clip: 1.0
+  debug_timing: true
+  log_every_steps: 1
+  debug_initial_eval: false
+  save_best_checkpoint: false
+  early_stopping:
+    patience: 0
+    min_delta: 0.0001
+
+eval:
+  max_batches: 10
+
+logging:
+  output_dir: outputs/Text8/${experiment.name}

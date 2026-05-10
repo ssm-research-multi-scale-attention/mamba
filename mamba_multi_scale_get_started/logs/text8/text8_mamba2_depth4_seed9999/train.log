@@ -1,0 +1,7 @@
+experiment=text8_mamba2_depth4_seed9999 device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/Text8BPC/text8_mamba2_depth4_seed9999
+epoch 1/10 train_loss=2.496581 val_loss=1.994053 val_ppl=7.35 val_bpc=2.876810 (train_updates_epoch=15)
+  saved best.pt (val_loss=1.994053 val_bpc=2.876810)
+epoch 2/10 train_loss=2.061554 val_loss=1.913510 val_ppl=6.78 val_bpc=2.760612 (train_updates_epoch=5)
+  saved best.pt (val_loss=1.913510 val_bpc=2.760612)
+[train] stopping after train.max_steps=20 (performed 20 optimizer steps)
+meta_metrics: train=15.16s eval=0.12s loop=15.48s setup=8.57s → meta_metrics.csv

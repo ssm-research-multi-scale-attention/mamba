@@ -1,5 +1,5 @@
 experiment:
-  name: text8_mamba2_depth4_random_windows
+  name: text8_smoke_quick
   seed: 42
 device: auto
 cuda_device: 0
@@ -9,10 +9,13 @@ data:
   block_size: 256
   train_ratio: 0.9
   sampling: random_windows
-  steps_per_epoch: 2000
+  steps_per_epoch: 128
+  use_encoded_cache: true
 loader:
-  batch_size: 128
+  batch_size: 8
   num_workers: 0
+  pin_memory: false
+  persistent_workers: false
 model:
   backbone: mamba2_lm
   d_model: 256
@@ -28,16 +31,19 @@ model:
     expand: 2
     ngroups: 1
 train:
-  epochs: 10
+  epochs: 3
+  max_steps: 20
   lr: 0.0003
   weight_decay: 0.01
   grad_clip: 1.0
+  debug_timing: true
+  log_every_steps: 1
   debug_initial_eval: false
+  save_best_checkpoint: false
   early_stopping:
-    patience: 3
+    patience: 0
     min_delta: 0.0001
-  max_steps: 2000
-logging:
-  output_dir: outputs/Text8/text8_mamba2_depth4_random_windows
 eval:
-  max_batches: 200
+  max_batches: 10
+logging:
+  output_dir: outputs/Text8/text8_smoke_quick

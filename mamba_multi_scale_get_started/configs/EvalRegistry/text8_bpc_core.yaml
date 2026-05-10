@@ -1,0 +1,18 @@
+# Text8 char-LM BPC benchmark (parallel GPU runner → outputs/Text8BPC/).
+# Seeds and train/eval budgets are CLI overrides from run_text8_bpc_benchmark.py.
+architectures:
+  - arch_name: mamba2_depth4
+    arch_type: baseline
+    text8_config: configs/Text8/text8_mamba2_depth4.yaml
+
+  - arch_name: mamba2_slow_init
+    arch_type: candidate_timescale_init
+    text8_config: configs/Text8/text8_mamba2_slow_init.yaml
+
+  - arch_name: mamba2_split_ts_slow_veryslow
+    arch_type: candidate_timescale_init
+    text8_config: configs/Text8/text8_mamba2_split_ts_slow_veryslow.yaml
+
+  - arch_name: ms_gated_right_init
+    arch_type: candidate_multiscale_gated
+    text8_config: configs/Text8/text8_ms_gated_right_init.yaml

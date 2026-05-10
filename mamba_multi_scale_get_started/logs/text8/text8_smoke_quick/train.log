@@ -1,0 +1,49 @@
+[debug_timing] 2026-05-10T22:19:09Z (+0.519s since start) resolved config merged (load_config done)
+[data] saved encoded cache: /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/data/text8/.char_lm_text8_encoded.pt (2.50s)
+[debug_timing] 2026-05-10T22:19:31Z (+23.299s since start) build dataset + DataLoaders done (+22.765s)
+[debug_timing] 2026-05-10T22:19:32Z (+23.522s since start) build model done (+0.192s)
+[debug_timing] summary: seq_len/block_size=256 batch_size=8 num_workers=0 pin_memory=False persistent_workers=False device=cuda:0 trainable_params=1682907
+[debug_timing] train_samples/epoch(len dataset)=128 val_windows=9999744 train_batches_epoch=16 val_batches_full=1249968 epochs=3 train.max_steps=20 eval.max_batches=10
+[debug_timing] corpus_chars train_split_tokens≈90000000 val_split_tokens≈10000000
+[debug_timing] encoded_cache file (if saved)=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/data/text8/.char_lm_text8_encoded.pt
+experiment=text8_smoke_quick device=cuda:0 out_dir=/home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/Text8/text8_smoke_quick
+[debug_timing] 2026-05-10T22:19:33Z (+0.001s) train first batch fetched from DataLoader (+0.001s since train_epoch start)
+[debug_timing] 2026-05-10T22:19:39Z (+5.686s) first forward done (+5.611s for forward pass)
+[debug_timing] 2026-05-10T22:19:48Z (+14.377s) first backward done (+8.668s for backward)
+[debug_timing] 2026-05-10T22:19:48Z (+14.553s) first optimizer.step done (+0.031s for optim step)
+[step] train 1/20
+[step] train 2/20
+[step] train 3/20
+[step] train 4/20
+[step] train 5/20
+[step] train 6/20
+[step] train 7/20
+[step] train 8/20
+[step] train 9/20
+[step] train 10/20
+[step] train 11/20
+[step] train 12/20
+[step] train 13/20
+[step] train 14/20
+[step] train 15/20
+[step] train 16/20
+[debug_timing] 2026-05-10T22:19:48Z (+40.048s since start) epoch 1/3: train_updates=16 cumulative_steps=16 mean_train_loss=2.526383
+[debug_timing] 2026-05-10T22:19:48Z (+40.064s since start) validation start epoch=1 eval.max_batches=10
+[debug_timing] 2026-05-10T22:19:48Z (+40.113s since start) validation end epoch=1 val_mean_ce=2.223873 val_bpc=3.208370
+epoch 1/3 train_loss=2.526383 val_loss=2.223873 val_ppl=9.24 val_bpc=3.208370 (train_updates_epoch=16)
+[debug_timing] train.save_best_checkpoint=false — skipping best.pt
+[debug_timing] 2026-05-10T22:19:48Z (+0.000s) train first batch fetched from DataLoader (+0.000s since train_epoch start)
+[debug_timing] 2026-05-10T22:19:48Z (+0.014s) first forward done (+0.003s for forward pass)
+[debug_timing] 2026-05-10T22:19:48Z (+0.036s) first backward done (+0.007s for backward)
+[debug_timing] 2026-05-10T22:19:48Z (+0.058s) first optimizer.step done (+0.000s for optim step)
+[step] train 17/20
+[step] train 18/20
+[step] train 19/20
+[step] train 20/20
+[debug_timing] 2026-05-10T22:19:49Z (+40.325s since start) epoch 2/3: train_updates=4 cumulative_steps=20 mean_train_loss=2.174348
+[debug_timing] 2026-05-10T22:19:49Z (+40.332s since start) validation start epoch=2 eval.max_batches=10
+[debug_timing] 2026-05-10T22:19:49Z (+40.371s since start) validation end epoch=2 val_mean_ce=2.145396 val_bpc=3.095153
+epoch 2/3 train_loss=2.174348 val_loss=2.145396 val_ppl=8.55 val_bpc=3.095153 (train_updates_epoch=4)
+[debug_timing] train.save_best_checkpoint=false — skipping best.pt
+[train] stopping after train.max_steps=20 (performed 20 optimizer steps)
+meta_metrics: train=15.07s eval=0.06s loop=15.35s setup=23.54s → meta_metrics.csv

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import random
+import time
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -133,6 +134,65 @@ def _ensure_text8_text(data_dir: Path) -> str:
     return txt_path.read_text(encoding="utf-8")
 
 
+def _encoded_cache_path(data_dir: Path, dataset: str) -> Path:
+    return (data_dir / f".char_lm_{dataset}_encoded.pt").resolve()
+
+
+def _try_load_encoded_cache(
+    cache_path: Path, source_path: Path, log: Any | None = None
+) -> tuple[torch.Tensor, CharVocab] | None:
+    if not cache_path.is_file():
+        return None
+    try:
+        try:
+            blob = torch.load(cache_path, map_location="cpu", weights_only=False)
+        except TypeError:
+            blob = torch.load(cache_path, map_location="cpu")
+    except Exception:
+        return None
+    meta = blob.get("meta") or {}
+    try:
+        st = source_path.stat()
+    except OSError:
+        return None
+    if (
+        meta.get("path") != str(source_path.resolve())
+        or int(meta.get("mtime_ns", -1)) != int(st.st_mtime_ns)
+        or int(meta.get("size", -1)) != int(st.st_size)
+    ):
+        return None
+    ids = blob.get("ids")
+    vj = blob.get("vocab_json")
+    if not isinstance(ids, torch.Tensor) or not isinstance(vj, dict):
+        return None
+    if log:
+        log(f"[data] loaded encoded cache: {cache_path}")
+    return ids, CharVocab.from_json(vj)
+
+
+def _save_encoded_cache(
+    cache_path: Path,
+    source_path: Path,
+    ids: torch.Tensor,
+    vocab: CharVocab,
+    log: Any | None = None,
+) -> None:
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    st = source_path.stat()
+    meta = {
+        "path": str(source_path.resolve()),
+        "mtime_ns": int(st.st_mtime_ns),
+        "size": int(st.st_size),
+    }
+    t0 = time.perf_counter()
+    torch.save(
+        {"meta": meta, "ids": ids.contiguous().cpu(), "vocab_json": vocab.to_json()},
+        cache_path,
+    )
+    if log:
+        log(f"[data] saved encoded cache: {cache_path} ({time.perf_counter() - t0:.2f}s)")
+
+
 def build_char_lm_dataset(
     dataset: str,
     data_dir: str | Path,
@@ -145,26 +205,45 @@ def build_char_lm_dataset(
     sampling: str = "sequential",
     steps_per_epoch: int = 1000,
     seed: int = 0,
+    pin_memory: bool | None = None,
+    persistent_workers: bool = False,
+    use_encoded_cache: bool = False,
+    log: Any | None = None,
 ) -> tuple[DataLoader, DataLoader, CharVocab]:
     """Build char LM loaders for supported corpora."""
     data_dir = Path(data_dir)
     ds = str(dataset).strip().lower()
     if ds == "tiny_shakespeare":
+        source_path = (data_dir / "input.txt").resolve()
         text = _ensure_tiny_shakespeare_text(data_dir)
     elif ds == "text8":
+        source_path = (data_dir / "text8").resolve()
         text = _ensure_text8_text(data_dir)
     else:
         raise ValueError(f"Unsupported data.dataset={dataset!r}. Use tiny_shakespeare or text8.")
 
+    ids: torch.Tensor | None = None
+    if use_encoded_cache:
+        cache_p = _encoded_cache_path(data_dir, ds)
+        hit = _try_load_encoded_cache(cache_p, source_path, log=log)
+        if hit is not None:
+            ids, loaded_vocab = hit
+            if vocab is not None and loaded_vocab.to_json() != vocab.to_json():
+                raise ValueError("Encoded cache vocab mismatch with provided vocab.")
+            vocab = loaded_vocab
+
     if vocab is None:
         vocab = CharVocab.from_text(text)
-    try:
-        ids = torch.tensor(vocab.encode(text), dtype=torch.long)
-    except KeyError as e:
-        ch = str(e).strip("'")
-        raise KeyError(
-            f"Dataset {dataset!r} contains character {ch!r} missing from provided vocab."
-        ) from e
+    if ids is None:
+        try:
+            ids = torch.tensor(vocab.encode(text), dtype=torch.long)
+        except KeyError as e:
+            ch = str(e).strip("'")
+            raise KeyError(
+                f"Dataset {dataset!r} contains character {ch!r} missing from provided vocab."
+            ) from e
+        if use_encoded_cache:
+            _save_encoded_cache(_encoded_cache_path(data_dir, ds), source_path, ids, vocab, log=log)
 
     n = ids.numel()
     need = int(block_size) + 1
@@ -187,12 +266,17 @@ def build_char_lm_dataset(
 
     val_ds = CharLMDataset(val_ids, block_size)
 
+    if pin_memory is None:
+        pin_memory = bool(torch.cuda.is_available())
+    pw = bool(persistent_workers) and int(num_workers) > 0
+
     train_loader = DataLoader(
         train_ds,
         batch_size=batch_size,
         shuffle=train_shuffle,
         num_workers=num_workers,
-        pin_memory=torch.cuda.is_available(),
+        pin_memory=pin_memory,
+        persistent_workers=pw,
         drop_last=True,
     )
     val_loader = DataLoader(
@@ -200,7 +284,8 @@ def build_char_lm_dataset(
         batch_size=batch_size,
         shuffle=False,
         num_workers=num_workers,
-        pin_memory=torch.cuda.is_available(),
+        pin_memory=pin_memory,
+        persistent_workers=pw,
         drop_last=False,
     )
     return train_loader, val_loader, vocab

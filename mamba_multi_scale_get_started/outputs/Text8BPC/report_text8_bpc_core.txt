@@ -1,0 +1,20 @@
+Text8 BPC benchmark report
+
+IMPORTANT: Text8 BPC metrics here were evaluated with fixed train.max_steps (train_max_steps)
+and eval.max_batches on the validation loader; see summary columns and each run's meta_metrics.csv.
+
+Registry stem: text8_bpc_core
+Scanned: /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/Text8BPC
+Runs in summary table: 12
+distinct train_max_steps in summary: [20000]
+distinct eval_max_batches in summary: [1000]
+
+Artifacts:
+  outputs/Text8BPC/summary_text8_bpc_core.csv
+  outputs/Text8BPC/scorecard_text8_bpc_core.csv
+
+Per-architecture scorecard (mean ± 95% CI via student-t / normal for n>20):
+  mamba2_depth4: n_ok=3  best_val_bpc mean=2.10304560 [2.08969209, 2.11639910]  final_val_bpc mean=2.10304560
+  mamba2_slow_init: n_ok=3  best_val_bpc mean=2.10384900 [2.08864190, 2.11905611]  final_val_bpc mean=2.10384900
+  mamba2_split_ts_slow_veryslow: n_ok=3  best_val_bpc mean=2.09663616 [2.09155928, 2.10171305]  final_val_bpc mean=2.09663616
+  ms_gated_right_init: n_ok=3  best_val_bpc mean=2.09299471 [2.07273421, 2.11325521]  final_val_bpc mean=2.09299471
