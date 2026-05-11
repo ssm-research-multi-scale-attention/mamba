@@ -1,0 +1,59 @@
+experiment:
+  name: text8_mamba2_split_ts_slow_veryslow_seed48
+  seed: 48
+device: auto
+cuda_device: 0
+data:
+  dataset: text8
+  data_dir: data/text8
+  block_size: 256
+  train_ratio: 0.9
+  sampling: random_windows
+  steps_per_epoch: 2000
+loader:
+  batch_size: 128
+  num_workers: 0
+model:
+  backbone: mamba2_lm
+  d_model: 256
+  layer_headdims:
+  - 32
+  - 32
+  - 32
+  - 32
+  vocab_size: 27
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+    timescale_init: split_heads
+    timescale_splits:
+    - name: slow
+      fraction: 0.5
+      A_init_range:
+      - 0.1
+      - 4.0
+      dt_min: 0.0001
+      dt_max: 0.03
+    - name: very_slow
+      fraction: 0.5
+      A_init_range:
+      - 0.03
+      - 1.0
+      dt_min: 3.0e-05
+      dt_max: 0.01
+train:
+  epochs: 10
+  lr: 0.0003
+  weight_decay: 0.01
+  grad_clip: 1.0
+  debug_initial_eval: false
+  early_stopping:
+    patience: 0
+    min_delta: 0.0001
+  max_steps: 20000
+logging:
+  output_dir: outputs/Text8BPC/text8_mamba2_split_ts_slow_veryslow_seed48
+eval:
+  max_batches: 1000

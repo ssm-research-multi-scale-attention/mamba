@@ -5,7 +5,7 @@ and eval.max_batches on the validation loader; see summary columns and each run'
 
 Registry stem: text8_bpc_core
 Scanned: /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/Text8BPC
-Runs in summary table: 12
+Runs in summary table: 60
 distinct train_max_steps in summary: [20000]
 distinct eval_max_batches in summary: [1000]
 
@@ -14,7 +14,7 @@ Artifacts:
   outputs/Text8BPC/scorecard_text8_bpc_core.csv
 
 Per-architecture scorecard (mean ± 95% CI via student-t / normal for n>20):
-  mamba2_depth4: n_ok=3  best_val_bpc mean=2.10304560 [2.08969209, 2.11639910]  final_val_bpc mean=2.10304560
-  mamba2_slow_init: n_ok=3  best_val_bpc mean=2.10384900 [2.08864190, 2.11905611]  final_val_bpc mean=2.10384900
-  mamba2_split_ts_slow_veryslow: n_ok=3  best_val_bpc mean=2.09663616 [2.09155928, 2.10171305]  final_val_bpc mean=2.09663616
-  ms_gated_right_init: n_ok=3  best_val_bpc mean=2.09299471 [2.07273421, 2.11325521]  final_val_bpc mean=2.09299471
+  mamba2_depth4: n_ok=15  best_val_bpc mean=2.09815494 [2.09521240, 2.10109747]  final_val_bpc mean=2.09815494
+  mamba2_slow_init: n_ok=15  best_val_bpc mean=2.09880594 [2.09554942, 2.10206246]  final_val_bpc mean=2.09880594
+  mamba2_split_ts_slow_veryslow: n_ok=15  best_val_bpc mean=2.09647005 [2.09385173, 2.09908838]  final_val_bpc mean=2.09647005
+  ms_gated_right_init: n_ok=15  best_val_bpc mean=2.08978791 [2.08648001, 2.09309581]  final_val_bpc mean=2.08978791
