@@ -1,0 +1,7 @@
+# ArchEval slice: shallow full-width MS-gated right-init (fast/slow 3/1 vs full 4/2).
+architectures:
+  - name: ms_gated_right_init_shallow_equal_param
+    type: multiscale_gated_shallow_equal_param
+    lm_config: configs/TinyShakespeare/tiny_shakespeare_ms_gated_stride2_right_init_shallow_equal_param.yaml
+    mqar_config: configs/MQAR/mqar_ms_gated_stride2_len128_right_init_shallow_equal_param.yaml
+    timing_config: configs/TinyShakespeare/benchmark_lm_ms_gated_stride2_right_init_shallow_equal_param.yaml

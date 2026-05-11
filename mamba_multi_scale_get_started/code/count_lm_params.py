@@ -30,8 +30,20 @@ def _maybe_sync_mqar_vocab(cfg: DictConfig) -> None:
         cfg.model.vocab_size = int(v)
 
 
+def _maybe_sync_text8_vocab_for_count(cfg: DictConfig) -> None:
+    """train_lm sets vocab from the built char table; for dry-run counts use a fixed proxy when unset."""
+    data_name = str(OmegaConf.select(cfg, "data.dataset", default="")).strip().lower()
+    if data_name != "text8":
+        return
+    if int(OmegaConf.select(cfg, "model.vocab_size", default=0)) == 0:
+        if "model" not in cfg or cfg.model is None:
+            raise ValueError("Text8 configs must define cfg.model.")
+        cfg.model.vocab_size = 27
+
+
 def _count_params(cfg: DictConfig, *, cuda_smoke: bool) -> tuple[int, str]:
     _maybe_sync_mqar_vocab(cfg)
+    _maybe_sync_text8_vocab_for_count(cfg)
     model = build_lm(cfg)
     n = sum(p.numel() for p in model.parameters() if p.requires_grad)
     if not cuda_smoke:

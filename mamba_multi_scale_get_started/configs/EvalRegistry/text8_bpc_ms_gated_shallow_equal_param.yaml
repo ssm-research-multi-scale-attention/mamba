@@ -1,0 +1,5 @@
+# Text8 BPC benchmark: depth-only “equal-param attempt” MS-gated (not strict ±5%, see YAML header).
+architectures:
+  - arch_name: ms_gated_right_init_shallow_equal_param
+    arch_type: multiscale_gated_shallow_equal_param
+    text8_config: configs/Text8/text8_ms_gated_right_init_shallow_equal_param.yaml

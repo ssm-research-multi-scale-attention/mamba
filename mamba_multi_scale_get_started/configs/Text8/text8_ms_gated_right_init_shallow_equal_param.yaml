@@ -1,0 +1,60 @@
+# MS-gated stride=2, right-init: same widths as full-size ms_gated_right_init (d_model=256,
+# headdim=32, d_state=32, expand=2, ngroups=1, same A/dt init ranges), but REDUCED DEPTH only:
+# fast 3 + slow 1 Mamba layers (full-size is 4+2).
+#
+# Param targeting vs mamba2_depth4 (~1.68M Text8 / ~1.70M Tiny): depth-only cannot hit ±5%.
+# Closest above baseline: this 3/1 layout (~+7.8% Tiny vs tiny_shakespeare_mamba2_depth4).
+# See: python code/report_ms_gated_shallow_depth_param_table.py
+experiment:
+  name: text8_ms_gated_right_init_shallow_equal_param
+  seed: 42
+
+device: auto
+cuda_device: 0
+
+data:
+  dataset: text8
+  data_dir: data/text8
+  block_size: 256
+  train_ratio: 0.9
+  sampling: random_windows
+  steps_per_epoch: 2000
+
+loader:
+  batch_size: 128
+  num_workers: 16
+
+model:
+  backbone: multiscale_mamba2_lm
+  d_model: 256
+  layer_headdims: [32, 32, 32]
+  vocab_size: 0
+  multiscale:
+    stride: 2
+    fusion: gated
+    fast_layer_headdims: [32, 32, 32]
+    slow_layer_headdims: [32]
+    fast_A_init_range: [0.1, 4.0]
+    slow_A_init_range: [4.0, 32.0]
+    fast_dt_min: 0.0001
+    fast_dt_max: 0.03
+    slow_dt_min: 0.003
+    slow_dt_max: 0.3
+  mamba:
+    d_state: 32
+    d_conv: 4
+    expand: 2
+    ngroups: 1
+
+train:
+  epochs: 10
+  lr: 0.0003
+  weight_decay: 0.01
+  grad_clip: 1.0
+  debug_initial_eval: false
+  early_stopping:
+    patience: 3
+    min_delta: 0.0001
+
+logging:
+  output_dir: outputs/Text8/${experiment.name}

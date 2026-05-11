@@ -1,0 +1,22 @@
+Text8 BPC benchmark report
+
+IMPORTANT: Text8 BPC metrics here were evaluated with fixed train.max_steps (train_max_steps)
+and eval.max_batches on the validation loader; see summary columns and each run's meta_metrics.csv.
+
+Registry stem: text8_bpc_ms_gated_shallow_equal_param
+Scanned: /home/jovyan/shares/SR008.fs2/nvidenisov/other/repos/mamba/mamba_multi_scale_get_started/outputs/Text8BPC
+Runs in summary table: 90
+distinct train_max_steps in summary: [20000]
+distinct eval_max_batches in summary: [1000]
+
+Artifacts:
+  outputs/Text8BPC/summary_text8_bpc_ms_gated_shallow_equal_param.csv
+  outputs/Text8BPC/scorecard_text8_bpc_ms_gated_shallow_equal_param.csv
+
+Per-architecture scorecard (mean ± 95% CI via student-t / normal for n>20):
+  ms_gated_right_init_shallow_equal_param: n_ok=15  best_val_bpc mean=2.15499920 [2.15167596, 2.15832245]  final_val_bpc mean=2.15499920
+  mamba2_depth4: n_ok=15  best_val_bpc mean=2.09815494 [2.09521240, 2.10109747]  final_val_bpc mean=2.09815494
+  mamba2_slow_init: n_ok=15  best_val_bpc mean=2.09880594 [2.09554942, 2.10206246]  final_val_bpc mean=2.09880594
+  mamba2_split_ts_slow_veryslow: n_ok=15  best_val_bpc mean=2.09647005 [2.09385173, 2.09908838]  final_val_bpc mean=2.09647005
+  ms_gated_right_init: n_ok=15  best_val_bpc mean=2.08978791 [2.08648001, 2.09309581]  final_val_bpc mean=2.08978791
+  ms_gated_right_init_equal_param: n_ok=15  best_val_bpc mean=2.18519902 [2.18060911, 2.18978892]  final_val_bpc mean=2.18519902
